@@ -2,7 +2,7 @@
  * UncertaintyValue.h
  *
  *  Created on: Jul 16, 2015
- *      Author: kargoll
+ *      Author: cherepanov
  *
  *      This class allows to store a value and an associated uncertainty
  *      in one object. Furthermore it provides operators to calculate

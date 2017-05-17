@@ -2,7 +2,7 @@
  * SVfitProvider.h
  *
  *  Created on: Jan 19, 2015
- *      Author: kargoll
+ *      Author: cherepanov
  *
  *  Interface to SVfit mass reconstruction framework
  *	Holds input information for SVfit, executes SVfit and provides results

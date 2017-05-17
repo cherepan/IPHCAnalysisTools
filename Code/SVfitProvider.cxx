@@ -2,7 +2,7 @@
  * SVfitProvider.cxx
  *
  *  Created on: Jan 19, 2015
- *      Author: kargoll
+ *      Author: cherepanov
  */
 
 #include "Ntuple_Controller.h"
