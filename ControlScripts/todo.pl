@@ -47,6 +47,8 @@ $maxmc=100;
 $maxemb=100;
 $ARCH="slc6_amd64_gcc530";
 $Queue="cream-pbs-short";
+$QsubQue="cms_local_short";
+
 
 if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\n ===========>>>>  Hello  $UserName ! <<<<=============\n\n");
@@ -66,10 +68,12 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\n                                                     --SetName <SetName>     Default value: $set ");
     printf("\n                                                     --NMaxData <Max Number of data files per job >     Default value: $maxdata ");
     printf("\n                                                     --NMaxMC <Max Number of MC files per job >     Default value: $maxmc ");
-	printf("\n                                                     --NMaxEmbed <Max Number of Embedding files per job > Default value: $maxemb ");
+    printf("\n                                                     --NMaxEmbed <Max Number of Embedding files per job > Default value: $maxemb ");
     printf("\n                                                     --ROOTSYS <ROOTSYS> the current ROOTSYS variable if --BuildRoot is not defined");
     printf("\n                                                     --TauSpinner Option to turn on TauSpinner");
     printf("\n                                                     --SVfit Option to turn on SVfit");
+    printf("\n                                                     --QsubQueue <queue>; type of queue of jobs submitted by qsub, example:  ");
+    printf("\n                                                     --QsubQueue short, --QsubQueue medium, --QsubQueue long; Default: short.");
     printf("\n./todo.pl --Batch <Input.txt> <ListofDS.txt>      INTENTED FOR REGULAR USE (DEFAULT) (will be implemented later)");
     printf("\n                                                   Configure a directory to run from. <InputPar.txt> name of file that");
     printf("\n                                                   contains input command template.");
@@ -197,8 +201,23 @@ for($l=2;$l<$numArgs; $l++){
     if($ARGV[$l] eq  "--SVfit" ){
     $svfit="--SVfit";
     }
-
+    if($ARGV[$l] eq  "--QsubQueue" ){
+	$l++;
+	if($ARGV[$l] eq  "short"){
+	    $QsubQue="cms_local_short";
+	}
+	if($ARGV[$l] eq  "medium"){
+	    $QsubQue="sbg_local_mdm";
+	}
+	if($ARGV[$l] eq  "long"){
+	    $QsubQue="cms_local";
+	}
+    }
 }
+
+
+
+
 
 my $dir = getcwd;
 
@@ -296,7 +315,8 @@ if( $ARGV[0] eq "--Local" ){
 			# Add Set information to Combining scripts and Input.txt
 			system(sprintf("echo \"File: $OutputDir/workdir$set/Set_$B/  \" >>  $OutputDir/workdir$set/Input.txt ")) ;
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B \" >> $OutputDir/workdir$set/Submit")) ;
-			system(sprintf("echo \"condor_submit  Condor_Set_$B  \" >> $OutputDir/workdir$set/Submit")) ;
+			system(sprintf("echo \"source Qsub_Set_$B  \" >> $OutputDir/workdir$set/Submit")) ;
+#			system(sprintf("echo \"condor_submit  Condor_Set_$B  \" >> $OutputDir/workdir$set/Submit")) ;
 
 			# Create and configure Set_$B dir
 			system(sprintf("mkdir $OutputDir/workdir$set/Set_$B ")) ;
@@ -320,15 +340,19 @@ if( $ARGV[0] eq "--Local" ){
 			system(sprintf("echo \"Mode: ANALYSIS\" >> $OutputDir/workdir$set/Set_$B/Input.txt")); 
 			system(sprintf("echo \"RunType: LOCAL\" >> $OutputDir/workdir$set/Set_$B/Input.txt"));
 
-			# Setup Condor scripts
-#			system(sprintf("echo \"universe     = vanilla      \"  >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B"));
-#			system(sprintf("echo \"rank         = memory       \"  >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B"));
-#			system(sprintf("echo \"executable   = Set_$B.sh      \"  >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B")); 
-#			system(sprintf("echo \"output       = Set_$B-Condor_\\\$(cluster)_\\\$(proccess).o  \" >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B")); 
-#			system(sprintf("echo \"error        = Set_$B-Condor_\\\$(cluster)_\\\$(proccess).e  \" >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B")); 
-#			system(sprintf("echo \"log          = Set_$B-Condor_\\\$(cluster)_\\\$(proccess).log  \" >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B")); 
-#			system(sprintf("echo \"notification = Error        \" >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B"));		
-#			system(sprintf("echo \"queue = 1 \" >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B"));
+
+
+			# Setup qsub scripts
+			$s1_char='\${que}';
+			$s2_char='\${output}';
+			$s3_char='\${error}';
+			system(sprintf("echo \" #PBS -u vcherepa\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
+			system(sprintf("echo \" #! /bin/bash\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
+			system(sprintf("echo \" export HOME=\\\"$OutputDir/workdir$set/\\\"         \"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
+			system(sprintf("echo \" que=\\\"$QsubQue\\\"\" >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
+			system(sprintf("echo \" output=\\\"Set_$B.qsub.o  \\\"\" >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
+			system(sprintf("echo \" error=\\\"Set_$B.qsub.e  \\\"\" >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
+			system(sprintf("echo \" qsub -q  $s1_char  -o $s2_char -e $s3_char Set_$B.sh\" >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));		
 		    }
 		    system(sprintf("echo \"File: $InputDir/$subdir/$file  \" >> $OutputDir/workdir$set/Set_$B/Input.txt")) ;
 		    $A++;
@@ -431,10 +455,10 @@ if( $ARGV[0] eq "--DCache" ){
     # Start Submit script
     system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/Submit")) ; 
     system(sprintf("echo \"verbosity=\\\$(grep SetLevel Code/Analysis.cxx | grep -c -e Debug -e Verbose)\" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"  if [[ \\\${verbosity} -ne 0 ]]; then \" >> $OutputDir/workdir$set/Submit")) ;
-	system(sprintf("echo \"    echo 'ERROR: Please make sure to set the verbosity level to Info in Analysis.cxx, otherwise your log-files will break Condor! Abort...' \" >> $OutputDir/workdir$set/Submit"));
-	system(sprintf("echo \"    exit \\\${verbosity}\" >> $OutputDir/workdir$set/Submit"));
-	system(sprintf("echo \"  fi\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  if [[ \\\${verbosity} -ne 0 ]]; then \" >> $OutputDir/workdir$set/Submit")) ;
+    system(sprintf("echo \"    echo 'ERROR: Please make sure to set the verbosity level to Info in Analysis.cxx, otherwise your log-files will break Condor! Abort...' \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"    exit \\\${verbosity}\" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"  fi\" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"cd $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit")) ;
     system(sprintf("echo \"rm Set*/*.o; rm Set*/*.e; rm Set*/*.log; \" >> $OutputDir/workdir$set/Submit")) ;
     $B=0;
