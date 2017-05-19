@@ -82,7 +82,7 @@ endif
 
 
 ifdef USE_goe
-	TARGETS += 
+	TARGETS += MyTest
 	DEFS += -DUSE_goe=1
 endif
 
@@ -90,8 +90,6 @@ ifdef USE_lebihan
 	TARGETS += 
 	DEFS += -DUSE_lebihan=1
 endif
-
-
 
 HDRS          = $(TARGETS:=.h) 		
 SRCS          = $(TARGETS:=.cxx)  Analysis.cxx
@@ -107,16 +105,18 @@ $(PROGRAM):     $(OBJS)
 
 VPATH = utilities:i386_linux
 
-vpath %.cxx cherepanov
-vpath %.h cherepanov
-
-vpath %.cxx goe
-vpath %.h goe
-
-vpath %.cxx lebihan
-vpath %.h lebihan
-
-
+ifdef USE_cherepanov
+	vpath %.cxx cherepanov
+	vpath %.h cherepanov
+endif
+ifdef USE_goe
+	vpath %.cxx goe
+	vpath %.h goe
+endif
+ifdef USE_lebihan
+	vpath %.cxx lebihan
+	vpath %.h lebihan
+endif
 vpath %.cxx CommonFiles
 vpath %.h CommonFiles
 
