@@ -5,6 +5,7 @@
 #include "TauSpinExample.h"
 #ifdef USE_cherepanov
 #include "cherepanov/MyTest.h"
+#include "cherepanov/NtupleValidation.h"
 #endif
 
 #ifdef USE_goe
@@ -35,6 +36,7 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   else if(Analysis.Contains("tauspin"))s=new TauSpinExample(Analysis,UncertType);
 #ifdef USE_cherepanov
   else if(Analysis.Contains("mytest"))s=new MyTest(Analysis,UncertType);
+  else if(Analysis.Contains("ntuplevalidation"))s=new NtupleValidation(Analysis,UncertType);
 #endif
 // #ifdef USE_goe
 //   else if(Analysis.Contains("bla"))s=new Bla(Analysis,UncertType);

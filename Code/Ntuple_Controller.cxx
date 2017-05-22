@@ -219,12 +219,13 @@ void Ntuple_Controller::doMET(){
 //Physics get Functions
 Long64_t  Ntuple_Controller::GetMCID(){
 	Long64_t  DataMCTypeFromTupel = Ntp->DataMC_Type_idx;
-
+	//customize your event ID here 
+	if(DataMCTypeFromTupel==10230533 or DataMCTypeFromTupel==10130533 or DataMCTypeFromTupel==10330533 or DataMCTypeFromTupel==10430533) return 10230533;
+	if(DataMCTypeFromTupel==10410433 ) return DataMCTypeFromTupel;
 	// move JAK Id information 3 digits to the left
 	Long64_t  jakid = DataMCTypeFromTupel - (DataMCTypeFromTupel%100);
 	jakid *= 1000;
 	DataMCTypeFromTupel = jakid + (DataMCTypeFromTupel%100);
-
 	if (DataMCTypeFromTupel == DataMCType::DY_ll_Signal && HistoC.hasID(DataMCType::DY_ll_Signal)) {
 		for (unsigned int i = 0; i < NMCSignalParticles(); i++) {
 			if (abs(MCSignalParticle_pdgid(i)) == PDGInfo::Z0) {
@@ -258,7 +259,6 @@ Long64_t  Ntuple_Controller::GetMCID(){
 	    dmcType = DataMCTypeFromTupel % 100;
 	  }
 	}
-	
 	return dmcType;
 }
 
@@ -1093,6 +1093,23 @@ bool Ntuple_Controller::hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,u
   }
   return false;
 }
+bool Ntuple_Controller::GetTriggerIndex(TString n,  int &i){
+  for(i=0; i<NTriggers();i++){
+      TString name=TriggerName(i);
+      if(name.Contains(n))return true;
+    } 
+	return false;
+ }
+
+std::vector<int> Ntuple_Controller::GetVectorTriggers(TString n){
+    std::vector<int> out;
+    for(unsigned i=0; i<NTriggers();i++){
+	TString name=TriggerName(i);
+	if(name.Contains(n)) out.push_back(i) ;
+      } 
+	  return out;
+ }
+
 
 // // PFTau significance, using the reffited primary and secondary vertices
 // double Ntuple_Controller::PFTau_FlightLength_significance(unsigned int i) {
@@ -1105,43 +1122,43 @@ bool Ntuple_Controller::hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,u
 // }
 
 // // calculate flight length significance from primary and secondary vertex info
-// double Ntuple_Controller::PFTau_FlightLength_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov ){
-//   TVector3 SVPV = sv - pv;
-//   TVectorF FD;
-//   FD.ResizeTo(3);
-//   FD(0) = SVPV.X();
-//   FD(1) = SVPV.Y();
-//   FD(2) = SVPV.Z();
+ double Ntuple_Controller::PFTau_FlightLength_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov ){
+   TVector3 SVPV = sv - pv;
+   TVectorF FD;
+   FD.ResizeTo(3);
+   FD(0) = SVPV.X();
+   FD(1) = SVPV.Y();
+   FD(2) = SVPV.Z();
 
-//   TMatrixT<double> PVcv;
-//   PVcv.ResizeTo(3,3);
-//   for(int nr =0; nr<PVcov.GetNrows(); nr++){
-//     for(int nc =0; nc<PVcov.GetNcols(); nc++){
-//       PVcv(nr,nc) = PVcov(nr,nc);
-//     }
-//   }
-//   TMatrixT<double> SVcv;
-//   SVcv.ResizeTo(3,3);
-//   for(int nr =0; nr<SVcov.GetNrows(); nr++){
-//     for(int nc =0; nc<SVcov.GetNcols(); nc++){
-//       SVcv(nr,nc) = SVcov(nr,nc);
-//     }
-//   }
+   TMatrixT<double> PVcv;
+   PVcv.ResizeTo(3,3);
+   for(int nr =0; nr<PVcov.GetNrows(); nr++){
+     for(int nc =0; nc<PVcov.GetNcols(); nc++){
+       PVcv(nr,nc) = PVcov(nr,nc);
+     }
+   }
+   TMatrixT<double> SVcv;
+   SVcv.ResizeTo(3,3);
+   for(int nr =0; nr<SVcov.GetNrows(); nr++){
+     for(int nc =0; nc<SVcov.GetNcols(); nc++){
+       SVcv(nr,nc) = SVcov(nr,nc);
+     }
+   }
 
-//   TMatrixT<double> SVPVMatrix(3,1);
-//   for(int i=0; i<SVPVMatrix.GetNrows();i++){
-//     SVPVMatrix(i,0)=FD(i);
-//   }
+   TMatrixT<double> SVPVMatrix(3,1);
+   for(int i=0; i<SVPVMatrix.GetNrows();i++){
+     SVPVMatrix(i,0)=FD(i);
+   }
 
-//   TMatrixT<double> SVPVMatrixT=SVPVMatrix;
-//   SVPVMatrixT.T();
+   TMatrixT<double> SVPVMatrixT=SVPVMatrix;
+   SVPVMatrixT.T();
 
-//   TMatrixT<double> lambda2 = SVPVMatrixT*(SVcv + PVcv)*SVPVMatrix;
-//   double sigmaabs = sqrt(lambda2(0,0))/SVPV.Mag();
-//   double sign = SVPV.Mag()/sigmaabs;
+   TMatrixT<double> lambda2 = SVPVMatrixT*(SVcv + PVcv)*SVPVMatrix;
+   double sigmaabs = sqrt(lambda2(0,0))/SVPV.Mag();
+   double sign = SVPV.Mag()/sigmaabs;
 
-//   return sign;
-// }
+   return sign;
+ }
 
 //// Generator Information
 int Ntuple_Controller::matchTruth(TLorentzVector tvector){
@@ -1291,6 +1308,151 @@ std::string Ntuple_Controller::MCParticleToString(unsigned int par, bool printSt
 	if (printPt || printEtaPhi) out << "]";
 	return out.str();
 }
+bool Ntuple_Controller::CheckDecayID(unsigned  int jak1, unsigned int jak2){
+  // if(id!=998) return false;
+  bool decayid= false;
+  for(unsigned int iz =0; iz<Ntp->MCSignalParticle_p4->size(); iz++){
+    // std::cout<<"NC: Ntp->MCSignalParticle_p4->size()  "<<Ntp->MCSignalParticle_p4->size()<<std::endl;
+    // std::cout<<"NC: Ntp->MCSignalParticle_Tauidx->at(iz).size()  "<<Ntp->MCSignalParticle_Tauidx->at(iz).size()<<std::endl;
+    // std::cout<<"  MCSignalParticle_pdgid->at(iz)  "<< Ntp-> MCSignalParticle_pdgid->at(iz) <<std::endl;
+    if(fabs(Ntp-> MCSignalParticle_pdgid->at(iz) )!=23) return false;
+    if(Ntp->MCSignalParticle_Tauidx->at(iz).size()!=0){
+      //     std::cout<<" Ntp->MCTau_JAK-> "<< Ntp->MCTau_JAK->size()<<std::endl;
+      if(Ntp->MCTau_JAK->at(0) == jak1 and Ntp->MCTau_JAK->at(1) ==jak2 ){ decayid = true;}
+      else if(Ntp->MCTau_JAK->at(0) ==jak2  and Ntp->MCTau_JAK->at(1) ==jak1){decayid  = true;}
+    }
+  }
+  return decayid;
+}
+TLorentzVector Ntuple_Controller::GetTruthTauLV(unsigned int jak){
+  TLorentzVector tau(0,0,0,0);
+  bool DecayOK = false;
+  unsigned int tauIndex;
+  for(unsigned int iz =0; iz<Ntp->MCSignalParticle_p4->size(); iz++){
+    if(Ntp->MCSignalParticle_Tauidx->at(iz).size()!=0){
+      if(Ntp->MCTau_JAK->at(0) == jak){tauIndex=0; DecayOK = true;}
+      else if(  Ntp->MCTau_JAK->at(1) ==jak ){ tauIndex=1; DecayOK = true;}
+      if(DecayOK){
+        tau = TLorentzVector(Ntp->MCTauandProd_p4->at(Ntp->MCSignalParticle_Tauidx->at(iz).at(tauIndex)).at(0).at(1),Ntp->MCTauandProd_p4->at(Ntp->MCSignalParticle_Tauidx->at(iz).at(tauIndex)).at(0).at(2),
+                             Ntp->MCTauandProd_p4->at(Ntp->MCSignalParticle_Tauidx->at(iz).at(tauIndex)).at(0).at(3),Ntp->MCTauandProd_p4->at(Ntp->MCSignalParticle_Tauidx->at(iz).at(tauIndex)).at(0).at(0));
+
+      }
+    }
+  }
+  return tau;
+}
+
+
+TLorentzVector Ntuple_Controller::GetTruthTauProductLV(unsigned int jak, int pdgID){
+  TLorentzVector tauProd(0,0,0,0);
+  bool DecayOK = false;
+  unsigned int tauIndex;
+  for(unsigned int iz =0; iz<Ntp->MCSignalParticle_p4->size(); iz++){
+    if(Ntp->MCSignalParticle_Tauidx->at(iz).size()!=0){
+      if(Ntp->MCTau_JAK->at(0) == jak){tauIndex=0; DecayOK = true;}
+      else if(  Ntp->MCTau_JAK->at(1) ==jak ){ tauIndex=1; DecayOK = true;}
+      if(DecayOK){
+        unsigned int NDec;
+        if(0<=tauIndex && tauIndex<NMCTaus()){ NDec = Ntp->MCTauandProd_p4->at(tauIndex).size();}
+        else NDec= 0;
+        for(unsigned int iProd =0; iProd < NDec; iProd++ ){
+          if(abs( Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd))==pdgID){
+            //if( Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd)==pdgID){
+              tauProd = TLorentzVector(Ntp->MCTauandProd_p4->at(tauIndex).at(iProd).at(1),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd).at(2),
+                                       Ntp->MCTauandProd_p4->at(tauIndex).at(iProd).at(3),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd).at(0));
+              // }
+          }
+        }
+      }
+    }
+  }
+    return tauProd;
+}
+
+
+std::vector<TLorentzVector> Ntuple_Controller::GetTruthPionsFromA1(){
+        TLorentzVector SSPion1(0,0,0,0);
+        TLorentzVector SSPion2(0,0,0,0);
+        TLorentzVector OSPion(0,0,0,0);
+        unsigned int OSMCPionIndex;
+        unsigned int SSMCPion1Index;
+        unsigned int SSMCPion2Index;
+
+        std::vector<TLorentzVector>  output;
+
+        bool DecayOK = false;
+        unsigned int tauIndex;
+        for(unsigned int iz =0; iz<Ntp->MCSignalParticle_p4->size(); iz++){
+          if(Ntp->MCSignalParticle_Tauidx->at(iz).size()!=0){
+            if(Ntp->MCTau_JAK->at(0) == 5){tauIndex=0; DecayOK = true;}
+            else if(  Ntp->MCTau_JAK->at(1) ==5 ){ tauIndex=1; DecayOK = true;}
+            if(DecayOK){
+              unsigned int NDec;
+              if(0<=tauIndex && tauIndex<NMCTaus()){ NDec = Ntp->MCTauandProd_p4->at(tauIndex).size();}
+              else NDec= 0;
+              int nplus =0, nminus = 0;
+              for(unsigned int iProd =0; iProd < NDec; iProd++ ){
+		// if(abs(Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd))==211){	  std::cout<<" pdgId     "<< Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd)<< std::endl;
+		//   std::cout<< " print mc again   "<<  Ntp->MCTauandProd_p4->at(tauIndex).at(iProd).at(1) << "  "<<Ntp->MCTauandProd_p4->at(tauIndex).at(iProd).at(2)	  << "  "<<Ntp->MCTauandProd_p4->at(tauIndex).at(iProd).at(3)	  << "  "<<Ntp->MCTauandProd_p4->at(tauIndex).at(iProd).at(0)	<<	  std::endl; }
+
+                if( Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd)== 211) nplus++;
+                if( Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd)==-211) nminus++;
+              }
+
+              //    std::cout<<" nplus nminus  "<< nplus << "  "<< nminus<<std::endl;
+
+              if(nplus == 1 && nminus==2){
+                int nss=0;
+                for(unsigned int iProd1 =0; iProd1 < NDec; iProd1++ ){
+                  if(Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd1)== 211){
+                    OSPion = TLorentzVector(Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(1),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(2), Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(3),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(0));
+                    OSMCPionIndex=iProd1;
+                  }
+
+                  if(Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd1)==-211 && nss ==0){
+                    nss++;
+                    SSPion1 = TLorentzVector(Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(1),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(2), Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(3),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(0));
+                    SSMCPion1Index=iProd1;
+                  }
+                  //              std::cout<<" nss "<< nss << " iProd1 "<<iProd1<<std::endl;
+                  if(Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd1)==-211 &&  nss == 1){
+                    SSPion2 = TLorentzVector(Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(1),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(2), Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(3),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd1).at(0));
+                    SSMCPion2Index=iProd1;
+                  }
+                }
+              }
+
+              if(nplus == 2 && nminus==1){
+                int nss=0;
+                for(unsigned int iProd2 =0; iProd2 < NDec; iProd2++ ){
+                  if(Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd2)== -211){
+                    OSPion = TLorentzVector(Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(1),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(2), Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(3),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(0));
+                    OSMCPionIndex=iProd2;
+                  }
+
+                  if(Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd2)==211 && nss ==0){
+                    nss++;
+                    SSPion1 = TLorentzVector(Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(1),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(2), Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(3),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(0));
+                    SSMCPion1Index=iProd2;
+                  }
+                  if(Ntp->MCTauandProd_pdgid->at(tauIndex).at(iProd2)==211 && nss ==1){
+                    SSPion2 = TLorentzVector(Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(1),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(2), Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(3),Ntp->MCTauandProd_p4->at(tauIndex).at(iProd2).at(0));
+                    SSMCPion2Index=iProd2;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        output.push_back(OSPion);
+        output.push_back(SSPion1);
+        output.push_back(SSPion2);
+        return output;
+}
+
+
+
 
 
 //// Trigger Information
@@ -1312,13 +1474,8 @@ std::string Ntuple_Controller::MCParticleToString(unsigned int par, bool printSt
 //   return 1;
 // }
 
-// bool Ntuple_Controller::GetTriggerIndex(TString n, unsigned int &i){
-//   for(i=0; i<Ntp->HTLTriggerName->size();i++){
-//     TString name=HTLTriggerName(i);
-//     if(name.Contains(n))return true;
-//   }
-//   return false;
-// }
+
+
 
 // double Ntuple_Controller::matchTrigger(TLorentzVector obj, std::vector<TString> trigger, std::string objectType){
 //   unsigned int id = 0;
@@ -1364,8 +1521,12 @@ std::string Ntuple_Controller::MCParticleToString(unsigned int par, bool printSt
 // 	return matchTrigger(obj, dr_cut, triggerVec, objectType);
 // }
 
+bool Ntuple_Controller::isPVCovAvailable(){ // sometimes returns zero size matrix (rare)
+  if(Ntp->pv_cov->size()!=6)  return false; 
+  return true;
 
-TMatrixTSym<float> Ntuple_Controller::PFTau_TIP_primaryVertex_cov(unsigned int i){
+}
+TMatrixTSym<float> Ntuple_Controller::PFTau_TIP_primaryVertex_cov(){
   TMatrixTSym<float> V_cov(LorentzVectorParticle::NVertex);
   int l=0;
   for(int j=0;j<LorentzVectorParticle::NVertex;j++){
@@ -1376,6 +1537,7 @@ TMatrixTSym<float> Ntuple_Controller::PFTau_TIP_primaryVertex_cov(unsigned int i
       l++;
     }
   }
+  //  std::cout<<"  pv is good"<< std::endl; V_cov.Print();
   return  V_cov;
 }
 
@@ -1389,6 +1551,7 @@ TMatrixTSym<double> Ntuple_Controller::PFTau_TIP_secondaryVertex_cov(unsigned in
       l++;
     }
   }
+  //    std::cout<<"  sv is good"<< std::endl; V_cov.Print();
   return  V_cov;
 }
 

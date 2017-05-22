@@ -288,8 +288,8 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   /* // Vertex Information */
    unsigned int NVtx(){return Ntp->npv;} 
    TVector3       PVtx(){return TVector3(Ntp->pv_x,Ntp->pv_y,Ntp->pv_z);} 
-   TMatrixTSym<float> PFTau_TIP_primaryVertex_cov(unsigned int i);
-
+   TMatrixTSym<float> PFTau_TIP_primaryVertex_cov();
+   bool isPVCovAvailable();
    bool              isPVtxRefit(){return Ntp->isRefitPV;}
    TVector3       PVtx_Refit(){return TVector3(Ntp->pvRefit_x,Ntp->pvRefit_y,Ntp->pvRefit_z);} 
    TVector3       PVtx_Gen(){return TVector3(Ntp->pvGen_x,Ntp->pvGen_y,Ntp->pvGen_z);} 
@@ -331,10 +331,12 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    TLorentzVector Mothers_P4(unsigned int i){return TLorentzVector(Ntp->mothers_px->at(i), Ntp->mothers_py->at(i), Ntp->mothers_pz->at(i),Ntp->mothers_e->at(i));}
    Long64_t mothers_trgSeparateMatch(unsigned int i){return Ntp->mothers_trgSeparateMatch->at(i);}
 
+
+   int NTriggers(){return Ntp->trigger_accept->size();}
    bool TriggerAccept(unsigned int i){return Ntp->trigger_accept->at(i);}
-   string TriggerName(unsigned int i){return Ntp->trigger_name->at(i);}
-
-
+   TString TriggerName(unsigned int i){return Ntp->trigger_name->at(i);}
+   bool         GetTriggerIndex(TString n,  int &i);
+   std::vector<int> GetVectorTriggers(TString n);
    Int_t            PUNumInteractions(){return Ntp->PUNumInteractions;}
    Float_t         MC_weight(){return Ntp->MC_weight;}
    Float_t         MC_weight_scale_muF0p5(){return Ntp->MC_weight_scale_muF0p5;}
@@ -534,7 +536,7 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  float  SIP(unsigned int i){return Ntp->SIP->at(i);}
  int  Daughters_muonID(unsigned int i){return Ntp->daughters_muonID->at(i);}
  int  Daughters_typeOfMuon(unsigned int i){return Ntp->daughters_typeOfMuon->at(i);}
- int particleType(unsigned int i){return Ntp->particleType->at(i);}
+ int particleType(unsigned int i){return Ntp->particleType->at(i);} // 0 - muon, 1- electron, 2 - tau
  float discriminator(unsigned int i){return Ntp->discriminator->at(i);}
 
 
@@ -546,8 +548,10 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  double PFTau_secondaryVertex_TracksMatchingQuality(unsigned int i){if(Ntp->PFTauSVChi2NDofMatchingQuality->at(i).size()==3) return  Ntp->PFTauSVChi2NDofMatchingQuality->at(i).at(2);  return 0;}
 
 
- bool PFTau_hasPions(unsigned int i){if(Ntp->PFTauPionsP4->at(i).size()!=0)return true; return false;}
+
  
+ bool PFtauHasPions(unsigned int i){if(Ntp->PFTauPionsP4->at(i).size()!=0){ return true;} return false;}
+ bool PFtauHasThreePions(unsigned int i){if(Ntp->PFTauPionsP4->at(i).size()==3) return true; return false;}
  int NPions(unsigned int i){return Ntp->PFTauPionsP4->at(i).size();}
  TLorentzVector PFTau_PionsP4(unsigned int i, unsigned int j){return TLorentzVector(Ntp->PFTauPionsP4->at(i).at(j).at(1),Ntp->PFTauPionsP4->at(i).at(j).at(2),Ntp->PFTauPionsP4->at(i).at(j).at(3),Ntp->PFTauPionsP4->at(i).at(j).at(0) );}
  double PFTau_PionsCharge(unsigned int i, unsigned int j){return Ntp->PFTauPionsCharge->at(i).at(j);}
@@ -577,8 +581,13 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  void						  printMCDecayChainOfMother(unsigned int i, bool printStatus = false, bool printPt = false, bool printEtaPhi = false, bool printQCD = false); // decay chain of object i
  void						  printMCDecayChainOfEvent(bool printStatus = false, bool printPt = false, bool printEtaPhi = false, bool printQCD = false); // full event decay chain
  std::string				  MCParticleToString(unsigned int par, bool printStatus = false, bool printPt = false, bool printEtaPhi = false);
+ bool CheckDecayID( unsigned int jak1,unsigned  int jak2);
+ TLorentzVector GetTruthTauLV(unsigned int jak);
+ TLorentzVector GetTruthTauProductLV(unsigned int jak, int pdgID);
+ std::vector<TLorentzVector> GetTruthPionsFromA1();
 
- 
+
+
  // Tau decays (Tau is first element of vector)
  unsigned int NMCTaus(){return Ntp->MCTauandProd_p4->size();}
  TLorentzVector MCTau_p4(unsigned int i){return MCTauandProd_p4(i,0);}
@@ -830,7 +839,7 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
   /*  std::vector<TVector3> PFTau_daughterTracks_poca(unsigned int i);    */
   /*  TMatrixTSym<double> PFTau_FlightLength3d_cov(unsigned int i){return  PFTau_TIP_secondaryVertex_cov(i)+PFTau_TIP_primaryVertex_cov(i);} */
   /*  TVector3 PFTau_FlightLength3d(unsigned int i){return PFTau_TIP_secondaryVertex_pos(i)-PFTau_TIP_primaryVertex_pos(i);} */
-  /*  double	PFTau_FlightLength_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov ); */
+ 
   /*  double	PFTau_FlightLength_significance(unsigned int i); */
   /*  double   PFTau_FlightLength(unsigned int i){return PFTau_FlightLength3d(i).Mag();} */
 
@@ -1136,6 +1145,8 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
    /* std::string  HLTTrigger_objs_trigger(unsigned int i){return Ntp->HLTTrigger_objs_trigger->at(i);} */
 
    // helper functions
+
+   double	PFTau_FlightLength_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov ); 
    double       dxy(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
    double	    dxySigned(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
    double       dz(TLorentzVector fourvector, TVector3 poca, TVector3 vtx);
@@ -1145,6 +1156,9 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
    std::vector<int> sortObjects(std::vector<int> indices, std::vector<double> values);
    std::vector<int> sortPFJetsByPt();
    std::vector<int> sortDefaultObjectsByPt(TString objectType);
+
+   void deb(int i){std::cout<<"  deb   "<<i<<std::endl;}
+
 
 };
 

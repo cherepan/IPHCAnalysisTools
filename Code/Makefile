@@ -76,7 +76,7 @@ ifdef USE_SVfit
 endif
 
 ifdef USE_cherepanov
-	TARGETS += MyTest
+	TARGETS += MyTest NtupleValidation
 	DEFS += -DUSE_cherepanov=1
 endif
 
