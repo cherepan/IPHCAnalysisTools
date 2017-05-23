@@ -181,10 +181,6 @@ void  NtupleValidation::doEvent(){ //  Method called on every event
       TLorentzVector mc_ospion =Ntp->GetTruthPionsFromA1().at(0);
       TLorentzVector mc_ss1pion=Ntp->GetTruthPionsFromA1().at(1);
       TLorentzVector mc_ss2pion=Ntp->GetTruthPionsFromA1().at(2);
-      // std::cout<<"truth pions " << std::endl;
-      // mc_ospion.Print();  
-      // mc_ss1pion.Print();
-      // mc_ss2pion.Print();
       s12.at(t).Fill( (mc_ospion + mc_ss1pion).M(),w);
       s13.at(t).Fill( (mc_ospion + mc_ss2pion).M(),w);
       s23.at(t).Fill( (mc_ss1pion + mc_ss2pion).M(),w);
@@ -200,11 +196,6 @@ void  NtupleValidation::doEvent(){ //  Method called on every event
 	taudecaytype.at(t).Fill(Ntp->decayMode(iDaugther),w);
 	if(Ntp->PFTau_hassecondaryVertex(iDaugther) && Ntp->isPVCovAvailable()){
 
-
- // TVector3 PFTau_secondaryVertex_pos(unsigned int i){return  TVector3(Ntp->PFTauSVPos->at(i).at(0),Ntp->PFTauSVPos->at(i).at(1),Ntp->PFTauSVPos->at(i).at(2));}
- // TMatrixTSym<double> PFTau_TIP_secondaryVertex_cov(unsigned int i);
-
-	  // double	PFTau_FlightLength_significance(TVector3 pv,TMatrixTSym<double> PVcov, TVector3 sv, TMatrixTSym<double> SVcov ); 
 	  PVSVSignificance.at(t).Fill( Ntp->PFTau_FlightLength_significance(Ntp->PVtx(),Ntp->PFTau_TIP_primaryVertex_cov(), Ntp->PFTau_secondaryVertex_pos(iDaugther), Ntp->PFTau_TIP_secondaryVertex_cov(iDaugther)),w);
 	  SVchi2.at(t).Fill(Ntp->PFTau_secondaryVertex_vtxchi2(iDaugther),w);
 	  SVMatchingQuality.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQuality(iDaugther),w);
@@ -239,10 +230,6 @@ void  NtupleValidation::doEvent(){ //  Method called on every event
 	      SSPion1Index = 1;
 	      SSPion2Index = 2;
 	    }
-	    // std::cout<<"reco pions " << std::endl;
-	    // OSPion.Print();  std::cout<<" charge    "<< Ntp->PFTau_PionsCharge(iDaugther,OSPionIndex) <<std::endl;
-	    // SSPion1.Print();std::cout<<" charge    "<< Ntp->PFTau_PionsCharge(iDaugther,SSPion1Index) <<std::endl;
-	    // SSPion2.Print();std::cout<<" charge    "<< Ntp->PFTau_PionsCharge(iDaugther,SSPion2Index) <<std::endl;
 	    s12reco.at(t).Fill(  (OSPion+ SSPion1).M() ,w);
 	    s13reco.at(t).Fill(  (OSPion+ SSPion2).M() ,w);
 	    s23reco.at(t).Fill(  (SSPion1+ SSPion2).M(),w);
@@ -257,8 +244,6 @@ void  NtupleValidation::doEvent(){ //  Method called on every event
 	    }
 	  }
 	}
-	//	if(Ntp->decayMode(iDaugther) == 10 && Ntp->PFtauHasPions() )	cout<<"  npions    "<< Ntp->NPions(iDaugther)<<endl;
-	//	cout<<"  decay mode  finder     "<< Ntp->Daughters_decayModeFindingNewDMs(iDaugther)<<endl;
       }
     }
     
@@ -273,25 +258,8 @@ void  NtupleValidation::doEvent(){ //  Method called on every event
 
 
 
-   // bool isOSCand(unsigned int i){return Ntp->isOSCand->at(i);}
-   // float mT_Dau1(unsigned int i){return Ntp->mT_Dau1->at(i);}
-   // float mT_Dau2(unsigned int i){return Ntp->mT_Dau2->at(i);}
-   // int   indexDau1(unsigned int i){return Ntp->indexDau1->at(i);}
-   // int   indexDau2(unsigned int i){return Ntp->indexDau2->at(i);}
-
-
     }
 
-
-   // TVector3       PVtx(){return TVector3(Ntp->pv_x,Ntp->pv_y,Ntp->pv_z);} 
-   // TMatrixTSym<float> PFTau_TIP_primaryVertex_cov(unsigned int i);
-
- // bool PFTau_hassecondaryVertex(unsigned int i){if(Ntp->PFTauSVPos->at(i).size()==3)return true; return false;}
- // TVector3 PFTau_secondaryVertex_pos(unsigned int i){return  TVector3(Ntp->PFTauSVPos->at(i).at(0),Ntp->PFTauSVPos->at(i).at(1),Ntp->PFTauSVPos->at(i).at(2));}
- // TMatrixTSym<double> PFTau_TIP_secondaryVertex_cov(unsigned int i);
- // double PFTau_secondaryVertex_vtxchi2(unsigned int i){if(Ntp->PFTauSVChi2NDofMatchingQuality->at(i).size()==3) return  Ntp->PFTauSVChi2NDofMatchingQuality->at(i).at(0); return 0;}
- // double PFTau_secondaryVertex_vtxndof(unsigned int i){if(Ntp->PFTauSVChi2NDofMatchingQuality->at(i).size()==3) return  Ntp->PFTauSVChi2NDofMatchingQuality->at(i).at(1);  return 0;}
- // double PFTau_secondaryVertex_TracksMatchingQuality(unsigned int i){if(Ntp->PFTauSVChi2NDofMatchingQuality->at(i).size()==3) return  Ntp->PFTauSVChi2NDofMatchingQuality->at(i).at(2);  return 0;}
 
   }
 }
