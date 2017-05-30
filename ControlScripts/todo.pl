@@ -42,9 +42,9 @@ $tag="03-00-12";
 $TauReco="5_2_3_patch3_Dec_08_2012";
 $BTag="NO";
 $Cleaning ="NO";
-$maxdata=100;
-$maxmc=100;
-$maxemb=100;
+$maxdata=20;
+$maxmc=20;
+$maxemb=20;
 $ARCH="slc6_amd64_gcc530";
 $Queue="cream-pbs-short";
 $QsubQue="cms_local_short";
@@ -55,7 +55,7 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\nThis code requires one input option. The systax is:./todo_Grid.pl [OPTION]");
     printf("\nPlease choose from the following options:\n");
     printf("\n./todo.pl --help                                   Prints this message\n");
-    printf("\n./todo.pl --TauNtuple <TauNtupleDir>               This Option will perform installation of LLR Ntuple framework production (come later)");
+    printf("\n./todo.pl --TauNtuple <TauNtupleDir>               This Option will perform installation of LLR Ntuple framework production");
     printf("\n./todo.pl --Local <Input.txt>                      INTENTED FOR SMALL SCALE TESTS ONLY");  
     printf("\n                                                   Configure a directory to run locally. <InputPar.txt> name of file that");
     printf("\n                                                   contains input command template.");
@@ -74,7 +74,8 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\n                                                     --SVfit Option to turn on SVfit");
     printf("\n                                                     --QsubQueue <queue>; type of queue of jobs submitted by qsub, example:  ");
     printf("\n                                                     --QsubQueue short, --QsubQueue medium, --QsubQueue long; Default: short.");
-    printf("\n./todo.pl --Batch <Input.txt> <ListofDS.txt>      INTENTED FOR REGULAR USE (DEFAULT) (will be implemented later)");
+    printf("\n                                                     --Proxy <path>;   a path to proxy recieved by running grid-init");
+    printf("\n./todo.pl --DCache <Input.txt> <ListofDS.txt>      INTENTED FOR REGULAR USE (DEFAULT)");
     printf("\n                                                   Configure a directory to run from. <InputPar.txt> name of file that");
     printf("\n                                                   contains input command template.");
     printf("\n                                                   <ListoDS.txt> list of DCache Dataset directories you want to run on.");
@@ -88,6 +89,9 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\n                                                     --ROOTSYS <ROOTSYS> the current ROOTSYS variable if --BuildRoot is not defined");
     printf("\n                                                     --TauSpinner Option to turn on TauSpinner");
     printf("\n                                                     --SVfit Option to turn on SVfit --- Not implemented at the moment");
+    printf("\n                                                     --QsubQueue <queue>; type of queue of jobs submitted by qsub, example:  ");
+    printf("\n                                                     --QsubQueue short, --QsubQueue medium, --QsubQueue long; Default: short.");
+    printf("\n                                                     --Proxy <path>;   a path to proxy recieved by running grid-init");
     printf("\n  ");
     printf("\n./todo.pl --GRID <Input.txt> <ListofDS.txt> --ROOTSYS \$ROOTSYS       ALTERNATIVE FOR REGULAR USE  (will be implemented later)");
     printf("\n                                                   Configure a directory to run from. <InputPar.txt> name of file that");
@@ -198,6 +202,10 @@ for($l=2;$l<$numArgs; $l++){
    if($ARGV[$l] eq  "--TauSpinner" ){
 	$tauspinner="--TauSpinner";
     }
+    if($ARGV[$l] eq  "--Proxy" ){
+        $l++;
+        $Proxy=$ARGV[$l];
+    }
     if($ARGV[$l] eq  "--SVfit" ){
     $svfit="--SVfit";
     }
@@ -214,18 +222,74 @@ for($l=2;$l<$numArgs; $l++){
 	}
     }
 }
-
-
-
-
-
 my $dir = getcwd;
 
 $time= strftime("%h_%d_%Y",localtime);
 $temp= $set . $time;
 $set=$temp;
 
+if( $ARGV[0] eq "--TauNtuple"){
+    $currentdir=getcwd;
+    if($ARGV[1] ne ""){
+	$basedir=$ARGV[1];
+    }
+    else{
+	printf("\nWorkingDir for CMSSW is required. Please follow the syntax:./todo.pl --TauNtuple <TauNtupleDir> ");
+	printf("\nFor more details use: ./todo --help\n"); 
+	exit(0);
+    }
+    printf("\nWorkingDir for CMSSW: $basedir");
+    printf("\nCurrentDir is: $currentdir \n");
 
+    system(sprintf("rm Install_TauNtuple_$time"));
+
+    system(sprintf("echo \"cernlib-use root\" >> Install_TauNtuple_$time"));
+
+    system(sprintf("echo \"export SCRAM_ARCH=\\\"$ARCH\\\"\" >> Install_TauNtuple_$time"));
+    system(sprintf("echo \"source /cvmfs/cms.cern.ch/cmsset_default.sh\" >> Install_TauNtuple_$time"));
+
+
+    system(sprintf("echo \"cd $basedir\" >>  Install_TauNtuple_$time")); 
+    system(sprintf("echo \"cmsrel CMSSW_$CMSSWRel\" >>  Install_TauNtuple_$time")); 
+    system(sprintf("echo \"cd CMSSW_$CMSSWRel/src\" >> Install_TauNtuple_$time")); 
+    system(sprintf("echo \"cmsenv\" >> Install_TauNtuple_$time")); 
+
+
+   system(sprintf("echo \"git cms-merge-topic cms-met:METRecipe_8020\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git cms-merge-topic ikrav:egm_id_80X_v2\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git cms-merge-topic gpetruc:badMuonFilters_80X_v2\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git clone https://github.com/CMS-HTT/RecoilCorrections.git  HTT-utilities/RecoilCorrections\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git clone https://github.com/cherepan/LLRHiggsTauTau\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd LLRHiggsTauTau; git checkout VladimirDev\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd -\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git clone -n https://github.com/latinos/UserCode-sixie-Muon-MuonAnalysisTools Muon/MuonAnalysisTools\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd Muon/MuonAnalysisTools ; git checkout master -- interface/MuonEffectiveArea.h\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd -\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git clone -n https://github.com/cms-analysis/EgammaAnalysis-ElectronTools EGamma/EGammaAnalysisTools\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd EGamma/EGammaAnalysisTools; git checkout c0db796 -- interface/ElectronEffectiveArea.h\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd -\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git clone -n https://github.com/VBF-HZZ/UFHZZAnalysisRun2\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd UFHZZAnalysisRun2 ; git checkout master FSRPhotons\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd -\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git clone https://github.com/veelken/SVfit_standalone TauAnalysis/SVfitStandalone\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd TauAnalysis/SVfitStandalone\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git checkout svFit_2015Apr03\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd $CMSSW_BASE/src\" >> Install_TauNtuple_$time")); 
+
+   system(sprintf("echo \"scram b -j 4\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd $CMSSW_BASE/external/$SCRAM_ARCH\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git clone https://github.com/ikrav/RecoEgamma-ElectronIdentification.git data/RecoEgamma/ElectronIdentification/data\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd data/RecoEgamma/ElectronIdentification/data\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git checkout egm_id_80X_v1\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"cd $CMSSW_BASE/src\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"scram b -j 4\" >> Install_TauNtuple_$time")); 
+    # print Instructions
+    printf("\n\nInstructions:");
+    printf("\nsource  Install_TauNtuple_$time to complete installation, compilation might take some time...  \n\n");
+    printf("\nTo run test job do  'cmsRun analyzer.py'  in  $CMSSW_BASE/src/LLRHiggsTauTau/NtupleProducer/test \n\n");
+
+}
+ 
 if( $ARGV[0] eq "--Local" ){
     # Print out input parameters
     printf("Active directory will be: $OutputDir/workdir$set \n");
@@ -267,7 +331,7 @@ if( $ARGV[0] eq "--Local" ){
 
     # Setup Condor Combine scripts
 #    system(sprintf("echo \"universe     = vanilla      \"  >> $OutputDir/workdir$set/Condor_Combine"));
-##    system(sprintf("echo \"rank         = memory       \"  >> $OutputDir/workdir$set/Condor_Combine"));
+#    system(sprintf("echo \"rank         = memory       \"  >> $OutputDir/workdir$set/Condor_Combine"));
 #    system(sprintf("echo \"executable   = Combine      \"  >> $OutputDir/workdir$set/Condor_Combine")); 
 #    system(sprintf("echo \"output       = Combine-Condor_\\\$(cluster)_\\\$(proccess).o  \" >> $OutputDir/workdir$set/Condor_Combine")); 
 #    system(sprintf("echo \"error        = Combine-Condor_\\\$(cluster)_\\\$(proccess).e  \" >> $OutputDir/workdir$set/Condor_Combine")); 
@@ -389,10 +453,11 @@ if( $ARGV[0] eq "--Local" ){
 
 }
 
+#xrdcp root://sbgse1.in2p3.fr//store/user/cherepan/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/DefaultPublishName/170523_140637/0000/HTauTauAnalysis_425.root .
 
 
-if( $ARGV[0] eq "--DCache" ){
-
+ if( $ARGV[0] eq "--DCache" ){
+    $RemoteDir="/opt/sbg/scratch1/cms/";
     $TempDataSetFile=$ARGV[2];
     # Print out input parameters
     printf("Active directory will be: $OutputDir/workdir$set \n");
@@ -404,11 +469,9 @@ if( $ARGV[0] eq "--DCache" ){
     open(DAT, $TempDataSetFile) || die("Could not open file $TempDataSetFile!");
     while ($item = <DAT>) {
 	chomp($item);
-	print("File: $item \n");
 	push(@DataSets,$item);
     }
     close(DAT);
-
     # Clean Directory in case workdir$set exists
     printf("Cleaning Directories \n");
     system(sprintf("cd $OutputDir"));
@@ -456,11 +519,13 @@ if( $ARGV[0] eq "--DCache" ){
     system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/Submit")) ; 
     system(sprintf("echo \"verbosity=\\\$(grep SetLevel Code/Analysis.cxx | grep -c -e Debug -e Verbose)\" >> $OutputDir/workdir$set/Submit")) ;
     system(sprintf("echo \"  if [[ \\\${verbosity} -ne 0 ]]; then \" >> $OutputDir/workdir$set/Submit")) ;
-    system(sprintf("echo \"    echo 'ERROR: Please make sure to set the verbosity level to Info in Analysis.cxx, otherwise your log-files will break Condor! Abort...' \" >> $OutputDir/workdir$set/Submit"));
+    system(sprintf("echo \"    echo 'ERROR: Please make sure to set the verbosity level to Info in Analysis.cxx, otherwise your log-files will break QSUB! Abort...' \" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"    exit \\\${verbosity}\" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"  fi\" >> $OutputDir/workdir$set/Submit"));
     system(sprintf("echo \"cd $OutputDir/workdir$set/ \" >> $OutputDir/workdir$set/Submit")) ;
     system(sprintf("echo \"rm Set*/*.o; rm Set*/*.e; rm Set*/*.log; \" >> $OutputDir/workdir$set/Submit")) ;
+ 
+
     $B=0;
     for($l=0;$l<2; $l++){
 	system(sprintf("echo \"notification = Error        \" >> $OutputDir/workdir$set/Condor_Combine"));
@@ -481,25 +546,54 @@ if( $ARGV[0] eq "--DCache" ){
 
 		# find the root files for the current DataSet (DS)
 		printf("Accessing Directory  $DS \n");
+		system(sprintf("touch junk0"));
+		system(sprintf("touch junk1"));
+		system(sprintf("touch junk2"));
 		system(sprintf("touch junk"));
-		system(sprintf("uberftp grid-ftp.physik.rwth-aachen.de \"cd $DS; ls */  \" | grep root >& junk "));
-		system(sprintf("cat junk | awk '{print \$8}' >& junk1")); 
-
-		# Get list of files in dcache dir
-		@files=();
+		system(sprintf("rfdir /dpm/in2p3.fr/home/cms/phedex$DS >& junk0 "));
+		@dpmsubdirs=();
+		open(DAT, "junk0");
+		while ($item = <DAT>) {
+		    chomp($item);
+		    push(@dpmsubdirs,$item);
+		}
+		close(DAT);
+		system(sprintf("cat junk0 | awk '{print \$9}' >& junk1")); 
+		@dpmdirs=();
 		open(DAT, "junk1");
 		while ($item = <DAT>) {
 		    chomp($item);
-		    push(@files,$item);
+		    $fpath="$DS$item";
+		    push(@dpmdirs,$fpath);
 		}
+		print @dpmdirs;
+		# Get list of files in dcache dir
+		foreach $ipath (@dpmdirs){
+		    printf(" path =  $ipath  \n ");
+		    system(sprintf("rfdir /dpm/in2p3.fr/home/cms/phedex$ipath >& junk2 "));
+		    system(sprintf("cat junk2 | awk '{print \$9}' >& junk")); 
+		    open(DAT, "junk");
+		    while ($item = <DAT>) {
+			chomp($item);
+#			printf(" file --- =  $ipath/$item  \n ");
+			$FileList="$ipath/$item";
+			push(@files,$FileList);
+		    }
+		}
+
 		close(DAT);
 		system(sprintf("rm junk"));
+		system(sprintf("rm junk0"));
 		system(sprintf("rm junk1"));
+		system(sprintf("rm junk2"));
+
 		$nfiles = @files;
 		$idx=0;
+
+
 		foreach $file (@files){
 		    $idx++;
-		    printf("$DS/$file Set= $B  Index=  $A   Max.= $max N Files = $nfiles Current File = $idx \n");
+		    printf("$file Set= $B  Index=  $A   Max.= $max N Files = $nfiles Current File = $idx \n");
 		    if($A > $max ){
 			$A=1;
 			$B++;
@@ -507,7 +601,7 @@ if( $ARGV[0] eq "--DCache" ){
 			# Add Set information to Combining scripts and Input.txt
 			system(sprintf("echo \"File: $OutputDir/workdir$set/Set_$B/ \" >>  $OutputDir/workdir$set/Input.txt ")) ;
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B \" >> $OutputDir/workdir$set/Submit")) ;
-			system(sprintf("echo \"condor_submit  Condor_Set_$B  \" >> $OutputDir/workdir$set/Submit")) ;
+			system(sprintf("echo \"source  Qsub_Set_$B  \" >> $OutputDir/workdir$set/Submit")) ;
 
 
 			# Create and configure Set_$B dir
@@ -519,27 +613,30 @@ if( $ARGV[0] eq "--DCache" ){
 			system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh")) ;
 			system(sprintf("echo \"echo 'Starting Job' \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"export workdir=\\\"$OutputDir/workdir$set/\\\"\" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+			system(sprintf("echo \"export X509_USER_PROXY=\\\"$Proxy\\\"\"  >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Code/; source config \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"source $OutputDir/workdir$set/Set_$B/Set_$B-get.sh \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh")) ; 
 			system(sprintf("chmod +x $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
-			system(sprintf("echo \"mkdir  /user/scratch/$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
-			system(sprintf("echo \"cp -r *   /user/scratch/$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
-			system(sprintf("echo \"cd /user/scratch/$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+			system(sprintf("echo \"mkdir $RemoteDir$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+			system(sprintf("echo \"cp -r *    $RemoteDir$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+			system(sprintf("echo \"cd  $RemoteDir$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"$OutputDir/workdir$set/Code/Analysis.exe 2>&1 | tee >(sed -r \\\"s/\\\\x1B\\\\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g\\\" > Set_$B.output) \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cp -r *  $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"source $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
-			system(sprintf("echo \"rm -r  /user/scratch/$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));			
+			system(sprintf("echo \"rm -r   $RemoteDir$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));	
+			system(sprintf("echo \" export HOME=\\\"/home/$UserID\\\"         \"   >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"echo 'Completed Job' \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+
 
                         # Setup Set_$B_get.sh and Set_$B_clean.sh
 			system(sprintf("echo \"#! /bin/bash\"         >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
-			system(sprintf("echo \"mkdir /user/scratch/$UserID \" >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
-			system(sprintf("echo \"cd /user/scratch/$UserID \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
+			system(sprintf("echo \"mkdir $RemoteDir$UserID \" >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
+			system(sprintf("echo \"cd $RemoteDir$UserID \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
 
 			system(sprintf("echo \"#! /bin/bash\"         >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
-			system(sprintf("echo \"cd /user/scratch/$UserID \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh")); 
+			system(sprintf("echo \"cd $RemoteDir$UserID \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh")); 
 
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh")) ;
 			# Setup Input.txt
@@ -549,15 +646,18 @@ if( $ARGV[0] eq "--DCache" ){
 			system(sprintf("echo \"Mode: ANALYSIS\" >> $OutputDir/workdir$set/Set_$B/Input.txt")); 
 			system(sprintf("echo \"RunType: LOCAL\" >> $OutputDir/workdir$set/Set_$B/Input.txt"));
 			
-			# Setup Condor scripts
-			system(sprintf("echo \"universe     = vanilla      \"  >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B"));
-			system(sprintf("echo \"rank         = memory       \"  >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B"));
-			system(sprintf("echo \"executable   = Set_$B.sh      \"  >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B")); 
-			system(sprintf("echo \"output       = Set_$B-Condor_\\\$(cluster)_\\\$(proccess).o  \" >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B")); 
-			system(sprintf("echo \"error        = Set_$B-Condor_\\\$(cluster)_\\\$(proccess).e  \" >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B")); 
-			system(sprintf("echo \"log          = Set_$B-Condor_\\\$(cluster)_\\\$(proccess).log  \" >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B")); 
-			system(sprintf("echo \"notification = Error        \" >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B"));
-			system(sprintf("echo \"queue = 1 \" >> $OutputDir/workdir$set/Set_$B/Condor_Set_$B"));
+			# Setup QSUB scripts
+			$s1_char='\${que}';
+			$s2_char='\${output}';
+			$s3_char='\${error}';
+			system(sprintf("echo \" #PBS -u vcherepa\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
+			system(sprintf("echo \" #! /bin/bash\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
+			system(sprintf("echo \" export HOME=\\\"$OutputDir/workdir$set/\\\"         \"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
+			system(sprintf("echo \" export X509_USER_PROXY=\\\"$Proxy\\\"    \"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
+			system(sprintf("echo \" que=\\\"$QsubQue\\\"\" >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
+			system(sprintf("echo \" output=\\\"Set_$B.qsub.o  \\\"\" >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
+			system(sprintf("echo \" error=\\\"Set_$B.qsub.e  \\\"\" >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
+			system(sprintf("echo \" qsub -q  $s1_char  -o $s2_char -e $s3_char Set_$B.sh\" >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));		
 		    }
 		    ($a,$b,$c)=split('/',$file);
 		    $myfile=$file;
@@ -571,9 +671,17 @@ if( $ARGV[0] eq "--DCache" ){
 		    if($c =~ m/root/){
                         $myfile=$c;
                     }
-		    system(sprintf("echo \"dccp  dcap://grid-dcap-extern.physik.rwth-aachen.de/$DS/$file . \"  >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
-		    system(sprintf("echo \"File:  /user/scratch/$UserID/$myfile \"     >> $OutputDir/workdir$set/Set_$B/Input.txt")) ;
-		    system(sprintf("echo \"rm -rf /user/scratch/$UserID/$myfile  \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
+		    $myfiletrunc = $myfile;
+		    my @wholepath = split /\//, $file;
+		    foreach $TreeName (@wholepath){
+			if($TreeName =~ m/root/){
+			    $myfiletrunc=$TreeName
+			}
+		    }
+#		    system(sprintf("echo \"xrdcp root://sbgse1.in2p3.fr/$file . \"  >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
+		    system(sprintf("echo \"rfcp /dpm/in2p3.fr/home/cms/phedex/$file . \"  >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));  ##rfcp /dpm/in2p3.fr/home/cms/phedex/store/user/cherepan
+		    system(sprintf("echo \"File:  $RemoteDir$UserID/$myfiletrunc \"     >> $OutputDir/workdir$set/Set_$B/Input.txt")) ;
+		    system(sprintf("echo \"rm -rf $RemoteDir$UserID/$myfiletrunc \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
 		    $A++;
 		}
 	    }
@@ -596,15 +704,17 @@ if( $ARGV[0] eq "--DCache" ){
     printf("\n\nInstructions");
     printf("\nPlease make sure you have run:");
     printf("\nvoms-proxy-init");
-    printf("\ngrid-proxy-init");
+    printf("\ngrid-proxy-init"); 
     printf("\ngit config --global credential.helper 'cache --timeout=3600'");
     printf("\ngit config --global credential.helper cache");
     printf("\nNow you can run the analysis using dcache.");
     printf("\nTo go to the Test workdir: cd  $OutputDir/workdir$set ");
-    printf("\nTo compile the code in the workdir: source compile --useRoot $OutputDir/workdir$set/root/ $UserDir $tauspinner $svfit");
+    printf("\nTo compile the code in the workdir: source compile  $UserDir $tauspinner $svfit");
+#    printf("\nTo compile the code in the workdir: source compile --useRoot $OutputDir/workdir$set/root/ $UserDir $tauspinner $svfit");
     printf("\nTo submit jobs to the batch queue: source Submit ");
     printf("\nTo combine jobs submitted to the batch queue: source Combine \n");
-    printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile  --useRoot $OutputDir/workdir$set/root/ $UserDir; cd $OutputDir/workdir$set/Set_1; source Set_1 | tee log; cd ..\n");
+#    printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile  --useRoot $OutputDir/workdir$set/root/ $UserDir; cd $OutputDir/workdir$set/Set_1; source Set_1 | tee log; cd ..\n");
+    printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile   $UserDir; cd $OutputDir/workdir$set/Set_1; source Set_1 | tee log; cd ..\n");
 } 
 
 if( $ARGV[0] eq "--GRID" ){

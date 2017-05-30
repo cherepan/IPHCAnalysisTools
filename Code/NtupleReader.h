@@ -104,7 +104,7 @@ public :
    vector<float>   *genpart_pz;
    vector<float>   *genpart_e;
    Int_t           DataMC_Type_idx;
-   Int_t           Event_isRealData;
+   bool           Event_isRealData;
    vector<float>   *genpart_pca_x;
    vector<float>   *genpart_pca_y;
    vector<float>   *genpart_pca_z;

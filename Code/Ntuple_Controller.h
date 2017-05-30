@@ -209,7 +209,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
 
   // Data/MC switch and thin
-  bool isData(){return Ntp->Event_isRealData;}
+  bool isData(){std::cout<<"NC:  Ntp->Event_isRealData "<<Ntp->Event_isRealData <<std::endl;  return (bool)Ntp->Event_isRealData;}
   void ThinTree();
 
   // Set object corrections to be applied
