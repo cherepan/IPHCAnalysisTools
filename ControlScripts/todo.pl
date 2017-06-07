@@ -36,7 +36,7 @@ $OutputDir="/home-pbs/$UserID/Test";
 #$OutputDir="~/";
 $CodeDir="../Code";
 $set="AnalysisTest_";
-$CMSSWRel="5_3_22_patch1";
+$CMSSWRel="8_0_25";
 $PileupVersion="V08-03-17";
 $tag="03-00-12";
 $TauReco="5_2_3_patch3_Dec_08_2012";
@@ -55,7 +55,7 @@ if($ARGV[0] eq "--help" || $ARGV[0] eq ""){
     printf("\nThis code requires one input option. The systax is:./todo_Grid.pl [OPTION]");
     printf("\nPlease choose from the following options:\n");
     printf("\n./todo.pl --help                                   Prints this message\n");
-    printf("\n./todo.pl --TauNtuple <TauNtupleDir>               This Option will perform installation of LLR Ntuple framework production");
+    printf("\n./todo.pl --TauNtuple <TauNtupleDir>   --CMSSWRel <X_Y_Z>            This Option will perform installation of LLR Ntuple framework production");
     printf("\n./todo.pl --Local <Input.txt>                      INTENTED FOR SMALL SCALE TESTS ONLY");  
     printf("\n                                                   Configure a directory to run locally. <InputPar.txt> name of file that");
     printf("\n                                                   contains input command template.");
