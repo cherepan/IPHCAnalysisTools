@@ -4,7 +4,7 @@ HistoFile: InputData/MyHisto.txt
 Analysis: NtupleValidation
 UncertType: default
 SkimInfo: InputData/SkimSummary.log
-Lumi: 19712
+Lumi: 88.300
 PlotStyle: style2
 
 # Everything below is only needed if you intend to use SVFit

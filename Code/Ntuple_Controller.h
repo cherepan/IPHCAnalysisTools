@@ -209,7 +209,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
 
   // Data/MC switch and thin
-  bool isData(){std::cout<<"NC:  Ntp->Event_isRealData "<<Ntp->Event_isRealData <<std::endl;  return (bool)Ntp->Event_isRealData;}
+  bool isData()  {return (bool)Ntp->Event_isRealData;}
   void ThinTree();
 
   // Set object corrections to be applied
@@ -763,20 +763,20 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
   /* int            Muon_numberofValidPixelHits(unsigned int i){return Ntp->Muon_numberofValidPixelHits->at(i);} */
   /* int            Muon_trackerLayersWithMeasurement(unsigned int i){return Ntp->Muon_trackerLayersWithMeasurement->at(i);} */
 
-
-  /* TrackParticle Muon_TrackParticle(unsigned int i){ */
-  /*   TMatrixT<double>    mu_par(TrackParticle::NHelixPar,1); */
-  /*   TMatrixTSym<double> mu_cov(TrackParticle::NHelixPar); */
-  /*   unsigned int l=0; */
-  /*   for(int k=0; k<TrackParticle::NHelixPar; k++){ */
-  /*     mu_par(k,0)=Ntp->Muon_par->at(i).at(k); */
-  /*     for(int j=k; j<TrackParticle::NHelixPar; j++){ */
-  /*       mu_cov(k,j)=Ntp->Muon_cov->at(i).at(l); */
-  /*       l++; */
-  /*     } */
-  /*   } */
-  /*   return TrackParticle(mu_par,mu_cov,Ntp->Muon_pdgid->at(i),Ntp->Muon_M->at(i),Ntp->Muon_charge->at(i),Ntp->Muon_B->at(i)); */
-  /* } */
+ bool Muon_TrackParticleHasMomentum(unsigned int i){if(Ntp->Muon_par->at(i).size()!=0)return true; return false;} 
+   TrackParticle Muon_TrackParticle(unsigned int i){ 
+     TMatrixT<double>    mu_par(TrackParticle::NHelixPar,1); 
+     TMatrixTSym<double> mu_cov(TrackParticle::NHelixPar); 
+     unsigned int l=0;
+     for(int k=0; k<TrackParticle::NHelixPar; k++){ 
+       mu_par(k,0)=Ntp->Muon_par->at(i).at(k); 
+       for(int j=k; j<TrackParticle::NHelixPar; j++){ 
+         mu_cov(k,j)=Ntp->Muon_cov->at(i).at(l); 
+         l++; 
+       } 
+     } 
+     return TrackParticle(mu_par,mu_cov,Ntp->Muon_pdgid->at(i),Ntp->Muon_M->at(i),Ntp->Muon_trackCharge->at(i),Ntp->Muon_B->at(i));
+   } 
 
   /* bool           isGoodMuon(unsigned int i); */
   /* bool           isGoodMuon_nooverlapremoval(unsigned int i); */
@@ -832,9 +832,9 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
   /*  TMatrixTSym<double> PFTau_TIP_secondaryVertex_cov(unsigned int i); */
   /*  double PFTau_TIP_secondaryVertex_vtxchi2(unsigned int i){if(Ntp->PFTau_TIP_secondaryVertex_vtxchi2->at(i).size()==1) return  Ntp->PFTau_TIP_secondaryVertex_vtxchi2->at(i).at(0); return 0;} */
   /*  double PFTau_TIP_secondaryVertex_vtxndof(unsigned int i){if(Ntp->PFTau_TIP_secondaryVertex_vtxndof->at(i).size()==1) return  Ntp->PFTau_TIP_secondaryVertex_vtxndof->at(i).at(0);  return 0;} */
-  /*  bool PFTau_TIP_hasA1Momentum(unsigned int i){if(Ntp->PFTau_a1_lvp->at(i).size()==LorentzVectorParticle::NLorentzandVertexPar)return true; return false;} */
-  /*  LorentzVectorParticle PFTau_a1_lvp(unsigned int i); */
-  /*  TLorentzVector PFTau_3PS_A1_LV(unsigned int i){return PFTau_a1_lvp(i).LV();} */
+    bool PFTau_TIP_hasA1Momentum(unsigned int i){if(Ntp->PFTau_a1_lvp->at(i).size()==LorentzVectorParticle::NLorentzandVertexPar)return true; return false;} 
+    LorentzVectorParticle PFTau_a1_lvp(unsigned int i);
+    TLorentzVector PFTau_3PS_A1_LV(unsigned int i){return PFTau_a1_lvp(i).LV();}
   /*  std::vector<TrackParticle> PFTau_daughterTracks(unsigned int i); */
   /*  std::vector<TVector3> PFTau_daughterTracks_poca(unsigned int i);    */
   /*  TMatrixTSym<double> PFTau_FlightLength3d_cov(unsigned int i){return  PFTau_TIP_secondaryVertex_cov(i)+PFTau_TIP_primaryVertex_cov(i);} */

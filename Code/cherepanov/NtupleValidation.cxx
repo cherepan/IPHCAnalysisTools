@@ -192,7 +192,15 @@ void  NtupleValidation::doEvent(){ //  Method called on every event
 
       particletype.at(t).Fill(Ntp->particleType(iDaugther),w);
 
+      int MuonCandidate;
+      int TauCandidate;
+      if(Ntp->particleType(iDaugther) == 0){
+	if(Ntp->Muon_TrackParticleHasMomentum(iDaugther))	 MuonCandidate= iDaugther;
+      }
+
+
       if(Ntp->particleType(iDaugther) == 2){
+	if(Ntp->PFTau_TIP_hasA1Momentum(iDaugther)) TauCandidate = iDaugther;
 	taudecaytype.at(t).Fill(Ntp->decayMode(iDaugther),w);
 	if(Ntp->PFTau_hassecondaryVertex(iDaugther) && Ntp->isPVCovAvailable()){
 
@@ -240,7 +248,24 @@ void  NtupleValidation::doEvent(){ //  Method called on every event
 	      TLorentzVector mc_ss1pion=Ntp->GetTruthPionsFromA1().at(1);
 	      TLorentzVector mc_ss2pion=Ntp->GetTruthPionsFromA1().at(2);
 	      OSPionPtResolution.at(t).Fill(mc_ospion.Pt() - OSPion.Pt(),w);
-	      SSPionPtResolution.at(t).Fill( (mc_ss1pion + mc_ss2pion).Pt() - ( SSPion1+ SSPion2).Pt()),w;
+	      SSPionPtResolution.at(t).Fill( (mc_ss1pion + mc_ss2pion).Pt() - ( SSPion1+ SSPion2).Pt(),w);
+	      std::cout<<"  pt Diff    "<< Ntp->Daughters_P4(iDaugther).Pt() - (OSPion+ SSPion1+ SSPion2).Pt() <<std::endl;
+
+	      if(Ntp->PFTau_hassecondaryVertex(TauCandidate) && Ntp->isPVCovAvailable()){
+		
+		double phiz = 0.1;
+		LorentzVectorParticle LVPTauA1 =Ntp->PFTau_a1_lvp(TauCandidate) ;
+		GlobalEventFit EF(Ntp->Muon_TrackParticle(MuonCandidate), LVPTauA1, phiz, Ntp->PVtx(),Ntp->PFTau_TIP_primaryVertex_cov());
+		LVPTauA1.LVCov().Print();
+
+		GEFObject GEF = EF.Fit();
+		std::cout<<"   Covariance(3,3) "<< LVPTauA1.Covariance(3,3) <<std::endl;
+		std::cout<<"   Covariance(4,4) "<< LVPTauA1.Covariance(4,4) <<std::endl;
+		std::cout<<"   Covariance(5,5) "<< LVPTauA1.Covariance(5,5) <<std::endl;
+		std::cout<<"   GEF Status  "<< GEF.isValid() <<std::endl;
+	      }
+	      
+ 
 	    }
 	  }
 	}

@@ -257,6 +257,12 @@ public :
    vector<Long64_t> *daughters_L3FilterFiredLast;
    vector<float>   *daughters_HLTpt;
    vector<bool>    *daughters_isL1IsoTau28Matched;
+   vector<int>     *Muon_trackCharge;
+   vector<int>     *Muon_pdgid;
+   vector<double>  *Muon_B;
+   vector<double>  *Muon_M;
+   vector<vector<double> > *Muon_par;
+   vector<vector<double> > *Muon_cov;
    vector<vector<double> > *PFTauSVPos;
    vector<vector<double> > *PFTauSVCov;
    vector<vector<vector<double> > > *PFTauPionsP4;
@@ -278,7 +284,13 @@ public :
    vector<float>   *daughters_pcaGenPV_x;
    vector<float>   *daughters_pcaGenPV_y;
    vector<float>   *daughters_pcaGenPV_z;
-   Int_t           JetsNumber;
+   vector<vector<double> > *PFTau_a1_lvp;
+   vector<vector<double> > *PFTau_a1_cov;
+   vector<int>     *PFTau_a1_charge;
+   vector<int>     *PFTau_a1_pdgid;
+   vector<double>  *PFTau_a1_B;
+   vector<double>  *PFTau_a1_M;
+    Int_t           JetsNumber;
    vector<float>   *jets_px;
    vector<float>   *jets_py;
    vector<float>   *jets_pz;
@@ -571,7 +583,13 @@ public :
    TBranch        *b_daughters_L3FilterFiredLast;   //!
    TBranch        *b_daughters_HLTpt;   //!
    TBranch        *b_daughters_isL1IsoTau28Matched;   //!
-   TBranch        *b_PFTauSVPos;   //!
+   TBranch        *b_Muon_trackCharge;   //!
+   TBranch        *b_Muon_pdgid;   //!
+   TBranch        *b_Muon_B;   //!
+   TBranch        *b_Muon_M;   //!
+   TBranch        *b_Muon_par;   //!
+   TBranch        *b_Muon_cov;   //!
+    TBranch        *b_PFTauSVPos;   //!
    TBranch        *b_PFTauSVCov;   //!
    TBranch        *b_PFTauPionsP4;   //!
    TBranch        *b_PFTauPionsCharge;   //!
@@ -592,6 +610,12 @@ public :
    TBranch        *b_daughters_pcaGenPV_x;   //!
    TBranch        *b_daughters_pcaGenPV_y;   //!
    TBranch        *b_daughters_pcaGenPV_z;   //!
+   TBranch        *b_PFTau_a1_lvp;   //!
+   TBranch        *b_PFTau_a1_cov;   //!
+   TBranch        *b_PFTau_a1_charge;   //!
+   TBranch        *b_PFTau_a1_pdgid;   //!
+   TBranch        *b_PFTau_a1_B;   //!
+   TBranch        *b_PFTau_a1_M;   //!
    TBranch        *b_JetsNumber;   //!
    TBranch        *b_jets_px;   //!
    TBranch        *b_jets_py;   //!
@@ -932,6 +956,12 @@ void NtupleReader::Init(TTree *tree)
    daughters_L3FilterFiredLast = 0;
    daughters_HLTpt = 0;
    daughters_isL1IsoTau28Matched = 0;
+   Muon_trackCharge = 0;
+   Muon_pdgid = 0;
+   Muon_B = 0;
+   Muon_M = 0;
+   Muon_par = 0;
+   Muon_cov = 0;
    PFTauSVPos = 0;
    PFTauSVCov = 0;
    PFTauPionsP4 = 0;
@@ -953,6 +983,13 @@ void NtupleReader::Init(TTree *tree)
    daughters_pcaGenPV_x = 0;
    daughters_pcaGenPV_y = 0;
    daughters_pcaGenPV_z = 0;
+   PFTau_a1_lvp = 0;
+   PFTau_a1_cov = 0;
+   PFTau_a1_charge = 0;
+   PFTau_a1_pdgid = 0;
+   PFTau_a1_B = 0;
+   PFTau_a1_M = 0;
+   JetsNumber = 0;
    jets_px = 0;
    jets_py = 0;
    jets_pz = 0;
@@ -1239,6 +1276,12 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("daughters_L3FilterFiredLast", &daughters_L3FilterFiredLast, &b_daughters_L3FilterFiredLast);
    fChain->SetBranchAddress("daughters_HLTpt", &daughters_HLTpt, &b_daughters_HLTpt);
    fChain->SetBranchAddress("daughters_isL1IsoTau28Matched", &daughters_isL1IsoTau28Matched, &b_daughters_isL1IsoTau28Matched);
+   fChain->SetBranchAddress("Muon_trackCharge", &Muon_trackCharge, &b_Muon_trackCharge);
+   fChain->SetBranchAddress("Muon_pdgid", &Muon_pdgid, &b_Muon_pdgid);
+   fChain->SetBranchAddress("Muon_B", &Muon_B, &b_Muon_B);
+   fChain->SetBranchAddress("Muon_M", &Muon_M, &b_Muon_M);
+   fChain->SetBranchAddress("Muon_par", &Muon_par, &b_Muon_par);
+   fChain->SetBranchAddress("Muon_cov", &Muon_cov, &b_Muon_cov);
    fChain->SetBranchAddress("PFTauSVPos", &PFTauSVPos, &b_PFTauSVPos);
    fChain->SetBranchAddress("PFTauSVCov", &PFTauSVCov, &b_PFTauSVCov);
    fChain->SetBranchAddress("PFTauPionsP4", &PFTauPionsP4, &b_PFTauPionsP4);
@@ -1261,6 +1304,13 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("daughters_pcaGenPV_y", &daughters_pcaGenPV_y, &b_daughters_pcaGenPV_y);
    fChain->SetBranchAddress("daughters_pcaGenPV_z", &daughters_pcaGenPV_z, &b_daughters_pcaGenPV_z);
    fChain->SetBranchAddress("JetsNumber", &JetsNumber, &b_JetsNumber);
+   fChain->SetBranchAddress("PFTau_a1_lvp", &PFTau_a1_lvp, &b_PFTau_a1_lvp);
+   fChain->SetBranchAddress("PFTau_a1_cov", &PFTau_a1_cov, &b_PFTau_a1_cov);
+   fChain->SetBranchAddress("PFTau_a1_charge", &PFTau_a1_charge, &b_PFTau_a1_charge);
+   fChain->SetBranchAddress("PFTau_a1_pdgid", &PFTau_a1_pdgid, &b_PFTau_a1_pdgid);
+   fChain->SetBranchAddress("PFTau_a1_B", &PFTau_a1_B, &b_PFTau_a1_B);
+   fChain->SetBranchAddress("PFTau_a1_M", &PFTau_a1_M, &b_PFTau_a1_M);
+
    fChain->SetBranchAddress("jets_px", &jets_px, &b_jets_px);
    fChain->SetBranchAddress("jets_py", &jets_py, &b_jets_py);
    fChain->SetBranchAddress("jets_pz", &jets_pz, &b_jets_pz);

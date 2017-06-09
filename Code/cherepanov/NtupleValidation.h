@@ -5,7 +5,18 @@
 #include <vector>
 #include "TString.h"
 #include "SVFitStorage.h"
-
+#include "SimpleFits/FitSoftware/interface/PDGInfo.h"
+#include "TVector3.h"
+#include "TLorentzVector.h"
+#include "TMath.h"
+#include "SimpleFits/FitSoftware/interface/TrackParticle.h"
+#include "SimpleFits/FitSoftware/interface/LorentzVectorParticle.h"
+#include "SimpleFits/FitSoftware/interface/MultiProngTauSolver.h"
+#include "SimpleFits/FitSoftware/interface/ErrorMatrixPropagator.h"
+#include "SimpleFits/FitSoftware/interface/TauA1NuConstrainedFitter.h"
+#include "SimpleFits/FitSoftware/interface/DiTauConstrainedFitter.h"
+#include "SimpleFits/FitSoftware/interface/GlobalEventFit.h"
+#include "Objects.h"
 class NtupleValidation : public Selection {
 
  public:

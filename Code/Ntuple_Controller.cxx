@@ -1555,22 +1555,22 @@ TMatrixTSym<double> Ntuple_Controller::PFTau_TIP_secondaryVertex_cov(unsigned in
   return  V_cov;
 }
 
-// LorentzVectorParticle Ntuple_Controller::PFTau_a1_lvp(unsigned int i){
-//   TMatrixT<double>    a1_par(LorentzVectorParticle::NLorentzandVertexPar,1);
-//   TMatrixTSym<double> a1_cov(LorentzVectorParticle::NLorentzandVertexPar);
-//   int l=0;
-//   if(Ntp->PFTau_a1_lvp->at(i).size()==LorentzVectorParticle::NLorentzandVertexPar){
-//     for(int k=0; k<LorentzVectorParticle::NLorentzandVertexPar; k++){
-//       a1_par(k,0)=Ntp->PFTau_a1_lvp->at(i).at(k);
-//       for(int j=k; j<LorentzVectorParticle::NLorentzandVertexPar; j++){
-// 	a1_cov(k,j)=Ntp->PFTau_a1_cov->at(i).at(l);
-// 	a1_cov(j,k)=Ntp->PFTau_a1_cov->at(i).at(l);
-// 	l++;
-//       } 
-//     }
-//   }
-//   return LorentzVectorParticle(a1_par,a1_cov,Ntp->PFTau_a1_pdgid->at(i).at(0),Ntp->PFTau_a1_charge->at(i).at(0),Ntp->PFTau_a1_B->at(i).at(0));
-// }
+ LorentzVectorParticle Ntuple_Controller::PFTau_a1_lvp(unsigned int i){
+   TMatrixT<double>    a1_par(LorentzVectorParticle::NLorentzandVertexPar,1);
+   TMatrixTSym<double> a1_cov(LorentzVectorParticle::NLorentzandVertexPar);
+   int l=0;
+   if(Ntp->PFTau_a1_lvp->at(i).size()==LorentzVectorParticle::NLorentzandVertexPar){
+     for(int k=0; k<LorentzVectorParticle::NLorentzandVertexPar; k++){
+       a1_par(k,0)=Ntp->PFTau_a1_lvp->at(i).at(k);
+       for(int j=k; j<LorentzVectorParticle::NLorentzandVertexPar; j++){
+ 	a1_cov(k,j)=Ntp->PFTau_a1_cov->at(i).at(l);
+ 	a1_cov(j,k)=Ntp->PFTau_a1_cov->at(i).at(l);
+ 	l++;
+       } 
+     }
+   }
+   return LorentzVectorParticle(a1_par,a1_cov,Ntp->PFTau_a1_pdgid->at(i),Ntp->PFTau_a1_charge->at(i),Ntp->PFTau_a1_B->at(i));
+ }
 
 // std::vector<TrackParticle> Ntuple_Controller::PFTau_daughterTracks(unsigned int i){
 //   std::vector<TrackParticle> daughter;
