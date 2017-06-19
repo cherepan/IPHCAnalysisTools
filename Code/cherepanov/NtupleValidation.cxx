@@ -172,11 +172,11 @@ void  NtupleValidation::doEvent(){ //  Method called on every event
     NumVertices.at(t).Fill(Ntp->NVtx(),w);
 
 
-
-    if(Ntp->CheckDecayID(2,5) && id == 10230533){
-      TLorentzVector TruthTauMu = Ntp->GetTruthTauLV(2);
-      TLorentzVector TruthTauA1 = Ntp->GetTruthTauLV(5);
-
+    if(id == 10230533){
+      if(Ntp->CheckDecayID(2,5)){
+	TLorentzVector TruthTauMu = Ntp->GetTruthTauLV(2);
+	TLorentzVector TruthTauA1 = Ntp->GetTruthTauLV(5);
+	
       TruthTauTauMass.at(t).Fill((TruthTauMu+TruthTauA1).M(),w);
       TLorentzVector mc_ospion =Ntp->GetTruthPionsFromA1().at(0);
       TLorentzVector mc_ss1pion=Ntp->GetTruthPionsFromA1().at(1);
@@ -184,8 +184,8 @@ void  NtupleValidation::doEvent(){ //  Method called on every event
       s12.at(t).Fill( (mc_ospion + mc_ss1pion).M(),w);
       s13.at(t).Fill( (mc_ospion + mc_ss2pion).M(),w);
       s23.at(t).Fill( (mc_ss1pion + mc_ss2pion).M(),w);
+      }
     }
-
     for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
 
       DaughtersPt.at(t).Fill(Ntp->Daughters_P4(iDaugther).Pt(),w);  // Fill transverse momentum

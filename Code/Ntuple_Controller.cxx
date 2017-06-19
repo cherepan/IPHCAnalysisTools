@@ -220,8 +220,8 @@ void Ntuple_Controller::doMET(){
 Long64_t  Ntuple_Controller::GetMCID(){
 	Long64_t  DataMCTypeFromTupel = Ntp->DataMC_Type_idx;
 	//customize your event ID here 
-	if(DataMCTypeFromTupel==10230533 or DataMCTypeFromTupel==10130533 or DataMCTypeFromTupel==10330533 or DataMCTypeFromTupel==10430533) return 10230533;
-	if(DataMCTypeFromTupel==10410433 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10230533 or DataMCTypeFromTupel==10130533 or DataMCTypeFromTupel==10330533 or DataMCTypeFromTupel==10430533) return 10230533;
+	// if(DataMCTypeFromTupel==10410433 ) return DataMCTypeFromTupel;
 	// move JAK Id information 3 digits to the left
 	Long64_t  jakid = DataMCTypeFromTupel - (DataMCTypeFromTupel%100);
 	jakid *= 1000;
@@ -259,6 +259,7 @@ Long64_t  Ntuple_Controller::GetMCID(){
 	    dmcType = DataMCTypeFromTupel % 100;
 	  }
 	}
+
 	return dmcType;
 }
 

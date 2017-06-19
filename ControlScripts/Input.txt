@@ -1,19 +1,16 @@
 Thin: False
 Skim: False
-HistoFile: InputData/MyHisto.txt
+HistoFile: InputData/Histo.txt
 Analysis: NtupleValidation
 UncertType: default
 SkimInfo: InputData/SkimSummary.log
 Lumi: 88.300
 PlotStyle: style2
 
+
 # Everything below is only needed if you intend to use SVFit
 # DO NOT modify the fields in curly brackets {xyz}, they are set by the framework
 InputFileSVFit: /pnfs/physik.rwth-aachen.de/cms/store/user/myPathToSVFitFiles/mySVFitInputFile.root
-OutputFileSVFit: /pnfs/physik.rwth-aachen.de/cms/store/user/inugent/{DATE}/MySVFIT_Set_1_{TIME}.root 
+OutputFileSVFit: /pnfs/physik.rwth-aachen.de/cms/store/user/inugent/{DATE}/MySVFIT_{SET}_{TIME}.root 
 GRIDSite: grid-srm.physik.rwth-aachen.de
-InputNtuples: /home-pbs/vcherepa/InputTest/mc
-Mode: ANALYSIS
-RunType: LOCAL
-File: /home-pbs/vcherepa/InputTest/mc/HTauTauAnalysisWJet.root  
-File: /home-pbs/vcherepa/InputTest/mc/HTauTauAnalysisdy.root  
+InputNtuples: {FileDir}

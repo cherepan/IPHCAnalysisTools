@@ -42,8 +42,8 @@ $tag="03-00-12";
 $TauReco="5_2_3_patch3_Dec_08_2012";
 $BTag="NO";
 $Cleaning ="NO";
-$maxdata=20;
-$maxmc=20;
+$maxdata=10;
+$maxmc=4;
 $maxemb=20;
 $ARCH="slc6_amd64_gcc530";
 $Queue="cream-pbs-short";
@@ -531,16 +531,23 @@ if( $ARGV[0] eq "--Local" ){
 	system(sprintf("echo \"notification = Error        \" >> $OutputDir/workdir$set/Condor_Combine"));
 	$max=1;
 	foreach $DS (@DataSets){
+	   
 	    if(($l==0 && ($DS =~ m/data/)) || ($l==1 && !($DS =~ m/data/))){
+		print "true 1   l = $l\n";
 		if($l==0){
+		print "true 2   l = $l\n";
 		    $max=$maxdata;
 		}
 		else{
+		print "true 3   l = $l\n";
 		    $max=$maxmc;
 			if($DS =~ m/embed/){
+		print "true 4";
 				$max=$maxemb
 			}
 		}
+		print "max  = $max;    maxmc = $maxmc \n";
+		print "------- DS   $DS  \n";
 		printf("\n\nStarting Loop $l \n");
 		$A=$maxdata+$maxmc+$maxemb+10;
 
@@ -568,6 +575,7 @@ if( $ARGV[0] eq "--Local" ){
 		}
 		print @dpmdirs;
 		# Get list of files in dcache dir
+		@files=(); 
 		foreach $ipath (@dpmdirs){
 		    printf(" path =  $ipath  \n ");
 		    system(sprintf("rfdir /dpm/in2p3.fr/home/cms/phedex$ipath >& junk2 "));
@@ -577,6 +585,7 @@ if( $ARGV[0] eq "--Local" ){
 			chomp($item);
 #			printf(" file --- =  $ipath/$item  \n ");
 			$FileList="$ipath/$item";
+			#print ">>>>>>>>>>>> Filelst  $FileList";
 			push(@files,$FileList);
 		    }
 		}
@@ -589,8 +598,11 @@ if( $ARGV[0] eq "--Local" ){
 
 		$nfiles = @files;
 		$idx=0;
-
-
+		print  "  ======================================================";
+		print  "  in   $DS \n";
+		print  "  Files : @files   \n";
+		print  "  ======================================================";
+	    
 		foreach $file (@files){
 		    $idx++;
 		    printf("$file Set= $B  Index=  $A   Max.= $max N Files = $nfiles Current File = $idx \n");
@@ -626,7 +638,7 @@ if( $ARGV[0] eq "--Local" ){
 			system(sprintf("echo \"cp -r *  $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"source $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"rm -r   $RemoteDir$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));	
-			system(sprintf("echo \" export HOME=\\\"/home/$UserID\\\"         \"   >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+			system(sprintf("echo \"export HOME=\\\"/home/$UserID\\\"         \"   >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"echo 'Completed Job' \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 
 
