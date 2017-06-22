@@ -533,21 +533,21 @@ if( $ARGV[0] eq "--Local" ){
 	foreach $DS (@DataSets){
 	   
 	    if(($l==0 && ($DS =~ m/data/)) || ($l==1 && !($DS =~ m/data/))){
-		print "true 1   l = $l\n";
+	#	print "true 1   l = $l\n";
 		if($l==0){
-		print "true 2   l = $l\n";
+	#	print "true 2   l = $l\n";
 		    $max=$maxdata;
 		}
 		else{
-		print "true 3   l = $l\n";
+	#	print "true 3   l = $l\n";
 		    $max=$maxmc;
 			if($DS =~ m/embed/){
-		print "true 4";
+	#	print "true 4";
 				$max=$maxemb
 			}
 		}
 		print "max  = $max;    maxmc = $maxmc \n";
-		print "------- DS   $DS  \n";
+#		print "------- DS   $DS  \n";
 		printf("\n\nStarting Loop $l \n");
 		$A=$maxdata+$maxmc+$maxemb+10;
 
@@ -573,12 +573,12 @@ if( $ARGV[0] eq "--Local" ){
 		    $fpath="$DS$item";
 		    push(@dpmdirs,$fpath);
 		}
-		print @dpmdirs;
+	#	print @dpmdirs;
 		# Get list of files in dcache dir
 		@files=(); 
 		foreach $ipath (@dpmdirs){
 		    printf(" path =  $ipath  \n ");
-		    system(sprintf("rfdir /dpm/in2p3.fr/home/cms/phedex$ipath >& junk2 "));
+		    system(sprintf("rfdir /dpm/in2p3.fr/home/cms/phedex$ipath | grep \".root\" >& junk2 "));
 		    system(sprintf("cat junk2 | awk '{print \$9}' >& junk")); 
 		    open(DAT, "junk");
 		    while ($item = <DAT>) {
