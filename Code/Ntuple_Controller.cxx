@@ -1111,6 +1111,17 @@ std::vector<int> Ntuple_Controller::GetVectorTriggers(TString n){
 	  return out;
  }
 
+std::vector<int> Ntuple_Controller::GetVectorTriggers(std::vector<TString>  v){
+    std::vector<int> out;
+    for(unsigned i=0; i<NTriggers();i++){
+      TString name=TriggerName(i);
+      for(unsigned int j=0; j<v.size(); j++){
+	if(name.Contains(v.at(j))) out.push_back(i) ;
+      }
+    } 
+    return out;
+}
+
 
 // // PFTau significance, using the reffited primary and secondary vertices
 // double Ntuple_Controller::PFTau_FlightLength_significance(unsigned int i) {

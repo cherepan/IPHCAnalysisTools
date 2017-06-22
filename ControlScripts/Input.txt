@@ -4,7 +4,7 @@ HistoFile: InputData/Histo.txt
 Analysis: NtupleValidation
 UncertType: default
 SkimInfo: InputData/SkimSummary.log
-Lumi: 88.300
+Lumi: 4008.663
 PlotStyle: style2
 
 
