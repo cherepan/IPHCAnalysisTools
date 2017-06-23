@@ -27,6 +27,8 @@ void  SkimmingNtuples::Configure(){
     value.push_back(0);
     pass.push_back(false);
     if(i==TriggerOk)    cut.at(TriggerOk)=1;
+    if(i==ntaus)          cut.at(ntaus)=1;
+    if(i==nmuons)      cut.at(nmuons)=1;
     if(i==PrimeVtx)     cut.at(PrimeVtx)=1;
   }
   // Setup cut plots
@@ -53,6 +55,18 @@ void  SkimmingNtuples::Configure(){
       hlabel="Trigger ";
       Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_TriggerOk_",htitle,2,-0.5,1.5,hlabel,"Events"));
       Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_TriggerOk_",htitle,2,-0.5,1.5,hlabel,"Events"));
+    }
+    else if(i==ntaus){
+      title.at(i)="Number of tau leptons ";
+      hlabel="Number of tau leptons  ";
+      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_ntaus_",htitle,10,-0.5,9.5,hlabel,"Events"));
+      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_ntaus_",htitle,10,-0.5,9.5,hlabel,"Events"));
+    }
+    else if(i==nmuons){
+      title.at(i)="Number of muons ";
+      hlabel="Number of muons  ";
+      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
+      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
     }
 
 
@@ -98,8 +112,13 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   for(int itrig = 0; itrig < TriggerIndexVector.size(); itrig++){
     if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){   PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
   }
+  int ntau(0); int nmu(0); 
+  for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
+    std::cout<<" i:    "<<iDaugther <<  "    "  <<Ntp->isLooseGoodTau(iDaugther)<< "   "<<Ntp->isMediumGoodTau(iDaugther) <<std::endl;
+    if(Ntp->isLooseGoodTau(iDaugther)) ntau++;
+    if(Ntp->isLooseGoodMuon(iDaugther)) nmu++;
 
-
+  }
   // for(int itrig = 0; itrig < TriggerIndex.size(); itrig++){
   //   if(Ntp->GetTriggerIndex((TString)"HLT_IsoMu", TriggerIndex.at(itrig))) {
   //     if(Ntp->TriggerAccept(TriggerIndex.at(itrig))){   PassedTrigger =Ntp->TriggerAccept(TriggerIndex.at(itrig)); }
@@ -117,6 +136,10 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   value.at(TriggerOk)=PassedTrigger;
   pass.at(TriggerOk)=PassedTrigger;
   
+  value.at(ntaus)=ntau;
+  pass.at(ntaus) = (value.at(ntaus) >= cut.at(ntaus));
+  value.at(nmuons)=nmu;
+  pass.at(nmuons) = (value.at(nmuons) >= cut.at(nmuons));
 
   // Here you can defined different type of weights you want to apply to events. At the moment only PU weight is considered if event is not data
   double wobs=1;

@@ -26,7 +26,7 @@ class SkimmingNtuples : public Selection {
   virtual void  Configure();
   virtual void  Finish();
 
-  enum cuts {TriggerOk=0,PrimeVtx,NCuts};
+  enum cuts {TriggerOk=0,PrimeVtx,ntaus,nmuons,NCuts};
 
  protected:
   virtual void doEvent();

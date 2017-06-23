@@ -182,6 +182,45 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
      qualitySize = 7
    };
   enum TrackPar{i_qoverp = 0, i_lambda, i_phi, i_dxy,i_dsz};
+  enum TauQualityBitMask{Bit_byLoosePileupWeightedIsolation3Hits=0,
+			 Bit_byMediumPileupWeightedIsolation3Hits,
+			 Bit_byTightPileupWeightedIsolation3Hits,    
+			 Bit_byLooseCombinedIsolationDeltaBetaCorr3Hits,    
+			 Bit_byMediumCombinedIsolationDeltaBetaCorr3Hits,    
+			 Bit_byTightCombinedIsolationDeltaBetaCorr3Hits,     
+			 Bit_againstMuonLoose3,     
+			 Bit_againstMuonTight3,     
+			 Bit_againstElectronVLooseMVA6,    
+			 Bit_againstElectronLooseMVA6, 
+			 Bit_againstElectronMediumMVA6,    
+			 Bit_againstElectronTightMVA6,     
+			 Bit_againstElectronVTightMVA6,    
+			 Bit_byVLooseIsolationMVArun2v1DBoldDMwLT,     
+			 Bit_byLooseIsolationMVArun2v1DBoldDMwLT,     
+			 Bit_byMediumIsolationMVArun2v1DBoldDMwLT,    
+			 Bit_byTightIsolationMVArun2v1DBoldDMwLT,     
+			 Bit_byVTightIsolationMVArun2v1DBoldDMwLT,    
+			 Bit_byVLooseIsolationMVArun2v1DBnewDMwLT,    
+			 Bit_byLooseIsolationMVArun2v1DBnewDMwLT,     
+			 Bit_byMediumIsolationMVArun2v1DBnewDMwLT,     
+			 Bit_byTightIsolationMVArun2v1DBnewDMwLT,     
+			 Bit_byVTightIsolationMVArun2v1DBnewDMwLT,     
+			 Bit_byLooseCombinedIsolationDeltaBetaCorr3HitsdR03,    
+			 Bit_byMediumCombinedIsolationDeltaBetaCorr3HitsdR03,     
+			 Bit_byTightCombinedIsolationDeltaBetaCorr3HitsdR03,    
+			 Bit_byLooseIsolationMVArun2v1DBdR03oldDMwLT,     
+			 Bit_byMediumIsolationMVArun2v1DBdR03oldDMwLT,
+			 Bit_byTightIsolationMVArun2v1DBdR03oldDMwLT,
+			 Bit_byVTightIsolationMVArun2v1DBdR03oldDMwLT };
+
+  enum MuonQualityBitMask{Bit_MuonLoose=0,
+			 Bit_MuonSoft,
+			 Bit_MuonMedium,
+			 Bit_MuonTight,
+			 Bit_MuonHighPt,
+			 Bit_MuonTight_noVtx};
+
+
 
   // access to SVFit
   #ifdef USE_SVfit
@@ -460,11 +499,54 @@ int    Daughters_eleMissingHits(unsigned int i){return Ntp->daughters_eleMissing
 bool  Daughters_iseleChargeConsistent(unsigned int i){return Ntp->daughters_iseleChargeConsistent->at(i);}
 int    Daughters_eleCUTID(unsigned int i){return Ntp->daughters_eleCUTID->at(i);}
 int    decayMode(unsigned int i){return Ntp->decayMode->at(i);}
-Long64_t  tauID(unsigned int i){return Ntp->tauID->at(i);}
-float   combreliso(unsigned int i){return Ntp->combreliso->at(i);}
-float  combreliso03(unsigned int i){return Ntp->combreliso03->at(i);}
-int    PDGIdDaughters(unsigned int i){return Ntp->PDGIdDaughters->at(i);}
+/* 0: 1prong + 0 pi0 */
+/* 1: 1prong + 1pi0 */
+/* 2: 1prong + 2pi0s */
+/* 5: 2prongs + 0pi0 */
+/* 6: 2prongs + 1 pi0s */
+/* 7: 2prongs + 2 pi0s */
+/* 10: 3prongs + 0 pi0s */
+/* 11: 3prongs + 1 pi0 */
 
+
+
+ Long64_t  tauID(unsigned int i){return Ntp->tauID->at(i);}
+ float   combreliso(unsigned int i){return Ntp->combreliso->at(i);}
+ float  combreliso03(unsigned int i){return Ntp->combreliso03->at(i);}
+ int    PDGIdDaughters(unsigned int i){return Ntp->PDGIdDaughters->at(i);}
+ /* static const int ntauIds = 30;  */
+ /* TString tauIDStrings[ntauIds] = { */
+ /*     "byLoosePileupWeightedIsolation3Hits",  */
+ /*     "byMediumPileupWeightedIsolation3Hits", */
+ /*     "byTightPileupWeightedIsolation3Hits", */
+ /*     "byLooseCombinedIsolationDeltaBetaCorr3Hits", */
+ /*     "byMediumCombinedIsolationDeltaBetaCorr3Hits", */
+ /*     "byTightCombinedIsolationDeltaBetaCorr3Hits",  */
+ /*     "againstMuonLoose3",  */
+ /*     "againstMuonTight3",  */
+ /*     "againstElectronVLooseMVA6", */
+ /*     "againstElectronLooseMVA6",  */
+ /*     "againstElectronMediumMVA6", */
+ /*     "againstElectronTightMVA6",  */
+ /*     "againstElectronVTightMVA6", */
+ /*     "byVLooseIsolationMVArun2v1DBoldDMwLT",  */
+ /*     "byLooseIsolationMVArun2v1DBoldDMwLT",  */
+ /*     "byMediumIsolationMVArun2v1DBoldDMwLT", */
+ /*     "byTightIsolationMVArun2v1DBoldDMwLT",  */
+ /*     "byVTightIsolationMVArun2v1DBoldDMwLT", */
+ /*     "byVLooseIsolationMVArun2v1DBnewDMwLT", */
+ /*     "byLooseIsolationMVArun2v1DBnewDMwLT",  */
+ /*     "byMediumIsolationMVArun2v1DBnewDMwLT",  */
+ /*     "byTightIsolationMVArun2v1DBnewDMwLT",  */
+ /*     "byVTightIsolationMVArun2v1DBnewDMwLT",  */
+ /*     "byLooseCombinedIsolationDeltaBetaCorr3HitsdR03", */
+ /*     "byMediumCombinedIsolationDeltaBetaCorr3HitsdR03",  */
+ /*     "byTightCombinedIsolationDeltaBetaCorr3HitsdR03", */
+ /*     "byLooseIsolationMVArun2v1DBdR03oldDMwLT",  */
+ /*     "byMediumIsolationMVArun2v1DBdR03oldDMwLT",  */
+ /*     "byTightIsolationMVArun2v1DBdR03oldDMwLT",  */
+ /*     "byVTightIsolationMVArun2v1DBdR03oldDMwLT"  */
+ /*   };  */
 
 float  Daughters_depositR03_tracker(unsigned int i){return Ntp->daughters_depositR03_tracker->at(i);}
 float  Daughters_depositR03_ecal(unsigned int i){return Ntp->daughters_depositR03_ecal->at(i);}
@@ -535,8 +617,8 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  float  dz_innerTrack(unsigned int i){return Ntp->dz_innerTrack->at(i);}
  float  Daughters_rel_error_trackpt(unsigned int i){return Ntp->daughters_rel_error_trackpt->at(i);}
  float  SIP(unsigned int i){return Ntp->SIP->at(i);}
- int  Daughters_muonID(unsigned int i){return Ntp->daughters_muonID->at(i);}
- int  Daughters_typeOfMuon(unsigned int i){return Ntp->daughters_typeOfMuon->at(i);}
+ int  Daughters_muonID(unsigned int i){return Ntp->daughters_muonID->at(i);} //bitwise (bit 0 loose, 1 soft , 2 medium, 3 tight, 4 highPT 5 tight_noVtx)
+ int  Daughters_typeOfMuon(unsigned int i){return Ntp->daughters_typeOfMuon->at(i);}  // //bitwise, 0=PF, 1=Global, 2=Tracker
  int particleType(unsigned int i){return Ntp->particleType->at(i);} // 0 - muon, 1- electron, 2 - tau
  float discriminator(unsigned int i){return Ntp->discriminator->at(i);}
 
@@ -780,8 +862,15 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
    } 
 
   /* bool           isGoodMuon(unsigned int i); */
-  /* bool           isGoodMuon_nooverlapremoval(unsigned int i); */
+   bool           isLooseGoodMuon(unsigned int i); 
+   bool           isSoftGoodMuon(unsigned int i); 
+   bool           isMediumGoodMuon(unsigned int i); 
+   bool           isTightGoodMuon(unsigned int i); 
 
+   bool           isLooseGoodTau(unsigned int i); 
+   bool           isMediumGoodTau(unsigned int i);
+
+ 
   /* bool			 isTightMuon(unsigned int i); */
   /* bool			 isTightMuon(unsigned int i, unsigned int j, TString corr = "default"); */
   /* bool           isSelectedMuon(unsigned int i, unsigned int ja, double impact_xy, double impact_z, TString corr = "default"); */

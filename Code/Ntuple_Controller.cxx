@@ -368,17 +368,17 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
 // 	return true;
 // }
 
-// bool Ntuple_Controller::isGoodMuon(unsigned int i){
-//   //  Top Dilepton muon selection without Transverse IP cut and PT cut at 17GeV for our trigger 
-//   //  https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiTopRefEventSel       
-//   //  isGoodMuon_nooverlapremoval(i) with
-//   //  ΔR(μ,jet)>0.3 where jet is any jet passing the jet requirements not applied applied       
-//   if(isGoodMuon_nooverlapremoval(i)){
-//     unsigned int jet_idx=0;
-//     return !muonhasJetOverlap(i,jet_idx);
-//   }
-//   return false;
-// }
+ // bool Ntuple_Controller::isGoodMuon(unsigned int i){
+ //   //  Top Dilepton muon selection without Transverse IP cut and PT cut at 17GeV for our trigger 
+ //   //  https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiTopRefEventSel       
+ //   //  isGoodMuon_nooverlapremoval(i) with
+ //   //  ΔR(μ,jet)>0.3 where jet is any jet passing the jet requirements not applied applied       
+ //   if(isGoodMuon_nooverlapremoval(i)){
+ //     unsigned int jet_idx=0;
+ //     return !muonhasJetOverlap(i,jet_idx);
+ //   }
+ //   return false;
+ // }
 
 // bool Ntuple_Controller::muonhasJetOverlap(unsigned int muon_idx,unsigned int &jet_idx){
 //   for(unsigned int j=0;j<NPFJets();j++){
@@ -399,36 +399,88 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
 // }
 
 
+ bool Ntuple_Controller::isLooseGoodTau(unsigned int i){
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   if(particleType(i)==2){
+     if(Daughters_decayModeFindingOldDMs(i)==1){
+       if(((tauID(i) & (1 << Bit_byVLooseIsolationMVArun2v1DBnewDMwLT))==(1 << Bit_byVLooseIsolationMVArun2v1DBnewDMwLT))){
+     	 if(Daughters_P4(i).Pt()>17 && fabs(Daughters_P4(i).Eta())<2.8){
+	 return true;
+	 }
+       }
+     }
+   }
+   return false;
+ }
 
-// bool Ntuple_Controller::isGoodMuon_nooverlapremoval(unsigned int i){
-//   //  Top Dilepton muon selection without Transverse IP cut and PT cut at 17GeV for our trigger and no overlpar removal applied
-//   //  https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiTopRefEventSel  
-//   //  GlobalMuon && TrackerMuon applied applied                                         
-//   //  pT > 20 GeV                                                                       
-//   //  fasb(eta) < 2.4                                                                   
-//   //  normChi2 < 10                                                                     
-//   //  n Tracker Hits > 10                                                               
-//   //  n Muon Hit > 0                                                                    
-//   //  Transverse IP of the muon wrt the beam spot (cm) < 0.02                           
-//   //  relIso < 0.20                                                                      
-//   //  fabs( muon.vertex().z() - PV.z()) not applied                           
-//   //  muon.innerTrack()->hitPattern().pixelLayersWithMeasurement() not applied
-//   //  numberOfMatchedStations() not applied                              
-//   if(Muon_isGlobalMuon(i) && Muon_isStandAloneMuon(i)){
-//     if(Muon_p4(i).Pt()>15.0){
-//       if(fabs(Muon_p4(i).Eta())<2.4){
-// 	if(Muon_normChi2(i)<10.0){
-// 	  if(Muon_innerTrack_numberofValidHits(i)>10){
-// 	    if(Muon_hitPattern_numberOfValidMuonHits(i)>0){
-// 	      return true;
-// 	    }
-// 	  }
-// 	}
-//       }
-//     }
-//   }
-//   return false;
-// }
+ bool Ntuple_Controller::isMediumGoodTau(unsigned int i){
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   int tauIDmaskMedium(0);
+   if(particleType(i)==2){
+     tauIDmaskMedium|= (1<<Bit_byMediumIsolationMVArun2v1DBoldDMwLT);
+     tauIDmaskMedium|= (1<<Bit_againstMuonLoose3);
+     tauIDmaskMedium|= (1<<Bit_againstElectronVLooseMVA6);
+     if(Daughters_decayModeFindingOldDMs(i)==1){
+       if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
+     	 if(Daughters_P4(i).Pt()>17 && fabs(Daughters_P4(i).Eta())<2.8){
+	     return true;
+	 }
+       }
+     }
+   }
+   return false;
+ }
+
+
+//Loose muon
+ bool Ntuple_Controller::isLooseGoodMuon(unsigned int i){
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   if(particleType(i)==0){
+     if(((Daughters_muonID(i) & (1<<Bit_MuonLoose)) == (1<<Bit_MuonLoose))){
+       return true;
+     }
+   }
+   return false;
+ }
+
+ bool Ntuple_Controller::isSoftGoodMuon(unsigned int i){
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   if(particleType(i)==0){
+     if(((Daughters_muonID(i) & (1<<Bit_MuonSoft)) == (1<<Bit_MuonSoft))){
+       return true;
+     }
+   }
+   return false;
+ }
+ bool Ntuple_Controller::isMediumGoodMuon(unsigned int i){
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   if(particleType(i)==0){
+    if(((Daughters_muonID(i) & (1<<Bit_MuonMedium)) == (1<<Bit_MuonMedium))){
+       return true;
+     }
+   }
+   return false;
+ }
+
+ bool Ntuple_Controller::isTightGoodMuon(unsigned int i){
+   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   if(particleType(i)==0){
+    if(((Daughters_muonID(i) & (1<<Bit_MuonTight)) == (1<<Bit_MuonTight))){
+       return true;
+     }
+   }
+   return false;
+ }
+
+
+// Global muon 	recoMu.isGlobalMuon()
+// Normalized global-track χ2 	recoMu.globalTrack()->normalizedChi2() < 3
+// Tracker-Standalone position match 	recoMu.combinedQuality().chi2LocalPosition < 12
+// Kick finder 	recoMu.combinedQuality().trkKink < 20
+// Segment compatibility 	muon::segmentCompatibility(recoMu) > 0.303
+
+
+
 
 // void Ntuple_Controller::CorrectMuonP4(){
 // 	if(isInit){
