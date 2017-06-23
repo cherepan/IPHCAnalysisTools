@@ -598,10 +598,6 @@ if( $ARGV[0] eq "--Local" ){
 
 		$nfiles = @files;
 		$idx=0;
-		print  "  ======================================================";
-		print  "  in   $DS \n";
-		print  "  Files : @files   \n";
-		print  "  ======================================================";
 	    
 		foreach $file (@files){
 		    $idx++;

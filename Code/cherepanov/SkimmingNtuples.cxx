@@ -114,7 +114,6 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   }
   int ntau(0); int nmu(0); 
   for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
-    std::cout<<" i:    "<<iDaugther <<  "    "  <<Ntp->isLooseGoodTau(iDaugther)<< "   "<<Ntp->isMediumGoodTau(iDaugther) <<std::endl;
     if(Ntp->isLooseGoodTau(iDaugther)) ntau++;
     if(Ntp->isLooseGoodMuon(iDaugther)) nmu++;
 
