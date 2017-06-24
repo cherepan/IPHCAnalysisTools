@@ -25,7 +25,7 @@ Ntuple_Controller::Ntuple_Controller(std::vector<TString> RootFiles):
   ,isInit(false)
 {
   // TChains the ROOTuple file
-  TChain *chain = new TChain("HTauTauTree/HTauTauTree");
+  TChain *chain = new TChain("HTauTauTree");
   Logger(Logger::Verbose) << "Loading " << RootFiles.size() << " files" << std::endl;
   for(unsigned int i=0; i<RootFiles.size(); i++){
     chain->Add(RootFiles[i]);
@@ -401,9 +401,14 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
 
  bool Ntuple_Controller::isLooseGoodTau(unsigned int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   int tauIDmaskLoose(0);
    if(particleType(i)==2){
+    tauIDmaskLoose |= (1<<Bit_byVLooseIsolationMVArun2v1DBnewDMwLT);
+    tauIDmaskLoose |= (1<<Bit_againstMuonLoose3);
+    tauIDmaskLoose |= (1<<Bit_againstElectronVLooseMVA6);
+
      if(Daughters_decayModeFindingOldDMs(i)==1){
-       if(((tauID(i) & (1 << Bit_byVLooseIsolationMVArun2v1DBnewDMwLT))==(1 << Bit_byVLooseIsolationMVArun2v1DBnewDMwLT))){
+       if(((tauID(i) & (1 <<tauIDmaskLoose ))==(1 << tauIDmaskLoose))){
      	 if(Daughters_P4(i).Pt()>17 && fabs(Daughters_P4(i).Eta())<2.8){
 	 return true;
 	 }

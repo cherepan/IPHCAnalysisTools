@@ -7,8 +7,14 @@
 #include "SimpleFits/FitSoftware/interface/Logger.h"
  
 ControlSample::ControlSample(TString Name_, TString id_):
-  Selection(Name_,id_)
+  Selection(Name_,id_),
+  cMu_pt(20),
+  cMu_eta(2.1),
+  cTau_pt(20),
+  cTau_eta(2.1)
 {
+  ChargeSumDummy = -999;
+
 }
 
 ControlSample::~ControlSample(){
@@ -26,10 +32,11 @@ void  ControlSample::Configure(){
     cut.push_back(0);
     value.push_back(0);
     pass.push_back(false);
-    if(i==TriggerOk)    cut.at(TriggerOk)=1;
-    if(i==ntaus)          cut.at(ntaus)=1;
-    if(i==nmuons)      cut.at(nmuons)=1;
-    if(i==PrimeVtx)     cut.at(PrimeVtx)=1;
+    if(i==TriggerOk)            cut.at(TriggerOk)=1;
+    if(i==nGoodTaus)          cut.at(nGoodTaus)=1;
+    if(i==nGoodMuons)       cut.at(nGoodMuons)=1;
+    if(i==PairCharge)          cut.at(PairCharge)=0;
+    if(i==PrimeVtx)             cut.at(PrimeVtx)=1;
   }
   // Setup cut plots
   TString hlabel;
@@ -56,17 +63,23 @@ void  ControlSample::Configure(){
       Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_TriggerOk_",htitle,2,-0.5,1.5,hlabel,"Events"));
       Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_TriggerOk_",htitle,2,-0.5,1.5,hlabel,"Events"));
     }
-    else if(i==ntaus){
+    else if(i==nGoodTaus){
       title.at(i)="Number of tau leptons ";
       hlabel="Number of tau leptons  ";
-      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_ntaus_",htitle,10,-0.5,9.5,hlabel,"Events"));
-      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_ntaus_",htitle,10,-0.5,9.5,hlabel,"Events"));
+      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_nGoodTaus_",htitle,10,-0.5,9.5,hlabel,"Events"));
+      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_nGoodTaus_",htitle,10,-0.5,9.5,hlabel,"Events"));
     }
-    else if(i==nmuons){
+    else if(i==nGoodMuons){
       title.at(i)="Number of muons ";
       hlabel="Number of muons  ";
-      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
-      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
+      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_nGoodMuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
+      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_nGoodMuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
+    }
+    else if(i==PairCharge){
+      title.at(i)="Charge of a pair candidate";
+      hlabel="Charge of a pair candidate";
+      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_PairCharge_",htitle,3,-1.5,1.5,hlabel,"Events"));
+      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_PairCharge_",htitle,3,-1.5,1.5,hlabel,"Events"));
     }
 
 
@@ -74,6 +87,11 @@ void  ControlSample::Configure(){
   // Setup NPassed Histogams
   Npassed=HConfig.GetTH1D(Name+"_NPass","Cut Flow",NCuts+1,-1,NCuts,"Number of Accumulative Cuts Passed","Events");
 
+
+  TauPT=HConfig.GetTH1D(Name+"_TauPT","Transverse momentum of selected #tau candidate",50,-0.05,99.5," P_{T}(#tau), GeV","Events");
+  MuonPT=HConfig.GetTH1D(Name+"_MuonPT","Transverse momentum of selected #mu candidate",50,-0.05,99.5," P_{T}(#mu), GeV","Events");
+  TauHPSDecayMode=HConfig.GetTH1D(Name+"_TauHPSDecayMode","Decay mode of the selected #tau candidate",11,-0.5,10.5," HPS Mode ","Events");
+  TauMuMass=HConfig.GetTH1D(Name+"_TauMuMass"," Visible mass of the selected pair candidate",50,50,100," M_{pair}, GeV","Events");
 
 
     Selection::ConfigureHistograms();   //   do not remove
@@ -85,7 +103,11 @@ void  ControlSample::Configure(){
 void  ControlSample::Store_ExtraDist(){
 
   //every new histo should be addedd to Extradist1d vector, just push it back;
-
+  Extradist1d.push_back(&TauPT);
+  Extradist1d.push_back(&MuonPT);
+  Extradist1d.push_back(&TauMuMass);
+  Extradist1d.push_back(&TauHPSDecayMode);
+  
 
 
 }
@@ -95,50 +117,60 @@ void  ControlSample::doEvent(){ //  Method called on every event
   int id(Ntp->GetMCID());  //read event ID of a sample
   if(!HConfig.GetHisto(Ntp->isData(),id,t)){ Logger(Logger::Error) << "failed to find id" <<std::endl; return;}  //  gives a warining if list of samples in Histo.txt  and SkimSummary.log do not coincide 
   //  std::cout<<"------------------ New Event -----------------------"<<std::endl;
-  bool PassedTrigger(false);
-  int triggerindex;
-  std::vector<int> TriggerIndex; 
-  std::vector<int>TriggerIndexVector ;
-  std::vector<TString>  MatchedTriggerNames;
+  Charge = ChargeSumDummy;
 
-  MatchedTriggerNames.push_back("DoubleMediumIsoPFTau");
-  MatchedTriggerNames.push_back("DoubleMediumCombinedIsoPFTau");
-  MatchedTriggerNames.push_back("LooseIsoPFTau");
-  MatchedTriggerNames.push_back("LooseCombinedIsoPFTau");
-  TriggerIndexVector=Ntp->GetVectorTriggers(MatchedTriggerNames);
-
-  TriggerIndex=Ntp->GetVectorTriggers("LooseIsoPFTau");
-
-  for(int itrig = 0; itrig < TriggerIndexVector.size(); itrig++){
-    if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){   PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
-  }
-  int ntau(0); int nmu(0); 
+  
+  //  int ntau(0); int nmu(0); 
+  std::vector<int> goodMuonsIndex;
+  std::vector<int> goodTauIndex;
   for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
-    if(Ntp->isLooseGoodTau(iDaugther)) ntau++;
-    if(Ntp->isLooseGoodMuon(iDaugther)) nmu++;
-
+    if(Ntp->isMediumGoodTau(iDaugther)){
+      if(Ntp->Daughters_P4(iDaugther).Pt() > cTau_pt){
+	if(fabs(  Ntp->Daughters_P4(iDaugther).Eta()) > cTau_eta  ){
+	  goodTauIndex.push_back(iDaugther) ;  }}}
+    if(Ntp->isMediumGoodMuon(iDaugther)){
+      if(Ntp->Daughters_P4(iDaugther).Pt() > cMu_pt){
+	if(fabs(  Ntp->Daughters_P4(iDaugther).Eta()) > cMu_eta  ){
+	  goodMuonsIndex.push_back(iDaugther) ;  }}}
   }
-  // for(int itrig = 0; itrig < TriggerIndex.size(); itrig++){
-  //   if(Ntp->GetTriggerIndex((TString)"HLT_IsoMu", TriggerIndex.at(itrig))) {
-  //     if(Ntp->TriggerAccept(TriggerIndex.at(itrig))){   PassedTrigger =Ntp->TriggerAccept(TriggerIndex.at(itrig)); }
-  //   }
-  // }
-
+  
  
 
-  // Apply Selection
-  // two vectors value and pass  are used to apply selection, store value.at(<A cut variable defined in .h as enumerator>) a quantitity you want to use in your selection.
-  // Define in the pass.at(<A cut variable defined in .h as enumerator>) a passing condidtion, true/false
+
+
   value.at(PrimeVtx)=Ntp->NVtx();
   pass.at(PrimeVtx)=(value.at(PrimeVtx)>=cut.at(PrimeVtx));
   
-  value.at(TriggerOk)=PassedTrigger;
-  pass.at(TriggerOk)=PassedTrigger;
-  
-  value.at(ntaus)=ntau;
-  pass.at(ntaus) = (value.at(ntaus) >= cut.at(ntaus));
-  value.at(nmuons)=nmu;
-  pass.at(nmuons) = (value.at(nmuons) >= cut.at(nmuons));
+  value.at(TriggerOk)=1;
+  pass.at(TriggerOk)=true;
+  // std::cout<<"----------------   "<< std::endl;
+  // std::cout<<" muon size   "<< goodMuonsIndex.size() <<std::endl;
+  // for(unsigned int v = 0;v<goodMuonsIndex.size(); v++ ){
+  //   std::cout<<"   muon index  "<<goodMuonsIndex.at(v)<< " pt   " <<Ntp->Daughters_P4(goodMuonsIndex.at(v)).Pt() << "  charge   "<<  Ntp->Daughters_charge(goodMuonsIndex.at(v))<< std::endl; 
+  // }
+
+  // std::cout<<" tau size   "<< goodTauIndex.size() <<std::endl;
+  // for(unsigned int v = 0;v<goodTauIndex.size(); v++ ){
+  //   std::cout<<"   tau index  "<<goodTauIndex.at(v)<< " pt   " <<Ntp->Daughters_P4(goodTauIndex.at(v)).Pt() << "  charge   "<<  Ntp->Daughters_charge(goodTauIndex.at(v))<< std::endl; 
+  // }
+
+
+  value.at(nGoodTaus)=goodTauIndex.size();
+  pass.at(nGoodTaus) = (value.at(nGoodTaus) >= cut.at(nGoodTaus));
+
+
+  value.at(nGoodMuons)=goodMuonsIndex.size();
+  pass.at(nGoodMuons) =(value.at(nGoodMuons) >= cut.at(nGoodMuons));
+
+  value.at(PairCharge) = ChargeSumDummy;
+
+  if(goodTauIndex.size()!=0){
+    if(goodMuonsIndex.size()!=0){
+      Charge=Ntp->Daughters_charge(goodTauIndex.at(0)) + Ntp->Daughters_charge(goodMuonsIndex.at(0));
+      value.at(PairCharge) = Charge;
+    }
+  }
+  pass.at(PairCharge) =(value.at(PairCharge)== cut.at(PairCharge));
 
   // Here you can defined different type of weights you want to apply to events. At the moment only PU weight is considered if event is not data
   double wobs=1;
@@ -152,7 +184,15 @@ void  ControlSample::doEvent(){ //  Method called on every event
   ///////////////////////////////////////////////////////////
   // Analyse events  which passed selection
   if(status){
-    
+
+
+  int MuonIndex = goodMuonsIndex.at(0);
+  int TauIndex = goodTauIndex.at(0);
+
+  TauPT.at(t).Fill(Ntp->Daughters_P4(TauIndex).Pt(),w);  // Fill transverse momentum
+  MuonPT.at(t).Fill(Ntp->Daughters_P4(MuonIndex).Pt(),w);  // Fill transverse momentum
+  TauHPSDecayMode.at(t).Fill(Ntp->decayMode(TauIndex),w);
+  TauMuMass.at(t).Fill(  (Ntp->Daughters_P4(MuonIndex) +Ntp->Daughters_P4(TauIndex) ).M() ,w);
 
   }
 }
