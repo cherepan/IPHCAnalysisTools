@@ -126,11 +126,13 @@ void  ControlSample::doEvent(){ //  Method called on every event
   for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
     if(Ntp->isMediumGoodTau(iDaugther)){
       if(Ntp->Daughters_P4(iDaugther).Pt() > cTau_pt){
-	if(fabs(  Ntp->Daughters_P4(iDaugther).Eta()) > cTau_eta  ){
+	if(fabs(  Ntp->Daughters_P4(iDaugther).Eta()) < cTau_eta  ){
 	  goodTauIndex.push_back(iDaugther) ;  }}}
+
+
     if(Ntp->isMediumGoodMuon(iDaugther)){
       if(Ntp->Daughters_P4(iDaugther).Pt() > cMu_pt){
-	if(fabs(  Ntp->Daughters_P4(iDaugther).Eta()) > cMu_eta  ){
+	if(fabs(  Ntp->Daughters_P4(iDaugther).Eta()) < cMu_eta  ){
 	  goodMuonsIndex.push_back(iDaugther) ;  }}}
   }
   
