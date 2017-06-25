@@ -182,6 +182,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
      qualitySize = 7
    };
   enum TrackPar{i_qoverp = 0, i_lambda, i_phi, i_dxy,i_dsz};
+
   enum TauQualityBitMask{Bit_byLoosePileupWeightedIsolation3Hits=0,
 			 Bit_byMediumPileupWeightedIsolation3Hits,
 			 Bit_byTightPileupWeightedIsolation3Hits,    
@@ -869,7 +870,9 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
 
    bool           isLooseGoodTau(unsigned int i); 
    bool           isMediumGoodTau(unsigned int i);
-
+   bool           isTightGoodTau(unsigned int i);
+   bool           tauBaselineSelection(unsigned int i);
+   bool           muonBaselineSelection(unsigned int i);
  
   /* bool			 isTightMuon(unsigned int i); */
   /* bool			 isTightMuon(unsigned int i, unsigned int j, TString corr = "default"); */

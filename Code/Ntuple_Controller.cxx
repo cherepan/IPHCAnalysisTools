@@ -25,7 +25,7 @@ Ntuple_Controller::Ntuple_Controller(std::vector<TString> RootFiles):
   ,isInit(false)
 {
   // TChains the ROOTuple file
-  TChain *chain = new TChain("HTauTauTree");
+  TChain *chain = new TChain("HTauTauTree/HTauTauTree");
   Logger(Logger::Verbose) << "Loading " << RootFiles.size() << " files" << std::endl;
   for(unsigned int i=0; i<RootFiles.size(); i++){
     chain->Add(RootFiles[i]);
@@ -403,15 +403,15 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    int tauIDmaskLoose(0);
    if(particleType(i)==2){
-    tauIDmaskLoose |= (1<<Bit_byVLooseIsolationMVArun2v1DBnewDMwLT);
-    tauIDmaskLoose |= (1<<Bit_againstMuonLoose3);
-    tauIDmaskLoose |= (1<<Bit_againstElectronVLooseMVA6);
+     tauIDmaskLoose |= (1<<Bit_byLooseIsolationMVArun2v1DBdR03oldDMwLT);
+     tauIDmaskLoose |= (1<<Bit_againstMuonLoose3);
+     tauIDmaskLoose |= (1<<Bit_againstElectronVLooseMVA6); 
 
-     if(Daughters_decayModeFindingOldDMs(i)==1){
+     if(Daughters_decayModeFindingOldDMs(i) > 0.5){
        if(((tauID(i) & (1 <<tauIDmaskLoose ))==(1 << tauIDmaskLoose))){
-     	 if(Daughters_P4(i).Pt()>17 && fabs(Daughters_P4(i).Eta())<2.8){
+     
 	 return true;
-	 }
+	 
        }
      }
    }
@@ -425,13 +425,54 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
      tauIDmaskMedium|= (1<<Bit_byMediumIsolationMVArun2v1DBoldDMwLT);
      tauIDmaskMedium|= (1<<Bit_againstMuonLoose3);
      tauIDmaskMedium|= (1<<Bit_againstElectronVLooseMVA6);
-     if(Daughters_decayModeFindingOldDMs(i)==1){
+     if(Daughters_decayModeFindingOldDMs(i)>0.5){
        if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
-     	 if(Daughters_P4(i).Pt()>17 && fabs(Daughters_P4(i).Eta())<2.8){
+     
 	     return true;
+	 }
+       
+     }
+   }
+   return false;
+ }
+  bool Ntuple_Controller::isTightGoodTau(unsigned int i){
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   int tauIDmaskMedium(0);
+   if(particleType(i)==2){
+     tauIDmaskMedium|= (1<<Bit_byTightIsolationMVArun2v1DBoldDMwLT);
+     tauIDmaskMedium|= (1<<Bit_againstMuonLoose3);
+     tauIDmaskMedium|= (1<<Bit_againstElectronVLooseMVA6);
+     if(Daughters_decayModeFindingOldDMs(i)>0.5){
+       if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
+	 return true;
+       }
+     }
+   }
+   return false;
+ }
+  
+
+bool Ntuple_Controller::tauBaselineSelection(unsigned int i){
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   if(particleType(i)==2){
+     if(Daughters_P4(i).Pt()>20 && fabs(Daughters_P4(i).Eta())<2.3){
+       if(fabs(dz(i))<0.2  ){
+	 if(fabs(Daughters_charge(i)==1)){
+	   return true;
 	 }
        }
      }
+   }
+   return false;
+}
+	   
+ bool Ntuple_Controller::muonBaselineSelection(unsigned int i){
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   if(particleType(i)==0){
+     if(Daughters_P4(i).Pt()>19 && fabs(Daughters_P4(i).Eta())<2.4)
+       if(fabs(dz(i))<0.2 &&  fabs(dxy(i))<0.045 ){
+	 return true;
+	 }
    }
    return false;
  }
@@ -441,7 +482,8 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
  bool Ntuple_Controller::isLooseGoodMuon(unsigned int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==0){
-     if(((Daughters_muonID(i) & (1<<Bit_MuonLoose)) == (1<<Bit_MuonLoose))){
+     //     if(((Daughters_muonID(i) & (1<<Bit_MuonLoose)) == (1<<Bit_MuonLoose))){
+     if(((Daughters_muonID(i) & (1<<6)) == (1<<6))){
        return true;
      }
    }
@@ -466,7 +508,6 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
    }
    return false;
  }
-
  bool Ntuple_Controller::isTightGoodMuon(unsigned int i){
    // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==0){

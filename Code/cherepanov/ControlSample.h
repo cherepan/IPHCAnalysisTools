@@ -30,6 +30,7 @@ class ControlSample : public Selection {
 	     PrimeVtx,
 	     nGoodTaus,
 	     nGoodMuons,
+	     MuonIsolation,
 	     PairCharge,
 	     NCuts};
 
@@ -47,9 +48,12 @@ class ControlSample : public Selection {
   // Selection Variables and Histos
 
   std::vector<TH1D> TauPT;
+  std::vector<TH1D> TauE;
   std::vector<TH1D> MuonPT;
   std::vector<TH1D> TauMuMass;
   std::vector<TH1D> TauHPSDecayMode;
+  std::vector<TH1D> MissingM;
+
 
 };
 #endif
