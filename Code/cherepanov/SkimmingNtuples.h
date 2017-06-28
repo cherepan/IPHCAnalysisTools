@@ -34,42 +34,14 @@ class SkimmingNtuples : public Selection {
 
  private:
   // Selection Variables and Histos
-  std::vector<TH1D> DaughtersPt;
-  std::vector<TH1D> MissingTEnergy;
-  std::vector<TH1D> NumVertices;
-  std::vector<TH1D> particletype;
-  std::vector<TH1D> taudecaytype;
-
-
-  std::vector<TH1D> PVSVSignificance;
-  std::vector<TH1D> SVchi2;
-  std::vector<TH1D> SVMatchingQuality;
-  std::vector<TH1D> SVz;
-  std::vector<TH1D> PVz;
-
-
-  std::vector<TH1D> isPairCandOS;
-  std::vector<TH1D> Pair_part1Type;
-  std::vector<TH1D> Pair_part2Type;
-  std::vector<TH1D> OSPairMass;
-  std::vector<TH1D> SSPairMass;
-
-  std::vector<TH1D> s12;
-  std::vector<TH1D> s13;
-  std::vector<TH1D> s23;
-
-  std::vector<TH1D> s12reco;
-  std::vector<TH1D> s13reco;
-  std::vector<TH1D> s23reco;
-
-
-  std::vector<TH1D> OSPionPtResolution;
-  std::vector<TH1D> SSPionPtResolution;
-
 
   //------------- Truth Gen ---------
-  std::vector<TH1D> TruthTauTauMass;
+  std::vector<TH1D> TauDecayMode;
 
+  std::vector<TH1D> TauPT;
+  std::vector<TH1D> MuonPT;
+  std::vector<TH1D> ElePT;
+  std::vector<TH1D> JetPT;
 
 
 };

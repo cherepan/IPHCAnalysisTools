@@ -73,7 +73,12 @@ void  SkimmingNtuples::Configure(){
   } 
   // Setup NPassed Histogams
   Npassed=HConfig.GetTH1D(Name+"_NPass","Cut Flow",NCuts+1,-1,NCuts,"Number of Accumulative Cuts Passed","Events");
+  TauDecayMode=HConfig.GetTH1D(Name+"_TauDecayMode","HPS decay type",11,-0.5,10.5," pType","Events");
 
+  TauPT=HConfig.GetTH1D(Name+"_TauPT","Transverse momentum #tau",50,15,75," P_{T}, GeV","Events");
+  MuonPT=HConfig.GetTH1D(Name+"_MuonPT","Transverse momentum  #mu " ,50,15,75," P_{T}, GeV","Events");
+  ElePT=HConfig.GetTH1D(Name+"_ElePT","Transverse momentum  e",50,15,75," P_{T}, GeV","Events");
+  JetPT=HConfig.GetTH1D(Name+"_JetPT","Transverse momentum jet",50,15,75," P_{T}, GeV","Events");
 
 
     Selection::ConfigureHistograms();   //   do not remove
@@ -85,8 +90,12 @@ void  SkimmingNtuples::Configure(){
 void  SkimmingNtuples::Store_ExtraDist(){
 
   //every new histo should be addedd to Extradist1d vector, just push it back;
+Extradist1d.push_back(&TauDecayMode);
 
-
+ Extradist1d.push_back(&TauPT);
+ Extradist1d.push_back(&MuonPT);
+ Extradist1d.push_back(&ElePT);
+ Extradist1d.push_back(&JetPT);
 
 }
 
@@ -94,24 +103,48 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   unsigned int t;                // sample type, you may manage in your further analysis, if needed
   int id(Ntp->GetMCID());  //read event ID of a sample
   if(!HConfig.GetHisto(Ntp->isData(),id,t)){ Logger(Logger::Error) << "failed to find id" <<std::endl; return;}  //  gives a warining if list of samples in Histo.txt  and SkimSummary.log do not coincide 
-  //  std::cout<<"------------------ New Event -----------------------"<<std::endl;
+  // std::cout<<"------------------ New Event -----------------------"<<std::endl;
   bool PassedTrigger(false);
   int triggerindex;
   std::vector<int> TriggerIndex; 
   std::vector<int>TriggerIndexVector ;
   std::vector<TString>  MatchedTriggerNames;
 
-  MatchedTriggerNames.push_back("DoubleMediumIsoPFTau");
-  MatchedTriggerNames.push_back("DoubleMediumCombinedIsoPFTau");
-  MatchedTriggerNames.push_back("LooseIsoPFTau");
-  MatchedTriggerNames.push_back("LooseCombinedIsoPFTau");
+  //MatchedTriggerNames.push_back("DoubleMediumIsoPFTau");
+  //  MatchedTriggerNames.push_back("DoubleMediumCombinedIsoPFTau");
+  //  MatchedTriggerNames.push_back("LooseCombinedIsoPFTau");
+  MatchedTriggerNames.push_back("IsoPFTau");
+
   TriggerIndexVector=Ntp->GetVectorTriggers(MatchedTriggerNames);
 
-  TriggerIndex=Ntp->GetVectorTriggers("LooseIsoPFTau");
+  //  TriggerIndex=Ntp->GetVectorTriggers("LooseIsoPFTau");
+  // TriggerIndex=Ntp->GetVectorTriggers("HLT_IsoMu24");
 
-  for(int itrig = 0; itrig < TriggerIndexVector.size(); itrig++){
-    if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){   PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
-  }
+   for(int itrig = 0; itrig < TriggerIndexVector.size(); itrig++){
+     if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){  
+       //   std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
+       PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
+   }
+
+
+  // for(unsigned int itr = 0; itr < Ntp->NTriggers(); itr++){
+    //    std::cout<<"====  Name  "<< Ntp->TriggerName(itr) << "   status   "<< Ntp->TriggerAccept(itr) <<std::endl;
+  //}
+
+  // std::vector<int> TriggerIndex;
+  // TriggerIndex=Ntp->GetVectorTriggers("LooseIsoPFTau");
+
+
+   // for(int itrig = 0; itrig < TriggerIndex.size(); itrig++){
+
+   //   if(   Ntp->GetTriggerIndex((TString)"HLT_IsoMu", TriggerIndex.at(itrig) )   ) {
+   //     if(Ntp->TriggerAccept(TriggerIndex.at(itrig))){   
+   // 	 std::cout<<" -----------  Name  "<< Ntp->TriggerName(TriggerIndex.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndex.at(itrig)) <<std::endl;
+   // 	 PassedTrigger =Ntp->TriggerAccept(TriggerIndex.at(itrig)); }
+   //   }
+   //  //if(Ntp->GetTriggerIndex("LooseIsoPFTau",itrig)) {PassedTrigger = Ntp->TriggerAccept(itrig); triggerindex=itrig; break; }
+   // }
+
 
 
 
@@ -119,7 +152,8 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   std::vector<int> GoodTausIndex;
   std::vector<int> GoodMuonIndex;
   for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
-    if(Ntp->isLooseGoodTau(iDaugther)) {
+    //    if(Ntp->isLooseGoodTau(iDaugther)) {
+      if(Ntp->isMediumGoodTau(iDaugther)) {
       if(Ntp->tauBaselineSelection(iDaugther)){
 	GoodTausIndex.push_back(iDaugther);
       }
@@ -151,8 +185,9 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   
   value.at(ntaus)=GoodTausIndex.size();
   pass.at(ntaus) = (value.at(ntaus) >= cut.at(ntaus));
+
   value.at(nmuons)=GoodMuonIndex.size();
-  pass.at(nmuons) = (value.at(nmuons) >= cut.at(nmuons));
+  pass.at(nmuons) = true;//(value.at(nmuons) >= cut.at(nmuons));
 
   // Here you can defined different type of weights you want to apply to events. At the moment only PU weight is considered if event is not data
   double wobs=1;
@@ -166,8 +201,23 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   ///////////////////////////////////////////////////////////
   // Analyse events  which passed selection
   if(status){
-    
+    for(unsigned int itau =0; itau<GoodTausIndex.size(); itau++){
+      TauDecayMode.at(t).Fill(Ntp->decayMode(itau),w);
+      TauPT.at(t).Fill(Ntp->Daughters_P4(itau).Pt(),w);
+    }
 
+
+    for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
+      if(Ntp->particleType(iDaugther) == 0){
+	MuonPT.at(t).Fill(Ntp->Daughters_P4(iDaugther).Pt(),w);
+      }
+      if(Ntp->particleType(iDaugther) == 1){
+	ElePT.at(t).Fill(Ntp->Daughters_P4(iDaugther).Pt(),w);
+      }
+    }
+
+
+     if(Ntp->NJets()!=0)JetPT.at(t).Fill(Ntp->Jet_P4(0).Pt(),w);
   }
 }
 

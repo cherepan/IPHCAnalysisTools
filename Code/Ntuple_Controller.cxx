@@ -397,28 +397,52 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
 //   }
 //   return false;
 // }
-
-
- bool Ntuple_Controller::isLooseGoodTau(unsigned int i){
+ bool Ntuple_Controller::isLooseGoodTau(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
-   int tauIDmaskLoose(0);
    if(particleType(i)==2){
-     tauIDmaskLoose |= (1<<Bit_byLooseIsolationMVArun2v1DBdR03oldDMwLT);
-     tauIDmaskLoose |= (1<<Bit_againstMuonLoose3);
-     tauIDmaskLoose |= (1<<Bit_againstElectronVLooseMVA6); 
 
-     if(Daughters_decayModeFindingOldDMs(i) > 0.5){
-       if(((tauID(i) & (1 <<tauIDmaskLoose ))==(1 << tauIDmaskLoose))){
-     
-	 return true;
-	 
+     //     std::cout<<
+
+     if(Daughters_decayModeFindingOldDMs(i)==1)
+       {
+       if(((tauID(i) & (1 << Bit_byLooseCombinedIsolationDeltaBetaCorr3Hits))==(1 << Bit_byLooseCombinedIsolationDeltaBetaCorr3Hits))){
+	 if( ((tauID(i) & (1 << Bit_againstMuonLoose3))==(1 << Bit_againstMuonLoose3))){
+	   if( ((tauID(i) & (1 << Bit_againstElectronVLooseMVA6))==(1 << Bit_againstElectronVLooseMVA6))){
+	     return true;
+	   }
+	 }
        }
-     }
+       }
    }
    return false;
  }
 
- bool Ntuple_Controller::isMediumGoodTau(unsigned int i){
+
+
+ // bool Ntuple_Controller::isLooseGoodTau(unsigned int i){
+ //  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+ //   int tauIDmaskLoose(0);
+ //   if(particleType(i)==2){
+ //     tauIDmaskLoose |= (1<<Bit_byLooseCombinedIsolationDeltaBetaCorr3HitsdR03);
+ //     //     tauIDmaskLoose |= (1<<Bit_againstMuonLoose3);
+ //     //     tauIDmaskLoose |= (1<<Bit_againstElectronVLooseMVA6); 
+ //     std::cout<<" NC:  " << tauIDmaskLoose << "  dec   " << Daughters_decayModeFindingOldDMs(i)  <<"   "  <<tauID(i) <<std::endl;
+ //     if(Daughters_decayModeFindingOldDMs(i) > 0.5){
+ //       if(((tauID(i) & (1 <<tauIDmaskLoose ))==(1 << tauIDmaskLoose))){
+     
+ // 	 return true;
+	 
+ //       }
+ //     }
+ //   }
+ //   return false;
+ // }
+
+
+
+
+
+ bool Ntuple_Controller::isMediumGoodTau(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    int tauIDmaskMedium(0);
    if(particleType(i)==2){
@@ -435,7 +459,7 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
    }
    return false;
  }
-  bool Ntuple_Controller::isTightGoodTau(unsigned int i){
+  bool Ntuple_Controller::isTightGoodTau(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    int tauIDmaskMedium(0);
    if(particleType(i)==2){
@@ -452,7 +476,7 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
  }
   
 
-bool Ntuple_Controller::tauBaselineSelection(unsigned int i){
+bool Ntuple_Controller::tauBaselineSelection(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==2){
      if(Daughters_P4(i).Pt()>20 && fabs(Daughters_P4(i).Eta())<2.3){
@@ -466,10 +490,10 @@ bool Ntuple_Controller::tauBaselineSelection(unsigned int i){
    return false;
 }
 	   
- bool Ntuple_Controller::muonBaselineSelection(unsigned int i){
+ bool Ntuple_Controller::muonBaselineSelection(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==0){
-     if(Daughters_P4(i).Pt()>19 && fabs(Daughters_P4(i).Eta())<2.4)
+     if(Daughters_P4(i).Pt()>17 && fabs(Daughters_P4(i).Eta())<2.4)
        if(fabs(dz(i))<0.2 &&  fabs(dxy(i))<0.045 ){
 	 return true;
 	 }
@@ -479,18 +503,23 @@ bool Ntuple_Controller::tauBaselineSelection(unsigned int i){
 
 
 //Loose muon
- bool Ntuple_Controller::isLooseGoodMuon(unsigned int i){
+ bool Ntuple_Controller::isLooseGoodMuon(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   int bit(0);
    if(particleType(i)==0){
-     //     if(((Daughters_muonID(i) & (1<<Bit_MuonLoose)) == (1<<Bit_MuonLoose))){
-     if(((Daughters_muonID(i) & (1<<6)) == (1<<6))){
+     //  if( ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 0))  &&	 (((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 1))  ||  ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 2)) )   )
+       {
        return true;
      }
    }
    return false;
  }
 
- bool Ntuple_Controller::isSoftGoodMuon(unsigned int i){
+
+
+
+
+ bool Ntuple_Controller::isSoftGoodMuon( int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==0){
      if(((Daughters_muonID(i) & (1<<Bit_MuonSoft)) == (1<<Bit_MuonSoft))){
@@ -499,7 +528,7 @@ bool Ntuple_Controller::tauBaselineSelection(unsigned int i){
    }
    return false;
  }
- bool Ntuple_Controller::isMediumGoodMuon(unsigned int i){
+ bool Ntuple_Controller::isMediumGoodMuon( int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==0){
     if(((Daughters_muonID(i) & (1<<Bit_MuonMedium)) == (1<<Bit_MuonMedium))){
@@ -508,7 +537,7 @@ bool Ntuple_Controller::tauBaselineSelection(unsigned int i){
    }
    return false;
  }
- bool Ntuple_Controller::isTightGoodMuon(unsigned int i){
+ bool Ntuple_Controller::isTightGoodMuon( int i){
    // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==0){
     if(((Daughters_muonID(i) & (1<<Bit_MuonTight)) == (1<<Bit_MuonTight))){
