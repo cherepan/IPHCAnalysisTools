@@ -254,7 +254,7 @@ if( $ARGV[0] eq "--TauNtuple"){
     system(sprintf("echo \"cd CMSSW_$CMSSWRel/src\" >> Install_TauNtuple_$time")); 
     system(sprintf("echo \"cmsenv\" >> Install_TauNtuple_$time")); 
     $CMSPATH="/CMSSW_$CMSSWRel/";
-    $CMSSW_BASE=$basedir$CMSPATH;
+    $CMSSW_BASE="$basedir$CMSPATH";
    system(sprintf("echo \"git cms-merge-topic cms-met:METRecipe_8020\" >> Install_TauNtuple_$time")); 
    system(sprintf("echo \"git cms-merge-topic ikrav:egm_id_80X_v2\" >> Install_TauNtuple_$time")); 
    system(sprintf("echo \"git cms-merge-topic gpetruc:badMuonFilters_80X_v2\" >> Install_TauNtuple_$time")); 
