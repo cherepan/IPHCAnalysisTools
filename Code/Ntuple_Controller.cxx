@@ -397,12 +397,20 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
 //   }
 //   return false;
 // }
+
+ bool Ntuple_Controller::isTau(int i){
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   if(particleType(i)==2){
+     if(Daughters_decayModeFindingOldDMs(i)==1){
+	     return true;
+     }
+   }
+   return false;
+ }
+
  bool Ntuple_Controller::isLooseGoodTau(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==2){
-
-     //     std::cout<<
-
      if(Daughters_decayModeFindingOldDMs(i)==1)
        {
        if(((tauID(i) & (1 << Bit_byLooseCombinedIsolationDeltaBetaCorr3Hits))==(1 << Bit_byLooseCombinedIsolationDeltaBetaCorr3Hits))){
@@ -481,14 +489,14 @@ bool Ntuple_Controller::tauBaselineSelection(int i){
    if(particleType(i)==2){
      if(Daughters_P4(i).Pt()>20 && fabs(Daughters_P4(i).Eta())<2.3){
        if(fabs(dz(i))<0.2  ){
-	 if(fabs(Daughters_charge(i)==1)){
+	 if(fabs(Daughters_charge(i))==1){
 	   return true;
 	 }
        }
      }
    }
    return false;
-}
+} 
 	   
  bool Ntuple_Controller::muonBaselineSelection(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
@@ -502,8 +510,8 @@ bool Ntuple_Controller::tauBaselineSelection(int i){
  }
 
 
-//Loose muon
- bool Ntuple_Controller::isLooseGoodMuon(int i){
+// muon
+ bool Ntuple_Controller::isMuon(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    int bit(0);
    if(particleType(i)==0){
@@ -515,6 +523,19 @@ bool Ntuple_Controller::tauBaselineSelection(int i){
    return false;
  }
 
+
+//Loose muon
+ bool Ntuple_Controller::isLooseGoodMuon(int i){
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   int bit(0);
+   if(particleType(i)==0){
+       if( ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 0))  &&	 (((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 1))  ||  ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 2)) )   )
+       {
+       return true;
+     }
+   }
+   return false;
+ }
 
 
 
@@ -1248,6 +1269,18 @@ std::vector<int> Ntuple_Controller::GetVectorTriggers(std::vector<TString>  v){
     } 
     return out;
 }
+std::vector<int> Ntuple_Controller::GetVectorCrossTriggers(TString n1,TString n2,TString f1,TString f2){
+    std::vector<int> out;
+
+
+
+    for(unsigned i=0; i<NTriggers();i++){
+      TString name=TriggerName(i);
+      if(name.Contains(n1) &&  name.Contains(n2)  && (!name.Contains(f1)  && !name.Contains(f2))   ) out.push_back(i) ;
+    } 
+    return out;
+}
+
 
 
 // // PFTau significance, using the reffited primary and secondary vertices

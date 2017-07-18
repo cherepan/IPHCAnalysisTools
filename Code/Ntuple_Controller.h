@@ -378,6 +378,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    bool         GetTriggerIndex(TString n,  int &i);
    std::vector<int> GetVectorTriggers(TString n);
    std::vector<int> GetVectorTriggers(std::vector<TString> v);
+   std::vector<int> GetVectorCrossTriggers(TString n1,TString n2,TString f1,TString f2);
    Int_t            PUNumInteractions(){return Ntp->PUNumInteractions;}
    Float_t         MC_weight(){return Ntp->MC_weight;}
    Float_t         MC_weight_scale_muF0p5(){return Ntp->MC_weight_scale_muF0p5;}
@@ -860,19 +861,21 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
        } 
      } 
      return TrackParticle(mu_par,mu_cov,Ntp->Muon_pdgid->at(i),Ntp->Muon_M->at(i),Ntp->Muon_trackCharge->at(i),Ntp->Muon_B->at(i));
-   } 
+   }  
 
   /* bool           isGoodMuon(unsigned int i); */
-   bool           isLooseGoodMuon(unsigned int i); 
-   bool           isSoftGoodMuon(unsigned int i); 
-   bool           isMediumGoodMuon(unsigned int i); 
-   bool           isTightGoodMuon(unsigned int i); 
+   bool           isMuon( int i); 
+   bool           isLooseGoodMuon( int i); 
+   bool           isSoftGoodMuon( int i); 
+   bool           isMediumGoodMuon( int i); 
+   bool           isTightGoodMuon( int i); 
 
-   bool           isLooseGoodTau(unsigned int i); 
-   bool           isMediumGoodTau(unsigned int i);
-   bool           isTightGoodTau(unsigned int i);
-   bool           tauBaselineSelection(unsigned int i);
-   bool           muonBaselineSelection(unsigned int i);
+   bool           isTau( int i); 
+   bool           isLooseGoodTau( int i); 
+   bool           isMediumGoodTau( int i);
+   bool           isTightGoodTau( int i);
+   bool           tauBaselineSelection( int i);
+   bool           muonBaselineSelection( int i);
  
   /* bool			 isTightMuon(unsigned int i); */
   /* bool			 isTightMuon(unsigned int i, unsigned int j, TString corr = "default"); */

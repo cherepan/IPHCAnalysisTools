@@ -83,7 +83,7 @@ void  SkimmingNtuples::Configure(){
 
     Selection::ConfigureHistograms();   //   do not remove
     HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);  // do not remove
-}
+} 
 
  
 
@@ -103,7 +103,7 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   unsigned int t;                // sample type, you may manage in your further analysis, if needed
   int id(Ntp->GetMCID());  //read event ID of a sample
   if(!HConfig.GetHisto(Ntp->isData(),id,t)){ Logger(Logger::Error) << "failed to find id" <<std::endl; return;}  //  gives a warining if list of samples in Histo.txt  and SkimSummary.log do not coincide 
-  // std::cout<<"------------------ New Event -----------------------"<<std::endl;
+  //   std::cout<<"------------------ New Event -----------------------"<<std::endl;
   bool PassedTrigger(false);
   int triggerindex;
   std::vector<int> TriggerIndex; 
@@ -114,16 +114,18 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   //  MatchedTriggerNames.push_back("DoubleMediumCombinedIsoPFTau");
   //  MatchedTriggerNames.push_back("LooseCombinedIsoPFTau");
   MatchedTriggerNames.push_back("IsoPFTau");
-
-  TriggerIndexVector=Ntp->GetVectorTriggers(MatchedTriggerNames);
+  TriggerIndexVector=Ntp->GetVectorCrossTriggers("HLT_IsoMu","eta2p1_LooseIsoPFTau","SingleL","Trk");
+  //TriggerIndexVector=Ntp->GetVectorTriggers(MatchedTriggerNames);
 
   //  TriggerIndex=Ntp->GetVectorTriggers("LooseIsoPFTau");
   // TriggerIndex=Ntp->GetVectorTriggers("HLT_IsoMu24");
 
    for(int itrig = 0; itrig < TriggerIndexVector.size(); itrig++){
-     if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){  
-       //   std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
-       PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
+    
+       if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){  
+	 //   std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
+	 PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
+     
    }
 
 
@@ -152,8 +154,8 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   std::vector<int> GoodTausIndex;
   std::vector<int> GoodMuonIndex;
   for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
-    //    if(Ntp->isLooseGoodTau(iDaugther)) {
-      if(Ntp->isMediumGoodTau(iDaugther)) {
+    //if(Ntp->isTau(iDaugther)) {
+    if(Ntp->isLooseGoodTau(iDaugther)) {
       if(Ntp->tauBaselineSelection(iDaugther)){
 	GoodTausIndex.push_back(iDaugther);
       }
