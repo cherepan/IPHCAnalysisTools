@@ -26,10 +26,14 @@ void  SkimmingNtuples::Configure(){
     cut.push_back(0);
     value.push_back(0);
     pass.push_back(false);
-    if(i==TriggerOk)    cut.at(TriggerOk)=1;
+    if(i==TriggerOk)      cut.at(TriggerOk)=1;
     if(i==ntaus)          cut.at(ntaus)=1;
-    if(i==nmuons)      cut.at(nmuons)=1;
-    if(i==PrimeVtx)     cut.at(PrimeVtx)=1;
+    if(i==nmuons)         cut.at(nmuons)=1;
+    if(i==nele)           cut.at(nele)=1;
+
+
+
+    if(i==PrimeVtx)       cut.at(PrimeVtx)=1;
   }
   // Setup cut plots
   TString hlabel;
@@ -47,8 +51,8 @@ void  SkimmingNtuples::Configure(){
       htitle.ReplaceAll("$","");
       htitle.ReplaceAll("\\","#");
       hlabel="Number of Prime Vertices";
-      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_PrimeVtx_",htitle,11,-0.5,10.5,hlabel,"Events"));
-      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_PrimeVtx_",htitle,11,-0.5,10.5,hlabel,"Events"));
+      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_PrimeVtx_",htitle,31,-0.5,30.5,hlabel,"Events"));
+      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_PrimeVtx_",htitle,31,-0.5,30.5,hlabel,"Events"));
     }
     else if(i==TriggerOk){
       title.at(i)="Trigger ";
@@ -69,6 +73,12 @@ void  SkimmingNtuples::Configure(){
       Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
     }
 
+    else if(i==nele){
+      title.at(i)="Number of electrons ";
+      hlabel="Number of electrons  ";
+      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
+      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
+    }
 
   } 
   // Setup NPassed Histogams
@@ -113,21 +123,35 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   //MatchedTriggerNames.push_back("DoubleMediumIsoPFTau");
   //  MatchedTriggerNames.push_back("DoubleMediumCombinedIsoPFTau");
   //  MatchedTriggerNames.push_back("LooseCombinedIsoPFTau");
-  MatchedTriggerNames.push_back("IsoPFTau");
-  TriggerIndexVector=Ntp->GetVectorCrossTriggers("HLT_IsoMu","eta2p1_LooseIsoPFTau","SingleL","Trk");
-  //TriggerIndexVector=Ntp->GetVectorTriggers(MatchedTriggerNames);
+  MatchedTriggerNames.push_back("HLT_IsoMu22_eta2p1_v");
+  // TriggerIndexVector=Ntp->GetVectorCrossTriggers("HLT_IsoMu","eta2p1_LooseIsoPFTau","SingleL","Trk");
+  TriggerIndexVector=Ntp->GetVectorTriggers(MatchedTriggerNames);
 
   //  TriggerIndex=Ntp->GetVectorTriggers("LooseIsoPFTau");
   // TriggerIndex=Ntp->GetVectorTriggers("HLT_IsoMu24");
 
-   for(int itrig = 0; itrig < TriggerIndexVector.size(); itrig++){
-    
-       if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){  
-	 //   std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
-	 PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
-     
-   }
 
+  //
+
+  //  for()
+  // for (auto itrig : MatchedTriggerNames){
+
+  //   std::cout<<" check auto  Name  "<< itrig <<std::endl;
+  // }
+
+   // for(int itrig = 0; itrig < TriggerIndexVector.size(); itrig++){
+   //   if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){  
+   //     std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
+   //     PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
+   // }
+
+
+
+   for(int itrig = 0; itrig < TriggerIndexVector.size(); itrig++){
+     if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){  
+       //       std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
+       PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
+   }
 
   // for(unsigned int itr = 0; itr < Ntp->NTriggers(); itr++){
     //    std::cout<<"====  Name  "<< Ntp->TriggerName(itr) << "   status   "<< Ntp->TriggerAccept(itr) <<std::endl;
@@ -152,17 +176,25 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
 
 
   std::vector<int> GoodTausIndex;
-  std::vector<int> GoodMuonIndex;
+  std::vector<int> GoodMuonIndex; 
+  std::vector<int> GoodEleIndex;
+
   for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
-    //if(Ntp->isTau(iDaugther)) {
-    if(Ntp->isLooseGoodTau(iDaugther)) {
+    if(Ntp->isTau(iDaugther)) {
+    //  if(Ntp->isLooseGoodTau(iDaugther)) {
       if(Ntp->tauBaselineSelection(iDaugther)){
 	GoodTausIndex.push_back(iDaugther);
       }
     }
-    if(Ntp->isLooseGoodMuon(iDaugther)){ 
+    //    if(Ntp->isLooseGoodMuon(iDaugther)){ 
+    if(Ntp->isMuon(iDaugther)){ 
       if(Ntp->muonBaselineSelection(iDaugther)){
-      GoodMuonIndex.push_back(iDaugther);}
+	GoodMuonIndex.push_back(iDaugther);}
+    }
+
+    if(Ntp->isElectron(iDaugther)){ 
+      if(Ntp->electronBaselineSelection(iDaugther)){
+	GoodEleIndex.push_back(iDaugther);}
     }
   }
 
@@ -189,30 +221,49 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
   pass.at(ntaus) = (value.at(ntaus) >= cut.at(ntaus));
 
   value.at(nmuons)=GoodMuonIndex.size();
-  pass.at(nmuons) = true;//(value.at(nmuons) >= cut.at(nmuons));
+  pass.at(nmuons) = (value.at(nmuons) == cut.at(nmuons));
+
+  value.at(nele)=GoodEleIndex.size();
+  pass.at(nele) = true;//(value.at(nele) == cut.at(nele));
+
+
 
   // Here you can defined different type of weights you want to apply to events. At the moment only PU weight is considered if event is not data
   double wobs=1;
-  double w;
-  if(!Ntp->isData()){w = Ntp->PUReweight();}
-  else{w=1;}
+  double w=1;
+  // if(!Ntp->isData()){w = Ntp->PUReweight();}
+  // else{w=1;}
 
-
+  //  std::cout<<"  w  "<< w << "  type   "<<HConfig.GetID(t)<<std::endl;
 
   bool status=AnalysisCuts(t,w,wobs);  // boolean that say whether your event passed critera defined in pass vector. The whole vector must be true for status = true
   ///////////////////////////////////////////////////////////
   // Analyse events  which passed selection
   if(status){
-    for(unsigned int itau =0; itau<GoodTausIndex.size(); itau++){
-      TauDecayMode.at(t).Fill(Ntp->decayMode(itau),w);
-      TauPT.at(t).Fill(Ntp->Daughters_P4(itau).Pt(),w);
+
+    //    std::cout<<"new event "<<std::endl;
+    for(unsigned int itau = 0; itau<GoodTausIndex.size(); itau++){
+      //   std::cout<<" itau  "<< itau << "  pT   "<< Ntp->Daughters_P4(GoodTausIndex.at(itau)).Pt() <<std::endl;
     }
 
 
-    for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
-      if(Ntp->particleType(iDaugther) == 0){
-	MuonPT.at(t).Fill(Ntp->Daughters_P4(iDaugther).Pt(),w);
-      }
+    //    std::cout<<"new event "<<std::endl;
+    for(unsigned int imu = 0; imu<GoodMuonIndex.size(); imu++){
+      //  std::cout<<"imu  "<< imu << "  pT   "<< Ntp->Daughters_P4(GoodMuonIndex.at(imu)).Pt() <<std::endl;
+    }
+
+
+    //  for(unsigned int itau =0; itau<GoodTausIndex.size(); itau++){
+      TauDecayMode.at(t).Fill(Ntp->decayMode(GoodTausIndex.at(0)),w);
+      TauPT.at(t).Fill(Ntp->Daughters_P4(GoodTausIndex.at(0)).Pt(),w);
+      //  }
+
+
+   
+     
+	MuonPT.at(t).Fill(Ntp->Daughters_P4(GoodMuonIndex.at(0)).Pt(),w);
+      
+ for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
       if(Ntp->particleType(iDaugther) == 1){
 	ElePT.at(t).Fill(Ntp->Daughters_P4(iDaugther).Pt(),w);
       }
@@ -228,7 +279,27 @@ void  SkimmingNtuples::doEvent(){ //  Method called on every event
 
 //  This is a function if you want to do something after the event loop
 void  SkimmingNtuples::Finish(){
+
   Selection::Finish();
+
+	for (unsigned int i = 0; i < CrossSectionandAcceptance.size(); i++) {
+	  std::cout<< "  i  "<< i<< "  HConfig.GetID(i) "<< HConfig.GetID(i) << " Npassed.GetBinContent(0) "<< Npassed.at(i).GetBinContent(0) << " Npassed.GetBinContent(1) "<< Npassed.at(i).GetBinContent(1) << " Npassed.GetBinContent(NCuts) "<< Npassed.at(i).GetBinContent(NCuts) <<  "   no weight 0  "<< Npassed_noweight.at(i).GetBinContent(0)<<  "   no weight 1  "<< Npassed_noweight.at(i).GetBinContent(1)<<  "   no weight Ncuts   "<< Npassed_noweight.at(i).GetBinContent(NCuts)<< " scale   "<< Selection::scaleFactorToLumi(HConfig.GetID(i))  << std::endl;
+
+	  int nbins = Npassed.at(0).GetNbinsX();
+
+	  for(unsigned int ibn=0; ibn < nbins+1; ibn ++){
+	    std::cout<<"   "<<  HConfig.GetID(i) << "  Npassed  "<< Npassed.at(i).GetBinContent(ibn)<< "  nowe  " << Npassed_noweight.at(i).GetBinContent(ibn)<<std::endl;
+
+	  }
+
+
+	}
+
+
+
+	
+
+
 }
 
 

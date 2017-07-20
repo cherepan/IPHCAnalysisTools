@@ -864,6 +864,9 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
    }  
 
   /* bool           isGoodMuon(unsigned int i); */
+
+   bool           isElectron( int i); 
+   bool           electronBaselineSelection( int i); 
    bool           isMuon( int i); 
    bool           isLooseGoodMuon( int i); 
    bool           isSoftGoodMuon( int i); 

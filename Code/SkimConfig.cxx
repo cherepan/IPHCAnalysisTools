@@ -139,9 +139,9 @@ void SkimConfig::SaveEfficiency(TString Name, std::vector<Long64_t> ids, std::ve
 			Eff = NPassed.at(i).GetBinContent(nbins) / NPassed.at(i).GetBinContent(1);
 		if (NPassed_noweight.at(i).GetBinContent(1) > 0)
 			Eff_w = NPassed_noweight.at(i).GetBinContent(nbins) / NPassed_noweight.at(i).GetBinContent(1);
-		(output) << "ID= " << ids.at(i) << setprecision(15) << "AllEvt= " << NPassed.at(i).GetBinContent(1) << "AllEvtErr= " << NPassed.at(i).GetBinError(1) << "SelEvt= "
-				<< NPassed.at(i).GetBinContent(nbins) << "SelEvtErr= " << NPassed.at(i).GetBinError(nbins) << "AllEvtnoweight= " << NPassed_noweight.at(i).GetBinContent(1) << "SelEvtnoweight= "
-				<< NPassed_noweight.at(i).GetBinContent(nbins) << "Eff(weight)= " << Eff << "Eff(noweight)= " << Eff_w << std::endl;
+		(output) << "ID= " << ids.at(i) << setprecision(15) << "  AllEvt= " << NPassed.at(i).GetBinContent(1) << "  AllEvtErr= " << NPassed.at(i).GetBinError(1) << "  SelEvt= "
+				<< NPassed.at(i).GetBinContent(nbins) << "  SelEvtErr= " << NPassed.at(i).GetBinError(nbins) << "  AllEvtnoweight= " << NPassed_noweight.at(i).GetBinContent(1) << "  SelEvtnoweight= "
+				<< NPassed_noweight.at(i).GetBinContent(nbins) << "  Eff(weight)= " << Eff << "  Eff(noweight)= " << Eff_w << std::endl;
 	}
 }
 
@@ -259,7 +259,7 @@ bool SkimConfig::CovertToHistoFormat() {
 	for (unsigned int i = 0; i < SkimIDs_new.size(); i++) {
 		for (unsigned int j = 0; j < SkimIDs.size(); j++) {
 			if (!IDFlag.at(j)) {
-				if (SkimIDs.at(j) % 100000 == SkimIDs_new.at(i)) {
+				if (SkimIDs.at(j) % 100 == SkimIDs_new.at(i)) {
 					Logger(Logger::Verbose) << "Found Master Decay: " << SkimIDs.at(j) << std::endl;
 					IDFlag.at(j) = true;
 					NEvents_new.at(i) += NEvents.at(j);

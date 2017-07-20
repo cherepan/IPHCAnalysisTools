@@ -411,6 +411,9 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
  bool Ntuple_Controller::isLooseGoodTau(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==2){
+
+     //     std::cout<<
+
      if(Daughters_decayModeFindingOldDMs(i)==1)
        {
        if(((tauID(i) & (1 << Bit_byLooseCombinedIsolationDeltaBetaCorr3Hits))==(1 << Bit_byLooseCombinedIsolationDeltaBetaCorr3Hits))){
@@ -487,7 +490,7 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
 bool Ntuple_Controller::tauBaselineSelection(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==2){
-     if(Daughters_P4(i).Pt()>20 && fabs(Daughters_P4(i).Eta())<2.3){
+     if(Daughters_P4(i).Pt()>17 && fabs(Daughters_P4(i).Eta())<2.3){
        if(fabs(dz(i))<0.2  ){
 	 if(fabs(Daughters_charge(i))==1){
 	   return true;
@@ -509,6 +512,26 @@ bool Ntuple_Controller::tauBaselineSelection(int i){
    return false;
  }
 
+ bool Ntuple_Controller::electronBaselineSelection(int i){
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+   if(particleType(i)==1){
+     if(Daughters_P4(i).Pt()>17 && fabs(Daughters_P4(i).Eta())<2.4)
+     	 return true;
+   }
+   return false;
+ }
+
+// electron
+bool Ntuple_Controller::isElectron(int i){
+  int bit(0);
+  if(particleType(i)==1){
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
 
 // muon
  bool Ntuple_Controller::isMuon(int i){
@@ -529,7 +552,7 @@ bool Ntuple_Controller::tauBaselineSelection(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    int bit(0);
    if(particleType(i)==0){
-       if( ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 0))  &&	 (((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 1))  ||  ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 2)) )   )
+     //  if( ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 0))  &&	 (((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 1))  ||  ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 2)) )   )
        {
        return true;
      }
