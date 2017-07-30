@@ -61,6 +61,8 @@ class NtupleValidation : public Selection {
   std::vector<TH1D> s12reco;
   std::vector<TH1D> s13reco;
   std::vector<TH1D> s23reco;
+  std::vector<TH1D> TauA1PtResolution;
+  std::vector<TH1D> TauA1PtResolutionPVSV;
 
 
   std::vector<TH1D> OSPionPtResolution;

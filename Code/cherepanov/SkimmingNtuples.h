@@ -38,6 +38,11 @@ class SkimmingNtuples : public Selection {
   //------------- Truth Gen ---------
   std::vector<TH1D> TauDecayMode;
 
+  std::vector<TH1D> OSPairMass;
+  std::vector<TH1D> LeadPairMass;
+  std::vector<TH1D> SSPairMass;
+  std::vector<TH1D> MissingTEnergy;
+  std::vector<TH1D> isPairCandOS;
   std::vector<TH1D> TauPT;
   std::vector<TH1D> MuonPT;
   std::vector<TH1D> ElePT;

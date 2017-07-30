@@ -378,6 +378,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    bool         GetTriggerIndex(TString n,  int &i);
    std::vector<int> GetVectorTriggers(TString n);
    std::vector<int> GetVectorTriggers(std::vector<TString> v);
+   std::vector<int> GetVectorTriggersFullMatch(std::vector<TString> v);
    std::vector<int> GetVectorCrossTriggers(TString n1,TString n2,TString f1,TString f2);
    Int_t            PUNumInteractions(){return Ntp->PUNumInteractions;}
    Float_t         MC_weight(){return Ntp->MC_weight;}

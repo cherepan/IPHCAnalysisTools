@@ -457,7 +457,9 @@ if( $ARGV[0] eq "--Local" ){
 
 
  if( $ARGV[0] eq "--DCache" ){
-    $RemoteDir="/opt/sbg/scratch1/cms/";
+#    $RemoteDir="/opt/sbg/scratch1/cms/";
+    $RemoteDir='\$TMPDIR'; 
+    #$RemoteDir   <-> $RemoteDir$UserID
     $TempDataSetFile=$ARGV[2];
     # Print out input parameters
     printf("Active directory will be: $OutputDir/workdir$set \n");
@@ -627,24 +629,24 @@ if( $ARGV[0] eq "--Local" ){
 			system(sprintf("echo \"source $OutputDir/workdir$set/Set_$B/Set_$B-get.sh \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh")) ; 
 			system(sprintf("chmod +x $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
-			system(sprintf("echo \"mkdir $RemoteDir$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
-			system(sprintf("echo \"cp -r *    $RemoteDir$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
-			system(sprintf("echo \"cd  $RemoteDir$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+			system(sprintf("echo \"mkdir $RemoteDir/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+			system(sprintf("echo \"cp -r *    $RemoteDir/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
+			system(sprintf("echo \"cd  $RemoteDir/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"$OutputDir/workdir$set/Code/Analysis.exe 2>&1 | tee >(sed -r \\\"s/\\\\x1B\\\\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g\\\" > Set_$B.output) \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"cp -r *  $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"source $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
-			system(sprintf("echo \"rm -r   $RemoteDir$UserID/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));	
+			system(sprintf("echo \"rm -r   $RemoteDir/workdir$set-Set_$B  \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));	
 			system(sprintf("echo \"export HOME=\\\"/home/$UserID\\\"         \"   >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 			system(sprintf("echo \"echo 'Completed Job' \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh"));
 
 
                         # Setup Set_$B_get.sh and Set_$B_clean.sh
 			system(sprintf("echo \"#! /bin/bash\"         >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
-			system(sprintf("echo \"mkdir $RemoteDir$UserID \" >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
-			system(sprintf("echo \"cd $RemoteDir$UserID \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
+			system(sprintf("echo \"mkdir $RemoteDir \" >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
+			system(sprintf("echo \"cd $RemoteDir \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
 
 			system(sprintf("echo \"#! /bin/bash\"         >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
-			system(sprintf("echo \"cd $RemoteDir$UserID \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh")); 
+			system(sprintf("echo \"cd $RemoteDir \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh")); 
 
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B/ \" >> $OutputDir/workdir$set/Set_$B/Set_$B.sh")) ;
 			# Setup Input.txt
@@ -688,8 +690,8 @@ if( $ARGV[0] eq "--Local" ){
 		    }
 #		    system(sprintf("echo \"xrdcp root://sbgse1.in2p3.fr/$file . \"  >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));
 		    system(sprintf("echo \"rfcp /dpm/in2p3.fr/home/cms/phedex/$file . \"  >> $OutputDir/workdir$set/Set_$B/Set_$B-get.sh"));  ##rfcp /dpm/in2p3.fr/home/cms/phedex/store/user/cherepan
-		    system(sprintf("echo \"File:  $RemoteDir$UserID/$myfiletrunc \"     >> $OutputDir/workdir$set/Set_$B/Input.txt")) ;
-		    system(sprintf("echo \"rm -rf $RemoteDir$UserID/$myfiletrunc \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
+		    system(sprintf("echo \"File:  $RemoteDir/$myfiletrunc \"     >> $OutputDir/workdir$set/Set_$B/Input.txt")) ;
+		    system(sprintf("echo \"rm -rf $RemoteDir/$myfiletrunc \"    >> $OutputDir/workdir$set/Set_$B/Set_$B-clean.sh"));
 		    $A++;
 		}
 	    }

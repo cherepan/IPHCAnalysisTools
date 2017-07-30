@@ -1,7 +1,7 @@
 Thin: False
-Skim: False
+Skim: True
 HistoFile: InputData/Histo.txt
-Analysis: ControlSample
+Analysis: NtupleValidation
 UncertType: default
 SkimInfo: InputData/SkimSummary.log
 Lumi: 4008.663

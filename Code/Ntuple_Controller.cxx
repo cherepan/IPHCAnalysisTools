@@ -1292,6 +1292,20 @@ std::vector<int> Ntuple_Controller::GetVectorTriggers(std::vector<TString>  v){
     } 
     return out;
 }
+
+std::vector<int> Ntuple_Controller::GetVectorTriggersFullMatch(std::vector<TString>  v){
+    std::vector<int> out;
+    for(unsigned i=0; i<NTriggers();i++){
+      TString name=TriggerName(i);
+      bool cpattern(true);
+      for(unsigned int j=0; j<v.size(); j++){
+	if(!name.Contains(v.at(j))) cpattern =false;
+      }
+      if(cpattern)  out.push_back(i) ;
+    } 
+    return out;
+}
+
 std::vector<int> Ntuple_Controller::GetVectorCrossTriggers(TString n1,TString n2,TString f1,TString f2){
     std::vector<int> out;
 
