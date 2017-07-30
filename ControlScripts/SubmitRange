@@ -1,0 +1,22 @@
+#! /bin/bash
+verbosity=$(grep SetLevel Code/Analysis.cxx | grep -c -e Debug -e Verbose)
+  if [[ ${verbosity} -ne 0 ]]; then 
+    echo 'ERROR: Please make sure to set the verbosity level to Info in Analysis.cxx, otherwise your log-files will break QSUB! Abort...' 
+    exit ${verbosity}
+  fi
+cd /home-pbs/vcherepa/Test/workdirSkimNtuplesJul_30_2017/
+
+
+#for var in $@ ; do
+ if [ "$1" == "--Range" ]; then
+     echo "Subbmiting range:  $2  $3"
+ 
+#done
+
+     for ((i=$2;i<=$3;i++)); do
+	 cd /home-pbs/vcherepa/Test/workdirSkimNtuplesJul_30_2017//Set_$i
+	 source  Qsub_Set_$i
+     done
+ fi
+ cd  /home-pbs/vcherepa/Test/workdirSkimNtuplesJul_30_2017/
+ 

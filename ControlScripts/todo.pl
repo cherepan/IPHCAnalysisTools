@@ -613,6 +613,8 @@ if( $ARGV[0] eq "--Local" ){
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B \" >> $OutputDir/workdir$set/Submit")) ;
 			system(sprintf("echo \"source  Qsub_Set_$B  \" >> $OutputDir/workdir$set/Submit")) ;
 
+			system(sprintf("./subs '{DIR}'  $OutputDir/workdir$set/  SubmitRange; "));
+			system(sprintf("cp  SubmitRange  $OutputDir/workdir$set/;"));
 
 			# Create and configure Set_$B dir
 			system(sprintf("mkdir $OutputDir/workdir$set/Set_$B ")) ;
