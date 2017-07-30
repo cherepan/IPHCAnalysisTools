@@ -40,6 +40,13 @@ Ntuple_Controller::Ntuple_Controller(std::vector<TString> RootFiles):
   nb=0;
   Logger(Logger::Info) << "Ntuple Configured" << std::endl;
 
+
+  // TFile *currentFile = chain->GetCurrentFile();
+  // hLLRCounters = (TH1F*)currentFile->Get("HTauTauTree/Counters");
+  // if(!hLLRCounters) std::cout<<"Counters histogram not found!"<<std::endl;
+ 
+
+
   // Fit setup 
 
   // Resolution uncertainty setup
@@ -1265,6 +1272,25 @@ bool Ntuple_Controller::hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,u
   }
   return false;
 }
+
+
+
+
+
+  int Ntuple_Controller::getBitOfGivenTrigger(TString tname){
+
+    TFile *currentFile = Ntp->fChain->GetCurrentFile();
+    TH1F  *hLLRCounters = (TH1F*)currentFile->Get("HTauTauTree/Counters");
+
+    int ibit=-1;
+    for(unsigned int iBinX=4;iBinX<(unsigned int)(hLLRCounters->GetNbinsX()+1);++iBinX){
+      TString name = hLLRCounters->GetXaxis()->GetBinLabel(iBinX);
+      if(name.Contains(tname))ibit =  iBinX-4;
+    }
+    return ibit;
+  }
+  
+
 bool Ntuple_Controller::GetTriggerIndex(TString n,  int &i){
   for(i=0; i<NTriggers();i++){
       TString name=TriggerName(i);
@@ -2034,5 +2060,8 @@ void Ntuple_Controller::runAndSaveSVFit_MuTau3p(SVFitObject* svfObj, SVFitStorag
 		Logger(Logger::Error) << "Unable to create a valid SVFit object." << std::endl;
 	}
 }
+
+
+
 
 #endif // USE_SVfit

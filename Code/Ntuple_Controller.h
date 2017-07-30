@@ -25,6 +25,7 @@
 
 // Include files (C & C++ libraries)
 #include<iostream>
+#include <fstream>
 #include <vector>
 #include <string.h>
 
@@ -249,6 +250,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
 
   // Data/MC switch and thin
+  TH1F* hLLRCounters;
   bool isData()  {return (bool)Ntp->Event_isRealData;}
   void ThinTree();
 
@@ -366,6 +368,10 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    Float_t         PUReweight(){return Ntp->PUReweight;}
    Float_t         rho(){return Ntp->rho;}
 
+
+   int getBitOfGivenTrigger(TString tname);
+
+
    unsigned int  NMothers(){return Ntp->mothers_px->size();}
 
    TLorentzVector Mothers_P4(unsigned int i){return TLorentzVector(Ntp->mothers_px->at(i), Ntp->mothers_py->at(i), Ntp->mothers_pz->at(i),Ntp->mothers_e->at(i));}
@@ -376,7 +382,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    bool TriggerAccept(unsigned int i){return Ntp->trigger_accept->at(i);}
    TString TriggerName(unsigned int i){return Ntp->trigger_name->at(i);}
    bool         GetTriggerIndex(TString n,  int &i);
-   std::vector<int> GetVectorTriggers(TString n);
+   std::vector<int> GetVectorTriggers(TString n); 
    std::vector<int> GetVectorTriggers(std::vector<TString> v);
    std::vector<int> GetVectorTriggersFullMatch(std::vector<TString> v);
    std::vector<int> GetVectorCrossTriggers(TString n1,TString n2,TString f1,TString f2);
@@ -1258,6 +1264,9 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
    std::vector<int> sortDefaultObjectsByPt(TString objectType);
 
    void deb(int i){std::cout<<"  deb   "<<i<<std::endl;}
+
+
+
 
 
 };
