@@ -4,8 +4,7 @@ verbosity=$(grep SetLevel Code/Analysis.cxx | grep -c -e Debug -e Verbose)
     echo 'ERROR: Please make sure to set the verbosity level to Info in Analysis.cxx, otherwise your log-files will break QSUB! Abort...' 
     exit ${verbosity}
   fi
-cd /home-pbs/vcherepa/Test/workdirSkimNtuplesJul_30_2017/
-
+cd {DIR}
 
 #for var in $@ ; do
  if [ "$1" == "--Range" ]; then
@@ -14,9 +13,10 @@ cd /home-pbs/vcherepa/Test/workdirSkimNtuplesJul_30_2017/
 #done
 
      for ((i=$2;i<=$3;i++)); do
-	 cd /home-pbs/vcherepa/Test/workdirSkimNtuplesJul_30_2017//Set_$i
+	 cd {DIR}Set_$i
 	 source  Qsub_Set_$i
      done
  fi
- cd  /home-pbs/vcherepa/Test/workdirSkimNtuplesJul_30_2017/
+ cd  {DIR}
+
  
