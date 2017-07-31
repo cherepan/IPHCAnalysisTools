@@ -457,7 +457,7 @@ if( $ARGV[0] eq "--Local" ){
 
 
  if( $ARGV[0] eq "--DCache" ){
-#    $RemoteDir="/opt/sbg/scratch1/cms/";
+    $RemoteScrathDir="/opt/sbg/scratch1/cms/";
     $RemoteDir='\$TMPDIR'; 
     #$RemoteDir   <-> $RemoteDir$UserID
     $TempDataSetFile=$ARGV[2];
@@ -616,6 +616,8 @@ if( $ARGV[0] eq "--Local" ){
 			system(sprintf("cp  SubmitManual  $OutputDir/workdir$set/;"));
 			system(sprintf("./subs '{DIR}'  $OutputDir/workdir$set/  $OutputDir/workdir$set/SubmitManual; "));
 			
+			system(sprintf("cp  set_env  $OutputDir/workdir$set/;"));
+			system(sprintf("./subs '{DIR}'  $RemoteScrathDir$UserID/  $OutputDir/workdir$set/set_env; "));
 
 			# Create and configure Set_$B dir
 			system(sprintf("mkdir $OutputDir/workdir$set/Set_$B ")) ;
