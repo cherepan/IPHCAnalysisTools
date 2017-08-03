@@ -408,12 +408,14 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
  bool Ntuple_Controller::isTau(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==2){
-     if(Daughters_decayModeFindingOldDMs(i)==1){
+     if(Daughters_decayModeFindingOldDMs(i)>0.5){
 	     return true;
      }
    }
    return false;
  }
+
+
 
  bool Ntuple_Controller::isLooseGoodTau(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
@@ -421,9 +423,9 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
 
      //     std::cout<<
 
-     if(Daughters_decayModeFindingOldDMs(i)==1)
+     if(Daughters_decayModeFindingOldDMs(i)>0.5)
        {
-       if(((tauID(i) & (1 << Bit_byLooseCombinedIsolationDeltaBetaCorr3Hits))==(1 << Bit_byLooseCombinedIsolationDeltaBetaCorr3Hits))){
+       if(((tauID(i) & (1 << Bit_byLooseIsolationMVArun2v1DBoldDMwLT))==(1 << Bit_byLooseIsolationMVArun2v1DBoldDMwLT))){
 	 if( ((tauID(i) & (1 << Bit_againstMuonLoose3))==(1 << Bit_againstMuonLoose3))){
 	   if( ((tauID(i) & (1 << Bit_againstElectronVLooseMVA6))==(1 << Bit_againstElectronVLooseMVA6))){
 	     return true;
@@ -497,8 +499,9 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
 bool Ntuple_Controller::tauBaselineSelection(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==2){
-     if(Daughters_P4(i).Pt()>17 && fabs(Daughters_P4(i).Eta())<2.3){
-       if(fabs(dz(i))<0.2  ){
+     if(Daughters_P4(i).Pt()>25 && fabs(Daughters_P4(i).Eta())<2.3){
+       //       if(fabs(dz(i))<0.2  )
+	 {
 	 if(fabs(Daughters_charge(i))==1){
 	   return true;
 	 }
@@ -511,8 +514,9 @@ bool Ntuple_Controller::tauBaselineSelection(int i){
  bool Ntuple_Controller::muonBaselineSelection(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==0){
-     if(Daughters_P4(i).Pt()>17 && fabs(Daughters_P4(i).Eta())<2.4)
-       if(fabs(dz(i))<0.2 &&  fabs(dxy(i))<0.045 ){
+     if(Daughters_P4(i).Pt()>25 && fabs(Daughters_P4(i).Eta())<2.1)
+       if(fabs(dz(i))<0.2 &&  fabs(dxy(i))<0.045 )
+	 {
 	 return true;
 	 }
    }

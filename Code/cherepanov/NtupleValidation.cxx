@@ -137,17 +137,27 @@ void  NtupleValidation::doEvent(){ //  Method called on every event
   //std::cout<<"------------------ New Event -----------------------"<<std::endl;
   bool PassedTrigger(false);
   int triggerindex;
-  std::vector<int> TriggerIndex;
-  TriggerIndex=Ntp->GetVectorTriggers("LooseIsoPFTau");
-  for(int itrig = 0; itrig < TriggerIndex.size(); itrig++){
 
-    if(   Ntp->GetTriggerIndex((TString)"HLT_IsoMu", TriggerIndex.at(itrig) )   ) {
-      if(Ntp->TriggerAccept(TriggerIndex.at(itrig))){   PassedTrigger =Ntp->TriggerAccept(TriggerIndex.at(itrig)); }
-    }
-   //if(Ntp->GetTriggerIndex("LooseIsoPFTau",itrig)) {PassedTrigger = Ntp->TriggerAccept(itrig); triggerindex=itrig; break; }
-   }
+  std::vector<int>TriggerIndexVector ;
+  std::vector<TString>  MatchedTriggerNames;
 
-  //std::cout<<" Trigger Name   " << Ntp->TriggerName(TriggerIndex.at(itrig))<< "  is accept   "<< Ntp->TriggerAccept(TriggerIndex.at(itrig)) <<std::endl;
+  MatchedTriggerNames.push_back("LooseIsoPFTau20");
+  //  TriggerIndexVector=Ntp->GetVectorCrossTriggers("HLT_IsoMu","LooseIsoPFTau20_v");
+  TriggerIndexVector=Ntp->GetVectorTriggers(MatchedTriggerNames);
+  
+  
+  // int triggerMask(0);
+  // triggerMask |= (1<< Ntp->getBitOfGivenTrigger("HLT_IsoMu22_eta2p1_v"));
+  // PassedTrigger = (( Ntp->triggerbit() & triggerMask ) == triggerMask);
+  
+  for(int itrig = 0; itrig < TriggerIndexVector.size(); itrig++){
+    if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){  
+      //  std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
+      PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
+  }
+  
+
+
 
   // Apply Selection
   // two vectors value and pass  are used to apply selection, store value.at(<A cut variable defined in .h as enumerator>) a quantitity you want to use in your selection.
