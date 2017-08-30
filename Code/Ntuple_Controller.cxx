@@ -25,7 +25,7 @@ Ntuple_Controller::Ntuple_Controller(std::vector<TString> RootFiles):
   ,isInit(false)
 {
   // TChains the ROOTuple file
-  TChain *chain = new TChain("HTauTauTree/HTauTauTree");
+  TChain *chain = new TChain("HTauTauTree");
   Logger(Logger::Verbose) << "Loading " << RootFiles.size() << " files" << std::endl;
   for(unsigned int i=0; i<RootFiles.size(); i++){
     chain->Add(RootFiles[i]);
