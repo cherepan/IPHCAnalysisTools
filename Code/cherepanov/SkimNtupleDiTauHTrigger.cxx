@@ -27,13 +27,9 @@ void  SkimNtupleDiTauHTrigger::Configure(){
     value.push_back(0);
     pass.push_back(false);
     if(i==TriggerOk)      cut.at(TriggerOk)=1;
-    if(i==ntaus)          cut.at(ntaus)=1;
-    if(i==nmuons)         cut.at(nmuons)=1;
-    if(i==nele)           cut.at(nele)=1;
-
-
-
     if(i==PrimeVtx)       cut.at(PrimeVtx)=1;
+    if(i==ntaus)          cut.at(ntaus)=1;
+
   }
   // Setup cut plots
   TString hlabel;
@@ -66,19 +62,6 @@ void  SkimNtupleDiTauHTrigger::Configure(){
       Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_ntaus_",htitle,10,-0.5,9.5,hlabel,"Events"));
       Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_ntaus_",htitle,10,-0.5,9.5,hlabel,"Events"));
     }
-    else if(i==nmuons){
-      title.at(i)="Number of muons ";
-      hlabel="Number of muons  ";
-      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
-      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
-    }
-
-    else if(i==nele){
-      title.at(i)="Number of electrons ";
-      hlabel="Number of electrons  ";
-      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
-      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
-    }
 
   } 
   // Setup NPassed Histogams
@@ -86,13 +69,10 @@ void  SkimNtupleDiTauHTrigger::Configure(){
   TauDecayMode=HConfig.GetTH1D(Name+"_TauDecayMode","HPS decay type",11,-0.5,10.5," pType","Events");
 
   TauPT=HConfig.GetTH1D(Name+"_TauPT","Transverse momentum #tau",50,15,75," P_{T}, GeV","Events");
-  MuonPT=HConfig.GetTH1D(Name+"_MuonPT","Transverse momentum  #mu " ,50,15,75," P_{T}, GeV","Events");
-  ElePT=HConfig.GetTH1D(Name+"_ElePT","Transverse momentum  e",50,15,75," P_{T}, GeV","Events");
   JetPT=HConfig.GetTH1D(Name+"_JetPT","Transverse momentum jet",50,15,125," P_{T}, GeV","Events");
   MissingTEnergy=HConfig.GetTH1D(Name+"_MissingTEnergy","Missing Transverse Energy",50,-0.05,99.5," M_{T}, GeV","Events");
   OSPairMass=HConfig.GetTH1D(Name+"_OSPairMass"," Mass of two OS candidates",50,50,100," M_{pair}, GeV","Events");
   SSPairMass=HConfig.GetTH1D(Name+"_SSPairMass"," Mass of two SS candidates",50,50,100," M_{pair}, GeV","Events");
-  LeadPairMass=HConfig.GetTH1D(Name+"_LeadPairMass"," Mass of two Lead OS candidates ",50,50,100," M_{pair}, GeV","Events");
 
 
 
@@ -108,13 +88,10 @@ void  SkimNtupleDiTauHTrigger::Store_ExtraDist(){
   //every new histo should be addedd to Extradist1d vector, just push it back;
   Extradist1d.push_back(&TauDecayMode);
   Extradist1d.push_back(&MissingTEnergy);
-  Extradist1d.push_back(&LeadPairMass);
   Extradist1d.push_back(&OSPairMass);
   Extradist1d.push_back(&SSPairMass);
   Extradist1d.push_back(&isPairCandOS);
   Extradist1d.push_back(&TauPT);
-  Extradist1d.push_back(&MuonPT);
-  Extradist1d.push_back(&ElePT);
   Extradist1d.push_back(&JetPT);
 
 }
@@ -130,8 +107,7 @@ void  SkimNtupleDiTauHTrigger::doEvent(){ //  Method called on every event
   std::vector<int>TriggerIndexVector ;
   std::vector<TString>  MatchedTriggerNames;
 
-  MatchedTriggerNames.push_back("HLT_IsoTkMu24_v");
-  //  TriggerIndexVector=Ntp->GetVectorCrossTriggers("HLT_IsoMu","LooseIsoPFTau20_v");
+  MatchedTriggerNames.push_back("HLT_DoubleMediumIsoPFTau");
   TriggerIndexVector=Ntp->GetVectorTriggers(MatchedTriggerNames);
    
 
@@ -141,7 +117,7 @@ void  SkimNtupleDiTauHTrigger::doEvent(){ //  Method called on every event
   
   for(int itrig = 0; itrig < TriggerIndexVector.size(); itrig++){
     if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){  
-      //  std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
+      std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
       PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
   }
   std::vector<int> GoodTausIndex;
@@ -154,7 +130,7 @@ void  SkimNtupleDiTauHTrigger::doEvent(){ //  Method called on every event
 	    GoodTausIndex.push_back(iDaugther);
 	  }
 	}
-    }
+    } 
   }
 
 
@@ -202,7 +178,7 @@ void  SkimNtupleDiTauHTrigger::doEvent(){ //  Method called on every event
     if(GoodTausIndex.size()!=0)   TauPT.at(t).Fill(Ntp->Daughters_P4(GoodTausIndex.at(0)).Pt(),w);
     
 
-    if(GoodTausIndex.size()!=0)      if(Ntp->Daughters_charge(GoodTausIndex.at(0))*Ntp->Daughters_charge(GoodMuonIndex.at(0))==-1) LeadPairMass.at(t).Fill(  (Ntp->Daughters_P4(GoodTausIndex.at(0)) + Ntp->Daughters_P4(GoodMuonIndex.at(0))).M(),w   );
+    //    if(GoodTausIndex.size()!=0)      if(Ntp->Daughters_charge(GoodTausIndex.at(0))*Ntp->Daughters_charge(GoodMuonIndex.at(0))==-1) LeadPairMass.at(t).Fill(  (Ntp->Daughters_P4(GoodTausIndex.at(0)) + Ntp->Daughters_P4(GoodMuonIndex.at(0))).M(),w   );
     
          
     

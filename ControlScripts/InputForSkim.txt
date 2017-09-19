@@ -1,11 +1,10 @@
 Thin: False
 Skim: True
 HistoFile: InputData/Histo.txt
-Analysis: NtupleValidation
-Analysis: SkimmingNtuples
+Analysis: SkimNtupleDiTauHTrigger
 UncertType: default
-SkimInfo: InputData/SkimSummaryRunD.log
-Lumi: 4248.384
+SkimInfo: InputData/SkimSummaryRunE.log
+Lumi: 4008.663
 PlotStyle: style2
 
 
