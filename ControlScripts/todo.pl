@@ -719,9 +719,9 @@ if( $ARGV[0] eq "--Local" ){
     printf("\n\nInstructions");
     printf("\nPlease make sure you have run:");
     printf("\nvoms-proxy-init");
-    printf("\ngrid-proxy-init"); 
-    printf("\ngit config --global credential.helper 'cache --timeout=3600'");
-    printf("\ngit config --global credential.helper cache");
+#    printf("\ngrid-proxy-init"); 
+#    printf("\ngit config --global credential.helper 'cache --timeout=3600'");
+#    printf("\ngit config --global credential.helper cache");
     printf("\nNow you can run the analysis using dcache.");
     printf("\nTo go to the Test workdir: cd  $OutputDir/workdir$set ");
     printf("\nTo compile the code in the workdir: source compile  $UserDir $tauspinner $svfit");

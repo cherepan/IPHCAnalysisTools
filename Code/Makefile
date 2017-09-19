@@ -76,7 +76,7 @@ ifdef USE_SVfit
 endif
 
 ifdef USE_cherepanov
-	TARGETS += MyTest NtupleValidation SkimmingNtuples ControlSample
+	TARGETS += MyTest NtupleValidation SkimmingNtuples ControlSample SkimNtupleDiTauHTrigger 
 	DEFS += -DUSE_cherepanov=1
 endif
 
