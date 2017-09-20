@@ -9,6 +9,10 @@
 #include "cherepanov/SkimmingNtuples.h"
 #include "cherepanov/ControlSample.h"
 #include "cherepanov/SkimNtupleDiTauHTrigger.h"
+#include "cherepanov/ZTauHTauH.h"
+
+
+
 #endif
 
 #ifdef USE_goe
@@ -42,6 +46,7 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   else if(Analysis.Contains("ntuplevalidation"))s=new NtupleValidation(Analysis,UncertType);
   else if(Analysis.Contains("skimmingntuples"))s=new SkimmingNtuples(Analysis,UncertType);
   else if(Analysis.Contains("skimntupleditauhtrigger"))s=new SkimNtupleDiTauHTrigger(Analysis,UncertType);
+  else if(Analysis.Contains("ztauhtauh"))s=new ZTauHTauH(Analysis,UncertType);
   else if(Analysis.Contains("controlsample"))s=new ControlSample(Analysis,UncertType);
 #endif
 // #ifdef USE_goe

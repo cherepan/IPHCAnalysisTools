@@ -1,7 +1,7 @@
 Thin: False
 Skim: False
 HistoFile: InputData/Histo.txt
-Analysis: ControlSample
+Analysis: ZTauHTauH
 UncertType: default
 SkimInfo: InputData/SkimSummaryRunE.log
 Lumi: 4008.663

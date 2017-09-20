@@ -461,14 +461,12 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
 
 
 
-
  bool Ntuple_Controller::isMediumGoodTau(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    int tauIDmaskMedium(0);
    if(particleType(i)==2){
-     tauIDmaskMedium|= (1<<Bit_byMediumIsolationMVArun2v1DBoldDMwLT);
-     tauIDmaskMedium|= (1<<Bit_againstMuonLoose3);
-     tauIDmaskMedium|= (1<<Bit_againstElectronVLooseMVA6);
+     tauIDmaskMedium|= (1<<Bit_againstMuonTight3);
+     tauIDmaskMedium|= (1<<Bit_againstElectronMediumMVA6);
      if(Daughters_decayModeFindingOldDMs(i)>0.5){
        if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
      
@@ -483,9 +481,8 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    int tauIDmaskMedium(0);
    if(particleType(i)==2){
-     tauIDmaskMedium|= (1<<Bit_byTightIsolationMVArun2v1DBoldDMwLT);
-     tauIDmaskMedium|= (1<<Bit_againstMuonLoose3);
-     tauIDmaskMedium|= (1<<Bit_againstElectronVLooseMVA6);
+     tauIDmaskMedium|= (1<<Bit_againstMuonTight3);
+     tauIDmaskMedium|= (1<<Bit_againstElectronTightMVA6);
      if(Daughters_decayModeFindingOldDMs(i)>0.5){
        if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
 	 return true;
@@ -495,6 +492,47 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
    return false;
  }
   
+ bool Ntuple_Controller::isLooseIsolatedTau(int i){
+   int tauIDmaskMedium(0);
+   if(particleType(i)==2){
+     tauIDmaskMedium|= (1<<Bit_byLooseIsolationMVArun2v1DBoldDMwLT);
+     if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
+       return true;
+     }
+   }
+   return false;
+ }
+bool Ntuple_Controller::isMediumIsolatedTau(int i){
+  int tauIDmaskMedium(0);
+  if(particleType(i)==2){
+    tauIDmaskMedium|= (1<<Bit_byMediumIsolationMVArun2v1DBoldDMwLT);
+    if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
+      return true;
+    }
+  }
+  return false;
+}
+bool Ntuple_Controller::isTightIsolatedTau(int i){
+  int tauIDmaskMedium(0);
+  if(particleType(i)==2){
+    tauIDmaskMedium|= (1<<Bit_byTightIsolationMVArun2v1DBoldDMwLT);
+    if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
+      return true;
+    }
+  }
+  return false;
+}
+bool Ntuple_Controller::isVTightIsolatedTau(int i){
+  int tauIDmaskMedium(0);
+  if(particleType(i)==2){
+    tauIDmaskMedium|= (1<<Bit_byVTightIsolationMVArun2v1DBoldDMwLT);
+    if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
+      return true;
+    }
+  }
+  return false;
+}
+
 
 bool Ntuple_Controller::tauBaselineSelection(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  

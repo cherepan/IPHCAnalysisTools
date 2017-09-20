@@ -884,6 +884,13 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
    bool           isLooseGoodTau( int i); 
    bool           isMediumGoodTau( int i);
    bool           isTightGoodTau( int i);
+
+   bool           isLooseIsolatedTau(int i);
+   bool           isMediumIsolatedTau(int i);
+   bool           isTightIsolatedTau(int i);
+   bool           isVTightIsolatedTau(int i);
+
+
    bool           tauBaselineSelection( int i);
    bool           muonBaselineSelection( int i);
  
