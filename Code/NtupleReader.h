@@ -710,7 +710,7 @@ NtupleReader::NtupleReader(TTree *tree) : fChain(0)
       if (!f || !f->IsOpen()) {
          f = new TFile("Memory Directory");
       }
-      f->GetObject("HTauTauTree/HTauTauTree",tree);
+      f->GetObject("HTauTauTree",tree);
 
 #else // SINGLE_TREE
 

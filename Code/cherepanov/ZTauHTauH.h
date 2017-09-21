@@ -9,6 +9,7 @@
 #include "TVector3.h"
 #include "TLorentzVector.h"
 #include "TMath.h"
+#include "TauDataFormat/TauNtuple/interface/DataMCType.h"
 #include "SimpleFits/FitSoftware/interface/TrackParticle.h"
 #include "SimpleFits/FitSoftware/interface/LorentzVectorParticle.h"
 #include "SimpleFits/FitSoftware/interface/MultiProngTauSolver.h"
@@ -58,6 +59,13 @@ class ZTauHTauH : public Selection {
   std::vector<TH1D> TauTauMass;
 
   std::vector<TH1D> dRTauTau;
+  std::vector<TH1D> QCDShape;
+
+  std::vector<TH1D> NQCD;
+  std::vector<TH1D> Tau1Isolation;
+  std::vector<TH1D> Tau2Isolation;
+
+
 
 };
 #endif

@@ -6,6 +6,30 @@
 #include "SVFitObject.h"
 #include "SimpleFits/FitSoftware/interface/Logger.h"
  
+#include "TLorentzVector.h"
+#include <cstdlib>
+#include "HistoConfig.h"
+#include <iostream>
+#include "PDG_Var.h"
+#include "SkimConfig.h"
+
+
+
+#include "SimpleFits/FitSoftware/interface/PDGInfo.h"
+#include "TVector3.h"
+#include "TMath.h"
+#include "SimpleFits/FitSoftware/interface/TrackParticle.h"
+#include "SimpleFits/FitSoftware/interface/LorentzVectorParticle.h"
+#include "SimpleFits/FitSoftware/interface/MultiProngTauSolver.h"
+#include "SimpleFits/FitSoftware/interface/ErrorMatrixPropagator.h"
+#include "SimpleFits/FitSoftware/interface/TauA1NuConstrainedFitter.h"
+#include "SimpleFits/FitSoftware/interface/DiTauConstrainedFitter.h"
+#include "SimpleFits/FitSoftware/interface/GlobalEventFit.h"
+#include "Objects.h"
+
+
+
+
 ZTauHTauH::ZTauHTauH(TString Name_, TString id_):
   Selection(Name_,id_),
   cMu_pt(20),
@@ -83,7 +107,6 @@ void  ZTauHTauH::Configure(){
       Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_SecondTauIsolation_",htitle,2,-0.5,1.5,hlabel,"Events"));
       Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_SecondTauIsolation_",htitle,2,-0.5,1.5,hlabel,"Events"));
     }
-
     else if(i==nGoodMuons){
       title.at(i)="Number of muons ";
       hlabel="Number of muons  ";
@@ -104,19 +127,24 @@ void  ZTauHTauH::Configure(){
   Npassed=HConfig.GetTH1D(Name+"_NPass","Cut Flow",NCuts+1,-1,NCuts,"Number of Accumulative Cuts Passed","Events");
 
 
-  Tau1PT=HConfig.GetTH1D(Name+"_Tau1PT","Transverse momentum of selected #tau candidate",50,24.5,80.5," P_{T}(#tau), GeV","Events");
-  Tau1E=HConfig.GetTH1D(Name+"_Tau1E","Energy of selected #tau candidate",50,24.5,99.5," E(#tau), GeV","Events");
+  Tau1PT=HConfig.GetTH1D(Name+"_Tau1PT","Transverse momentum of selected #tau candidate",30,24.5,80.5," P_{T}(#tau), GeV","Events");
+  Tau1E=HConfig.GetTH1D(Name+"_Tau1E","Energy of selected #tau candidate",30,24.5,99.5," E(#tau), GeV","Events");
   Tau1HPSDecayMode=HConfig.GetTH1D(Name+"_Tau1HPSDecayMode","Decay mode of the selected #tau candidate",11,-0.5,10.5," HPS Mode ","Events");
 
-  Tau2PT=HConfig.GetTH1D(Name+"_Tau2PT","Transverse momentum of selected #tau candidate",50,24.5,80.5," P_{T}(#tau), GeV","Events");
-  Tau2E=HConfig.GetTH1D(Name+"_Tau2E","Energy of selected #tau candidate",50,24.5,99.5," E(#tau), GeV","Events");
+  Tau2PT=HConfig.GetTH1D(Name+"_Tau2PT","Transverse momentum of selected #tau candidate",30,24.5,80.5," P_{T}(#tau), GeV","Events");
+  Tau2E=HConfig.GetTH1D(Name+"_Tau2E","Energy of selected #tau candidate",30,24.5,99.5," E(#tau), GeV","Events");
   Tau2HPSDecayMode=HConfig.GetTH1D(Name+"_Tau2HPSDecayMode","Decay mode of the selected #tau candidate",11,-0.5,10.5," HPS Mode ","Events");
 
 
-  TauTauMass=HConfig.GetTH1D(Name+"_TauTauMass","Visible invariant mass of a tau pair",60,40,120," M(#tau#tau), GeV","Events");
+  TauTauMass=HConfig.GetTH1D(Name+"_TauTauMass","Visible invariant mass of a tau pair",40,40,120," M(#tau#tau), GeV","Events");
+  NQCD=HConfig.GetTH1D(Name+"_NQCD","NQCD",6,0.5,6.5,"NQCD in ABCD","Events");
 
-
+  QCDShape=HConfig.GetTH1D(Name+"_QCDShape","QCDShape",2,0,1,"QCD Shape","");
   dRTauTau=HConfig.GetTH1D(Name+"_dRTauTau","#Delta R",20,0,1," #Delta R","Events");
+
+  Tau1Isolation=HConfig.GetTH1D(Name+"_Tau1Isolation","First Tau Isoaltion 1- Loose, 2- Medium, 3 Tight, 4-VTight",5,0.5,4.5," Discrimiantor","Events");
+  Tau2Isolation=HConfig.GetTH1D(Name+"_Tau2Isolation","First Tau Isoaltion 1- Loose, 2- Medium, 3 Tight, 4-VTight",5,0.5,4.5," Discrimiantor","Events");
+
 
     Selection::ConfigureHistograms();   //   do not remove
     HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);  // do not remove
@@ -137,7 +165,10 @@ void  ZTauHTauH::Store_ExtraDist(){
 
   Extradist1d.push_back(&dRTauTau);
   Extradist1d.push_back(&TauTauMass);
-
+  Extradist1d.push_back(&QCDShape);
+  Extradist1d.push_back(&NQCD);
+  Extradist1d.push_back(&Tau1Isolation);
+  Extradist1d.push_back(&Tau2Isolation);
 }
 
 void  ZTauHTauH::doEvent(){ //  Method called on every event
@@ -206,14 +237,78 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
   pass.at(FirstTauIsolation) = (value.at(FirstTauIsolation) == cut.at(FirstTauIsolation));
   pass.at(SecondTauIsolation) = (value.at(SecondTauIsolation) == cut.at(SecondTauIsolation));
 
- 
   // Here you can defined different type of weights you want to apply to events. At the moment only PU weight is considered if event is not data
   double wobs=1;
   double w;
   if(!Ntp->isData()){w = Ntp->PUReweight();}
   else{w=1;}
 
-  
+ // QCD ABCD BG Method
+  /*******************
+   *        |        *
+   *    C   |    D   *  SS
+   *        |        *       S
+   * ----------------*------ i
+   *        |        *       g
+   *    A   |    B   *  OS   n
+   *        |        *
+   *******************
+   *  Iso   | AntiIso
+   *
+   *     TauIsolation
+   */
+
+  std::vector<unsigned int> exclude_cuts;
+  exclude_cuts.push_back(FirstTauIsolation);
+  exclude_cuts.push_back(SecondTauIsolation);
+  exclude_cuts.push_back(PairCharge);
+  if(passAllBut(exclude_cuts)){
+    if(pass.at(FirstTauIsolation) && pass.at(SecondTauIsolation)){
+      if(pass.at(PairCharge)){
+	NQCD.at(t).Fill(1.,w); //A
+      }  
+      if(!pass.at(PairCharge)){
+	NQCD.at(t).Fill(2.,w); //B
+      }
+      if(Ntp->isMediumIsolatedTau(goodTauIndex.at(0)) && Ntp->isLooseIsolatedTau(goodTauIndex.at(1))){
+	if(pass.at(PairCharge)){
+	  NQCD.at(t).Fill(3.,w); //С
+	}
+	if(!pass.at(PairCharge)){
+	  NQCD.at(t).Fill(4.,w); //В
+	}  
+      }
+    }
+  }
+
+  bool IsQCDEvent = false;
+  if(!pass.at(PairCharge)){
+    QCDShape.at(t).Fill(1,w);
+    if(id == DataMCType::Data){
+      t=HConfig.GetType(DataMCType::QCD);
+      IsQCDEvent = true;
+    }
+  }
+  if(IsQCDEvent)    pass.at(PairCharge)= true;
+     
+
+  std::vector<unsigned int> exclude_cuts_ForTauIso;
+  exclude_cuts_ForTauIso.push_back(FirstTauIsolation);
+  exclude_cuts_ForTauIso.push_back(SecondTauIsolation);
+
+ if(passAllBut(exclude_cuts_ForTauIso)){
+   if(Ntp->isLooseIsolatedTau(goodTauIndex.at(0)))Tau1Isolation.at(t).Fill(1.);
+   if(Ntp->isMediumIsolatedTau(goodTauIndex.at(0)))Tau1Isolation.at(t).Fill(2.);
+   if(Ntp->isTightIsolatedTau(goodTauIndex.at(0)))Tau1Isolation.at(t).Fill(3.);
+   if(Ntp->isVTightIsolatedTau(goodTauIndex.at(0)))Tau1Isolation.at(t).Fill(4.);
+   if(Ntp->isLooseIsolatedTau(goodTauIndex.at(1)))Tau2Isolation.at(t).Fill(1.);
+   if(Ntp->isMediumIsolatedTau(goodTauIndex.at(1)))Tau2Isolation.at(t).Fill(2.);
+   if(Ntp->isTightIsolatedTau(goodTauIndex.at(1)))Tau2Isolation.at(t).Fill(3.);
+   if(Ntp->isVTightIsolatedTau(goodTauIndex.at(1)))Tau2Isolation.at(t).Fill(4.);
+
+
+ }
+
 
   bool status=AnalysisCuts(t,w,wobs);  // boolean that say whether your event passed critera defined in pass vector. The whole vector must be true for status = true
   ///////////////////////////////////////////////////////////
@@ -239,11 +334,7 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
   Tau2HPSDecayMode.at(t).Fill(Ntp->decayMode(TauIndex2),w);
   TauTauMass.at(t).Fill((Tau1P4+Tau2P4).M(),w);
   dRTauTau.at(t).Fill(Tau1P4.DeltaR(Tau2P4),w);
-
-  
   }
-
-
 }
 
 
@@ -251,6 +342,69 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
 
 //  This is a function if you want to do something after the event loop
 void  ZTauHTauH::Finish(){
+  if(mode == RECONSTRUCT){
+    std::cout<<" Starting Finish!  " <<std::endl;
+    
+    std::cout<<"A  Data  "<< NQCD.at(0).GetBinContent(1) << std::endl;
+    std::cout<<"B  Data  "<< NQCD.at(0).GetBinContent(2) << std::endl;
+    std::cout<<"C  Data  "<< NQCD.at(0).GetBinContent(3) << std::endl;
+    std::cout<<"D  Data  "<< NQCD.at(0).GetBinContent(4) << std::endl;
+    SkimConfig SC;
+    SC.ApplySkimEfficiency(types,Npassed, Npassed_noweight);
+
+    std::vector<double> QCD_Integral_B;
+    double QCD_IntegralMC_B;
+    double QCD_Integral_B_Data_minus_MC = 0;
+    
+    std::vector<double> QCD_Integral_C;
+    double QCD_IntegralMC_C;
+    double QCD_Integral_C_Data_minus_MC = 0;
+    
+    std::vector<double> QCD_Integral_D;
+    double QCD_IntegralMC_D;
+    double QCD_Integral_D_Data_minus_MC = 0;
+
+    //Get Yields in ABCD for QCD Scalefactor                                                                                                                                                                  
+    for(unsigned i=0;i<CrossSectionandAcceptance.size();i++){
+      QCD_Integral_B.push_back(NQCD.at(i).GetBinContent(2));
+      QCD_Integral_C.push_back(NQCD.at(i).GetBinContent(3));
+      QCD_Integral_D.push_back(NQCD.at(i).GetBinContent(4));
+      if(CrossSectionandAcceptance.at(i)>0){
+	QCD_Integral_B.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
+	QCD_Integral_C.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
+	QCD_Integral_D.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
+      }
+    }
+    for(unsigned i=0;i<CrossSectionandAcceptance.size();i++){
+      if(HConfig.GetID(i) == DataMCType::Data){
+	QCD_Integral_B_Data_minus_MC  += QCD_Integral_B.at(i);
+	QCD_Integral_C_Data_minus_MC += QCD_Integral_C.at(i);
+	QCD_Integral_D_Data_minus_MC += QCD_Integral_D.at(i);
+      }
+      if(CrossSectionandAcceptance.at(i)>0){
+	QCD_IntegralMC_B  += QCD_Integral_B.at(i);
+	QCD_IntegralMC_C  += QCD_Integral_C.at(i);
+	QCD_IntegralMC_D  += QCD_Integral_D.at(i);
+      }
+    }
+
+    double OS2SS = (QCD_Integral_C_Data_minus_MC  - QCD_IntegralMC_C )/ (QCD_Integral_D_Data_minus_MC);
+    double QCD_ScaleFactor = QCD_Integral_B_Data_minus_MC *OS2SS;
+
+
+    std::cout << "OS/SS QCD Sample: " << OS2SS << std::endl;
+    std::cout << "Scale Factor for QCD Sample: " << QCD_ScaleFactor << std::endl;
+    std::cout << "QCD in B region "<<  QCD_Integral_B_Data_minus_MC <<std::endl;
+    std::cout << "QCD_Integral_B_Data_minus_MC is: " << QCD_Integral_B_Data_minus_MC << std::endl;
+    std::cout << "QCD_Integral_C_Data_minus_MC is: " << QCD_Integral_C_Data_minus_MC << std::endl;
+    std::cout << "QCD_Integral_D_Data_minus_MC is: " << QCD_Integral_D_Data_minus_MC << std::endl;
+
+    std::cout << " QCD_IntegralMC_B is: " << QCD_IntegralMC_B << std::endl;
+    std::cout << " QCD_IntegralMC_C is: " << QCD_IntegralMC_C << std::endl;
+    std::cout << " QCD_IntegralMC_D is: " << QCD_IntegralMC_D << std::endl;
+    ScaleAllHistOfType(HConfig.GetType(DataMCType::QCD),QCD_ScaleFactor/Nminus0.at(0).at(HConfig.GetType(DataMCType::QCD)).Integral());
+  }
+
   Selection::Finish();
 }
 
