@@ -425,7 +425,8 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
 
      if(Daughters_decayModeFindingOldDMs(i)>0.5)
        {
-       if(((tauID(i) & (1 << Bit_byLooseIsolationMVArun2v1DBoldDMwLT))==(1 << Bit_byLooseIsolationMVArun2v1DBoldDMwLT))){
+	 //       if(((tauID(i) & (1 << Bit_byLooseIsolationMVArun2v1DBoldDMwLT))==(1 << Bit_byLooseIsolationMVArun2v1DBoldDMwLT)))
+	 {
 	 if( ((tauID(i) & (1 << Bit_againstMuonLoose3))==(1 << Bit_againstMuonLoose3))){
 	   if( ((tauID(i) & (1 << Bit_againstElectronVLooseMVA6))==(1 << Bit_againstElectronVLooseMVA6))){
 	     return true;

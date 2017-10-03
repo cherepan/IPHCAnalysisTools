@@ -3,8 +3,8 @@ Skim: True
 HistoFile: InputData/Histo.txt
 Analysis: SkimNtupleDiTauHTrigger
 UncertType: default
-SkimInfo: InputData/SkimSummaryRunE.log
-Lumi: 4008.663
+SkimInfo: InputData/SkimSummary_TauCGFE_Data.log
+Lumi: 229720.1
 PlotStyle: style2
 
 
