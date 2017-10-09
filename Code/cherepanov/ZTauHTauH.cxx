@@ -139,11 +139,11 @@ void  ZTauHTauH::Configure(){
   TauTauMass=HConfig.GetTH1D(Name+"_TauTauMass","Visible invariant mass of a tau pair",40,40,120," M(#tau#tau), GeV","Events");
   NQCD=HConfig.GetTH1D(Name+"_NQCD","NQCD",6,0.5,6.5,"NQCD in ABCD","Events");
 
-  QCDShape=HConfig.GetTH1D(Name+"_QCDShape","QCDShape",2,0,1,"QCD Shape","");
+  QCDShape=HConfig.GetTH1D(Name+"_QCDShape","QCDShape",2,0,2,"QCD Shape","");
   dRTauTau=HConfig.GetTH1D(Name+"_dRTauTau","#Delta R",20,0,1," #Delta R","Events");
 
-  Tau1Isolation=HConfig.GetTH1D(Name+"_Tau1Isolation","First Tau Isoaltion 1- Loose, 2- Medium, 3 Tight, 4-VTight",5,0.5,4.5," Discrimiantor","Events");
-  Tau2Isolation=HConfig.GetTH1D(Name+"_Tau2Isolation","First Tau Isoaltion 1- Loose, 2- Medium, 3 Tight, 4-VTight",5,0.5,4.5," Discrimiantor","Events");
+  Tau1Isolation=HConfig.GetTH1D(Name+"_Tau1Isolation","First Tau Isoaltion 1- Loose, 2- Medium, 3 Tight, 4-VTight",5,0.5,5.5," Discrimiantor","Events");
+  Tau2Isolation=HConfig.GetTH1D(Name+"_Tau2Isolation","First Tau Isoaltion 1- Loose, 2- Medium, 3 Tight, 4-VTight",5,0.5,5.5," Discrimiantor","Events");
 
 
     Selection::ConfigureHistograms();   //   do not remove
@@ -398,10 +398,9 @@ void  ZTauHTauH::Finish(){
     std::cout << "QCD_Integral_B_Data_minus_MC is: " << QCD_Integral_B_Data_minus_MC << std::endl;
     std::cout << "QCD_Integral_C_Data_minus_MC is: " << QCD_Integral_C_Data_minus_MC << std::endl;
     std::cout << "QCD_Integral_D_Data_minus_MC is: " << QCD_Integral_D_Data_minus_MC << std::endl;
-
-    std::cout << " QCD_IntegralMC_B is: " << QCD_IntegralMC_B << std::endl;
-    std::cout << " QCD_IntegralMC_C is: " << QCD_IntegralMC_C << std::endl;
-    std::cout << " QCD_IntegralMC_D is: " << QCD_IntegralMC_D << std::endl;
+    std::cout << "QCD_IntegralMC_B is: " << QCD_IntegralMC_B << std::endl;
+    std::cout << "QCD_IntegralMC_C is: " << QCD_IntegralMC_C << std::endl;
+    std::cout << "QCD_IntegralMC_D is: " << QCD_IntegralMC_D << std::endl;
     ScaleAllHistOfType(HConfig.GetType(DataMCType::QCD),QCD_ScaleFactor/Nminus0.at(0).at(HConfig.GetType(DataMCType::QCD)).Integral());
   }
 

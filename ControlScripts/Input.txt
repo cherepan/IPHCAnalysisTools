@@ -1,10 +1,10 @@
 Thin: False
 Skim: False
 HistoFile: InputData/Histo.txt
-Analysis: SimFit
+Analysis: ZTauHTauH
 UncertType: default
-SkimInfo: InputData/SkimSummary_TauCGFE_Data.log
-Lumi: 172240.1
+SkimInfo: InputData/SkimSummaryRunE.log
+Lumi: 4009.20
 PlotStyle: style2
 
 
