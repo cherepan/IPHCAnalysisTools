@@ -49,6 +49,7 @@ TARGETS       =	Ntuple_Controller \
 		ReferenceScaleFactors \
 		rochcor2012jan22 \
 		Objects \
+		PUReweight \
 		UncertaintyValue
 
 CINTTARGETS = 
