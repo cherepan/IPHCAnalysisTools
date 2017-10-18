@@ -28,6 +28,14 @@ if($UserID eq "lebihan"){
     $UserName="Anne-Catherine";
 }
 
+if($UserID eq "gbourgat"){
+    $UserIDCern="gbourgat";
+    $UserDir="--gbourgat";
+    $UserName="Guillaume";
+}
+
+
+
 
 
 #Default vaules

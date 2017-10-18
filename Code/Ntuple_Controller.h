@@ -365,6 +365,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    Float_t         PFMETCov11(){return Ntp->PFMETCov11;}
    Float_t         PFMETsignif(){return Ntp->PFMETsignif;}
    Float_t         npu(){return Ntp->npu;}
+   Int_t         npv(){return Ntp->npv;}
    Float_t         PUReweight(){return Ntp->PUReweight;}
    Float_t         rho(){return Ntp->rho;}
 
@@ -761,7 +762,7 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  float subjets_CSV(unsigned int i){return Ntp->subjets_CSV->at(i);}
  int subjets_ak8MotherIdx(unsigned int i){return Ntp->subjets_ak8MotherIdx->at(i);}
 
-
+ bool CHECK_BIT(int var, int pos){  return ((var & (1 << pos)) == (1 << pos)); }
 
 
 

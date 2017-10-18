@@ -91,6 +91,19 @@ ifdef USE_lebihan
 	DEFS += -DUSE_lebihan=1
 endif
 
+ifdef USE_lebihan
+	TARGETS += 
+	DEFS += -DUSE_lebihan=1
+endif
+
+
+ifdef USE_gbourgat
+	TARGETS += 
+	DEFS += -DUSE_gbourgat=1
+endif
+
+
+
 HDRS          = $(TARGETS:=.h) 		
 SRCS          = $(TARGETS:=.cxx)  Analysis.cxx
 OBJS          = $(SRCS:.cxx=.o)
@@ -117,6 +130,13 @@ ifdef USE_lebihan
 	vpath %.cxx lebihan
 	vpath %.h lebihan
 endif
+ifdef USE_gbourgat
+	vpath %.cxx gbourgat
+	vpath %.h gbourgat
+endif
+
+
+
 vpath %.cxx CommonFiles
 vpath %.h CommonFiles
 

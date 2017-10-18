@@ -262,6 +262,8 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
   exclude_cuts.push_back(FirstTauIsolation);
   exclude_cuts.push_back(SecondTauIsolation);
   exclude_cuts.push_back(PairCharge);
+  std::cout<<" before  " << pass.at(TriggerOk) << "    " <<   pass.at(PrimeVtx) << "    " <<  pass.at(nGoodTaus)<< "    " <<   pass.at(FirstTauIsolation) << "    " <<  pass.at(SecondTauIsolation) << "    " <<  pass.at(nGoodMuons) << "    " <<  pass.at(PairCharge) << "  passAllBut  " << passAllBut(exclude_cuts) <<std::endl;
+
   if(passAllBut(exclude_cuts)){
     if(pass.at(FirstTauIsolation) && pass.at(SecondTauIsolation)){
       if(pass.at(PairCharge)){
