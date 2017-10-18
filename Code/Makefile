@@ -50,6 +50,8 @@ TARGETS       =	Ntuple_Controller \
 		rochcor2012jan22 \
 		Objects \
 		PUReweight \
+		ScaleFactor \
+		tauTrigSFreader \
 		UncertaintyValue
 
 CINTTARGETS = 

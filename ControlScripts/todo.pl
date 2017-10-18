@@ -35,9 +35,6 @@ if($UserID eq "gbourgat"){
 }
 
 
-
-
-
 #Default vaules
 $InputDir="/home-pbs/$UserID/InputTest";
 $OutputDir="/home-pbs/$UserID/Test";
