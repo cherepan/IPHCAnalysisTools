@@ -513,14 +513,24 @@ if( $ARGV[0] eq "--Local" ){
     system(sprintf("echo \"Mode: RECONSTRUCT\" >> $OutputDir/workdir$set/Input.txt"));
     system(sprintf("echo \"RunType: LOCAL\" >> $OutputDir/workdir$set/Input.txt"));
 
+    # Generate SubmitManual and set_env 
+    system(sprintf("cp  subs  $OutputDir/workdir$set/;"));
+    system(sprintf("cp  SubmitManual  $OutputDir/workdir$set/;"));
+    system(sprintf("cd $OutputDir/workdir$set/; ./subs '{DIR}'  $OutputDir/workdir$set/  $OutputDir/workdir$set/SubmitManual; "));
+			
+    system(sprintf("cp  set_env  $OutputDir/workdir$set/;"));
+    system(sprintf("cd $OutputDir/workdir$set/; ./subs '{DIR}'  $RemoteScrathDir$UserID/  $OutputDir/workdir$set/set_env; "));
+
+
+
     # Setup Condor Combine scripts
-    system(sprintf("echo \"universe     = vanilla      \"  >> $OutputDir/workdir$set/Condor_Combine"));
-    system(sprintf("echo \"rank         = memory       \"  >> $OutputDir/workdir$set/Condor_Combine"));
-    system(sprintf("echo \"executable   = Combine      \"  >> $OutputDir/workdir$set/Condor_Combine")); 
-    system(sprintf("echo \"output       = Combine-Condor_\\\$(cluster)_\\\$(proccess).o  \" >> $OutputDir/workdir$set/Condor_Combine")); 
-    system(sprintf("echo \"error        = Combine-Condor_\\\$(cluster)_\\\$(proccess).e  \" >> $OutputDir/workdir$set/Condor_Combine")); 
-    system(sprintf("echo \"log          = Combine-Condor_\\\$(cluster)_\\\$(proccess).log  \" >> $OutputDir/workdir$set/Condor_Combine")); 			
-    system(sprintf("echo \"queue = 1 \" >> $OutputDir/workdir$set/Condor_Combine"));
+    #system(sprintf("echo \"universe     = vanilla      \"  >> $OutputDir/workdir$set/Condor_Combine"));
+    #system(sprintf("echo \"rank         = memory       \"  >> $OutputDir/workdir$set/Condor_Combine"));
+    #system(sprintf("echo \"executable   = Combine      \"  >> $OutputDir/workdir$set/Condor_Combine")); 
+    #system(sprintf("echo \"output       = Combine-Condor_\\\$(cluster)_\\\$(proccess).o  \" >> $OutputDir/workdir$set/Condor_Combine")); 
+    #system(sprintf("echo \"error        = Combine-Condor_\\\$(cluster)_\\\$(proccess).e  \" >> $OutputDir/workdir$set/Condor_Combine")); 
+    #system(sprintf("echo \"log          = Combine-Condor_\\\$(cluster)_\\\$(proccess).log  \" >> $OutputDir/workdir$set/Condor_Combine")); 			
+    #system(sprintf("echo \"queue = 1 \" >> $OutputDir/workdir$set/Condor_Combine"));
 
     # Start Submit script
     system(sprintf("echo \"#! /bin/bash\" >> $OutputDir/workdir$set/Submit")) ; 
@@ -618,11 +628,6 @@ if( $ARGV[0] eq "--Local" ){
 			system(sprintf("echo \"cd $OutputDir/workdir$set/Set_$B \" >> $OutputDir/workdir$set/Submit")) ;
 			system(sprintf("echo \"source  Qsub_Set_$B  \" >> $OutputDir/workdir$set/Submit")) ;
 
-			system(sprintf("cp  SubmitManual  $OutputDir/workdir$set/;"));
-			system(sprintf("./subs '{DIR}'  $OutputDir/workdir$set/  $OutputDir/workdir$set/SubmitManual; "));
-			
-			system(sprintf("cp  set_env  $OutputDir/workdir$set/;"));
-			system(sprintf("./subs '{DIR}'  $RemoteScrathDir$UserID/  $OutputDir/workdir$set/set_env; "));
 
 			# Create and configure Set_$B dir
 			system(sprintf("mkdir $OutputDir/workdir$set/Set_$B ")) ;
