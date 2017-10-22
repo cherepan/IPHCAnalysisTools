@@ -7,8 +7,12 @@ if [ "${1}"  == "--help" ]; then
     echo "--TauSpinner              Configures the make file to use TauSpinner"
     echo "--SVfit                   Configures the make file to use SVfit"
     echo "--cherepanov              Configures the make file to compile files in the directory cherepanov"
-    echo "--goe              Configures the make file to compile files in the directory goe"
-    echo "--lebihan              Configures the make file to compile files in the directory lebihan"
+    echo "--goe                     Configures the make file to compile files in the directory goe"
+    echo "--lebihan                 Configures the make file to compile files in the directory lebihan"
+    echo "--gbourgat                Configures the make file to compile files in the directory gbourgat"
+
+
+
 else
 
     echo "Configuring Environment...."
@@ -73,6 +77,10 @@ else
 	    if [ "${var}" == "--lebihan" ]; then
 		echo "Configuring Code to use directory lebihan"
 		echo "USE_lebihan=1" >> make.inc
+	    fi
+	    if [ "${var}" == "--gbourgat" ]; then
+		echo "Configuring Code to use directory lebihan"
+		echo "USE_gbourgat=1" >> make.inc
 	    fi
 
 	done

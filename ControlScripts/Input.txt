@@ -4,7 +4,7 @@ HistoFile: InputData/Histo.txt
 Analysis: ZTauHTauH
 UncertType: default
 SkimInfo: InputData/SkimSummaryRunE.log
-Lumi: 4009.20
+Lumi: 7540.12
 PlotStyle: style2
 
 

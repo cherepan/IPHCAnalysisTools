@@ -484,6 +484,8 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
    if(particleType(i)==2){
      tauIDmaskMedium|= (1<<Bit_againstMuonTight3);
      tauIDmaskMedium|= (1<<Bit_againstElectronTightMVA6);
+    
+
      if(Daughters_decayModeFindingOldDMs(i)>0.5){
        if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
 	 return true;
