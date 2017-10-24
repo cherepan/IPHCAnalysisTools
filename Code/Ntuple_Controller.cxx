@@ -7,7 +7,7 @@
 #include "TF1.h"
 #include "Parameters.h"
 #include "SimpleFits/FitSoftware/interface/Logger.h"
-
+#include <tuple>
 
 // External code
 #include "TauDataFormat/TauNtuple/interface/DataMCType.h"
@@ -495,63 +495,533 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
    return false;
  }
   
- bool Ntuple_Controller::isLooseIsolatedTau(int i){
-   int tauIDmaskMedium(0);
-   if(particleType(i)==2){
-     tauIDmaskMedium|= (1<<Bit_byLooseIsolationMVArun2v1DBoldDMwLT);
-     if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
-       return true;
-     }
-   }
-   return false;
- }
-bool Ntuple_Controller::isMediumIsolatedTau(int i){
-  int tauIDmaskMedium(0);
-  if(particleType(i)==2){
-    tauIDmaskMedium|= (1<<Bit_byMediumIsolationMVArun2v1DBoldDMwLT);
-    if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
-      return true;
-    }
-  }
-  return false;
-}
-bool Ntuple_Controller::isTightIsolatedTau(int i){
-  int tauIDmaskMedium(0);
-  if(particleType(i)==2){
-    tauIDmaskMedium|= (1<<Bit_byTightIsolationMVArun2v1DBoldDMwLT);
-    if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
-      return true;
-    }
-  }
-  return false;
-}
-bool Ntuple_Controller::isVTightIsolatedTau(int i){
-  int tauIDmaskMedium(0);
-  if(particleType(i)==2){
-    tauIDmaskMedium|= (1<<Bit_byVTightIsolationMVArun2v1DBoldDMwLT);
-    if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
-      return true;
-    }
-  }
-  return false;
+
+
+// bool Ntuple_Controller::isVTightIsolatedTau(int i){
+//   int tauIDmaskMedium(0);
+//   if(particleType(i)==2){
+//     tauIDmaskMedium|= (1<<Bit_byVTightIsolationMVArun2v1DBoldDMwLT);
+//     if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
+//       return true;
+//     }
+//   }
+//   return false;
+// }
+
+
+
+bool Ntuple_Controller::isIsolatedTau(int i, TString isotype){
+  if(particleType(i)!=2){ std::cout<<"candidate is  not a tau  "<< i <<std::endl; return false;} 
+  if(isotype.Contains("Loose")) return  CHECK_BIT(tauID(i),Bit_byLooseIsolationMVArun2v1DBoldDMwLT);
+  if(isotype.Contains("Medium")) return  CHECK_BIT(tauID(i),Bit_byMediumIsolationMVArun2v1DBoldDMwLT);
+  if(isotype.Contains("Tight")) return  CHECK_BIT(tauID(i),Bit_byTightIsolationMVArun2v1DBoldDMwLT);
+  if(isotype.Contains("VTight")) return  CHECK_BIT(tauID(i),Bit_byVTightIsolationMVArun2v1DBoldDMwLT);
+  return true;
 }
 
 
-bool Ntuple_Controller::tauBaselineSelection(int i){
-  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
-   if(particleType(i)==2){
-     if(Daughters_P4(i).Pt()>25 && fabs(Daughters_P4(i).Eta())<2.3){
-       //       if(fabs(dz(i))<0.2  )
-	 {
-	 if(fabs(Daughters_charge(i))==1){
-	   return true;
-	 }
-       }
-     }
-   }
-   return false;
+bool Ntuple_Controller::tauBaselineSelection(int i, double cutPt, double cutEta, int aele, int amu){
+  bool agEleVal(false), agMuVal(false), kin(false), dm(false), vertexS(false);
+  // ag ele:
+  if (aele== 0)      agEleVal = CHECK_BIT(tauID(i),Bit_againstElectronVLooseMVA6);
+  else if ( aele== 1) agEleVal = CHECK_BIT(tauID(i),Bit_againstElectronLooseMVA6);
+  else if ( aele== 2) agEleVal = CHECK_BIT(tauID(i),Bit_againstElectronMediumMVA6);
+  else if ( aele== 3) agEleVal = CHECK_BIT(tauID(i),Bit_againstElectronTightMVA6);
+  else if ( aele== 4) agEleVal = CHECK_BIT(tauID(i),Bit_againstElectronVTightMVA6);
+  // ag mu:
+  if ( amu== 0)      agMuVal = CHECK_BIT(tauID(i),Bit_againstMuonLoose3);
+  else if ( amu== 1) agMuVal = CHECK_BIT(tauID(i),Bit_againstMuonTight3);
+
+  kin     = (Daughters_P4(i).Pt() >cutPt && fabs(Daughters_P4(i).Eta())<cutEta );
+  vertexS = (fabs(dz(i)) < 0.2); 
+  dm      =(particleType(i)==2 && Daughters_decayModeFindingOldDMs(i) > 0.5);
+
+  if(kin && agEleVal && agMuVal && dm && vertexS) return true;
+  return false;
 } 
 	   
+
+
+std::vector<int>  Ntuple_Controller::SortTauHTauHPair (std::vector<int>  PairIndices)
+{
+
+  //  sorting according to https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#Baseline_tau_h_tau_h
+  //  First prefer the pair with the most isolated candidate 1 (muon for μτh and eμ, electron for eτh and either τh for τhτh).
+  //  If the isolation of candidate 1 is the same in both pairs, prefer the pair with the highest candidate 1 pt 
+  //  (for cases of genuinely the same isolation value but different possible candidate 1).
+  //  If the pt of candidate 1 in both pairs is the same (likely because it's the same object) then prefer the pair with the most isolated candidate 2 (tau for eτh, μτh, τhτh, electron for eμ).
+  //  If the isolation of candidate 2 is the same, prefer the pair with highest candidate 2 pt (for cases of genuinely the same isolation value but different possible candidate 2). 
+  //  std::vector<std::pair<double, double> >  vecpairs;
+
+  // prepare a tuple with all the needed sorting info
+  // pt1 - iso1 - idx1 - pt2 - iso2 - idx2 - idxoriginalPair
+
+
+  std::vector<int> Sorted;
+  vector<tauPair_t> vPairs;
+  for(unsigned int ipair=0; ipair<PairIndices.size(); ipair++ )
+    {
+      TLorentzVector p4_1 =   Daughters_P4(indexDau1(ipair));
+      TLorentzVector p4_2 =   Daughters_P4(indexDau2(ipair));
+  
+      float iso1 = Daughters_byCombinedIsolationDeltaBetaCorrRaw3Hits(indexDau1(ipair));
+      float iso2 = Daughters_byCombinedIsolationDeltaBetaCorrRaw3Hits(indexDau2(ipair));
+      // Daughters_byIsolationMVArun2v1DBoldDMwLTraw   - this is negative!
+      // Daughters_byCombinedIsolationDeltaBetaCorrRaw3Hits  --  optional raw isolation
+     // first one is highest pt
+      tauPair_t pp;
+      if (p4_1.Pt() > p4_2.Pt()) 
+	{ 
+	  pp.push_back(p4_1.Pt());  	pp.push_back(iso1); 	pp.push_back(indexDau1(ipair));
+	  pp.push_back(p4_2.Pt()); 	pp.push_back(iso2); 	pp.push_back(indexDau2(ipair));	pp.push_back(PairIndices.at(ipair));
+	  
+	 //	pp = make_tuple(p4_1.Pt(), iso1, indexDau1(ipair), p4_2.Pt(), iso2,indexDau2(ipair) , ipair);
+	}
+       else { 	
+        	pp.push_back(p4_2.Pt());	pp.push_back(iso2);	pp.push_back(indexDau2(ipair));
+        	pp.push_back(p4_1.Pt());	pp.push_back(iso1);	pp.push_back(indexDau1(ipair));	pp.push_back(PairIndices.at(ipair));
+      //  	//pp = make_tuple(p4_2.Pt(), iso2, indexDau2(ipair), p4_1.Pt(), iso1, indexDau1(ipair), ipair);
+       }
+      vPairs.push_back(pp);
+    }
+  std::vector<int> sortp;
+  for(uint f = 0; f < vPairs.size(); ++f){
+    int index(0);
+    for(uint s = 0; s < vPairs.size(); ++s){
+      if(s==f) continue;
+      if(vPairs.at(f).at(1) >  vPairs.at(s).at(1)) {index = f;  continue;}
+      else if(vPairs.at(f).at(0) > vPairs.at(s).at(0)){index = f;  continue;}
+      else if(vPairs.at(f).at(4) > vPairs.at(s).at(4)){index = f;  continue;}
+      else if(vPairs.at(f).at(3) > vPairs.at(s).at(3)){index = f;  continue;}
+    }
+    sortp.push_back(vPairs.at(index).at(6));
+  }
+
+
+   
+  // now sort by iso, then pt criteria
+  stable_sort(vPairs.begin(), vPairs.end(), pairSort);
+  // PairIndices.clear();
+   for(uint ipair = 0; ipair < vPairs.size(); ++ipair)
+     {
+       //       PairIndices.push_back( get<6> (vPairs.at(ipair)));
+       Sorted.push_back(int(vPairs.at(ipair).at(6)));
+     }
+   return Sorted;
+   //  return sortp;
+}
+
+bool Ntuple_Controller::pairSort (const tauPair_t& pA, const tauPair_t& pB)
+{
+  // first leg 1 iso
+  float isoA = pA.at(1);////get<1> (pA);//
+  float isoB = pB.at(1);////get<1> (pB);//
+  if (isoA > isoB) return true; // NB: MVA iso ! Most iso --> highest MVA score
+  else if (isoA < isoB) return false;
+
+   // then leg 1 pt
+   float ptA = pA.at(0);////get<0> (pA);//
+   float ptB =pB.at(0);// //get<0> (pB);//
+   if (ptA > ptB) return true;
+   else if (ptA < ptB) return false;
+
+   // then leg 2 iso
+   isoA = pA.at(4);////get<4> (pA);//
+   isoB = pB.at(4);////get<4> (pB);//
+   if (isoA > isoB) return true;
+   else if (isoA < isoB) return false;
+
+   // then leg 2 pt
+   ptA = pA.at(3);;////get<3> (pA);//
+   ptB = pB.at(3);////get<3> (pB);//
+   if (ptA > ptB) return true;
+   else if (ptA < ptB) return false;
+
+  // should be never here..
+  return false;
+}
+
+
+bool Ntuple_Controller::pairSortRawIso (const tauPair_t& pA, const tauPair_t& pB)
+{
+  // first leg 1 iso
+  float isoA = pA.at(1);//get<1> (pA);
+  float isoB = pB.at(1);//get<1> (pB);//
+  if (isoA < isoB) return true; // NB: raw iso ! Most iso --> lowest value
+  else if (isoA > isoB) return false;
+
+  // then leg 1 pt
+  float ptA = pA.at(0);//get<0> (pA);//
+  float ptB = pB.at(0);//get<0> (pB);//
+  if (ptA > ptB) return true;
+  else if (ptA < ptB) return false;
+
+  // then leg 2 iso
+  isoA = pA.at(4);//get<4> (pA);//
+  isoB = pB.at(4);//get<4> (pB);//
+  if (isoA < isoB) return true;
+  else if (isoA > isoB) return false;
+
+  // then leg 2 pt
+  ptA = pA.at(3);//get<3> (pA);//
+  ptB = pB.at(3);//get<3> (pB);//
+  if (ptA > ptB) return true;
+  else if (ptA < ptB) return false;
+
+  std::cout<<"  should be never here.. " <<std::endl;
+  return false;
+}
+
+
+
+
+
+
+
+
+bool Ntuple_Controller::tauBaseline (int iDau, float ptMin, 
+         float etaMax, int againstEleWP, int againstMuWP, float isoRaw3Hits, 
+         TString whatApply, bool debug)
+{
+
+  TLorentzVector p4 =Daughters_P4(iDau);
+
+    // bypasser(s) according to the string content
+    bool byp_vertexS = false;
+    bool byp_dmfS  = false;
+    bool byp_agEleS = false;
+    bool byp_agMuS = false;
+    bool byp_isoS = false;
+    bool byp_ptS  = false;
+    bool byp_etaS = false;
+
+    // whatApply: use "All", "Iso", "LepID", pTMin", "etaMax", "againstEle", 
+    // "againstMu", "Vertex"; separate various arguments with a semicolon
+    if (!whatApply.Contains("All") && 
+        !whatApply.Contains("SScharge") && 
+        !whatApply.Contains("OScharge"))
+    {
+      byp_vertexS = byp_dmfS = byp_agEleS = byp_agMuS = byp_isoS = byp_ptS = byp_etaS = true;
+      // set selections
+      if (whatApply.Contains("Vertex")) byp_vertexS = false; 
+      if (whatApply.Contains("Iso"))    byp_isoS = false; 
+      if (whatApply.Contains("LepID"))  byp_dmfS = false; 
+      if (whatApply.Contains("againstEle"))  byp_agEleS = false; 
+      if (whatApply.Contains("againstMu"))   byp_agMuS = false;       
+      if (whatApply.Contains("pTMin"))  byp_ptS = false; 
+      if (whatApply.Contains("etaMax")) byp_etaS = false;
+    }
+
+
+    if (againstEleWP < 0 || againstEleWP > 4) {
+        cout << " ** OfflineProducerHelper::tauBaseline: againstEleWP must be between 0 and 4 --> using 0" << endl;
+        againstEleWP = 0;
+    } 
+
+    if (againstMuWP < 0 || againstMuWP > 1) {
+        cout << " ** OfflineProducerHelper::tauBaseline: againstMuWP must be between 0 and 1 --> using 0" << endl;
+        againstMuWP = 0;
+    }
+    
+    int agEleVal = 0;
+    int agMuVal = 0;
+    
+    // ag ele:
+    if (againstEleWP == 0)      agEleVal = CHECK_BIT(tauID(iDau),Bit_againstElectronVLooseMVA6);
+    else if (againstEleWP == 1) agEleVal = CHECK_BIT(tauID(iDau),Bit_againstElectronLooseMVA6);
+    else if (againstEleWP == 2) agEleVal = CHECK_BIT(tauID(iDau),Bit_againstElectronMediumMVA6);
+    else if (againstEleWP == 3) agEleVal = CHECK_BIT(tauID(iDau),Bit_againstElectronTightMVA6);
+    else if (againstEleWP == 4) agEleVal = CHECK_BIT(tauID(iDau),Bit_againstElectronVTightMVA6);
+
+    // ag mu:
+    if (againstMuWP == 0)      agMuVal = CHECK_BIT(tauID(iDau),Bit_againstMuonLoose3);
+    else if (againstMuWP == 1) agMuVal = CHECK_BIT(tauID(iDau),Bit_againstMuonTight3);
+
+    //bool dmfS = (tree->daughters_decayModeFindingOldDMs->at(iDau) == 1 || tree->daughters_decayModeFindingNewDMs->at(iDau) == 1) || byp_dmfS;
+    bool dmfS = (Daughters_decayModeFindingOldDMs(iDau) == 1) || byp_dmfS;
+    // bool vertexS = (tree->dxy->at(iDau) < 0.045 && tree->dz->at(iDau) < 0.2) || byp_vertexS;
+    bool vertexS = (fabs(dz(iDau)) < 0.2) || byp_vertexS;
+    bool agEleS = (agEleVal == 1) || byp_agEleS; 
+    bool agMuS  = (agMuVal == 1) || byp_agMuS; 
+    bool isoS = (Daughters_byCombinedIsolationDeltaBetaCorrRaw3Hits(iDau) < isoRaw3Hits) || byp_isoS;
+    if (whatApply.Contains ("InvertIzo")) isoS = !isoS ;
+
+    bool ptS = (p4.Pt() > ptMin) || byp_ptS;
+    bool etaS = (fabs(p4.Eta()) < etaMax) || byp_etaS;
+
+    bool totalS = (dmfS && vertexS && agEleS && agMuS && isoS && ptS && etaS);
+    if (debug)
+    {
+      cout << "@ tau baseline" << endl;
+      cout << " dmfS    "  << dmfS    << " skipped? " << byp_dmfS << endl;
+      cout << " vertexS "  << vertexS << " skipped? " << byp_vertexS << endl;
+      cout << " agEleS  "  << agEleS  << " skipped? " << byp_agEleS << endl;
+      cout << " agMuS   "  << agMuS   << " skipped? " << byp_agMuS << endl;
+      cout << " isoS    "  << isoS    << " skipped? " << byp_isoS << endl;
+      cout << " ptS     "  << ptS     << " skipped? " << byp_ptS << endl;
+      cout << " etaS    "  << etaS    << " skipped? " << byp_etaS << endl;
+    }
+    return totalS;    
+}
+
+
+
+bool Ntuple_Controller::muBaseline (int iDau, float ptMin, 
+     float etaMax, float relIso, int muIDWP, TString whatApply, bool debug)
+{
+
+    TLorentzVector p4=Daughters_P4(iDau);
+    int discr = Daughters_muonID(iDau);
+
+    // bypasser(s) according to the string content
+    bool byp_vertexS = false;
+    bool byp_idS  = false;
+    bool byp_isoS = false;
+    bool byp_ptS  = false;
+    bool byp_etaS = false;
+
+    // whatApply: use "All", "Iso", "LepID", pTMin", "etaMax", "againstEle", 
+    // "againstMu", "Vertex"; separate various arguments with a semicolon
+    if (!whatApply.Contains("All") && 
+        !whatApply.Contains("SScharge") && 
+        !whatApply.Contains("OScharge"))
+    {
+      byp_vertexS = byp_idS = byp_isoS = byp_ptS = byp_etaS = true;
+      // set selections
+      if (whatApply.Contains("Vertex")) byp_vertexS = false; 
+      if (whatApply.Contains("Iso"))    byp_isoS = false; 
+      if (whatApply.Contains("LepID"))  byp_idS = false; 
+      if (whatApply.Contains("pTMin"))  byp_ptS = false; 
+      if (whatApply.Contains("etaMax")) byp_etaS = false;
+    }
+      
+    if (muIDWP < 0 || muIDWP > 3)
+    {
+        cout << " ** Ntuple_Controller::muBaseline: muIDWP must be between 0 and 3 --> using 0" << endl;
+        muIDWP = 0;
+    }
+
+    bool vertexS = (fabs(dxy(iDau)) < 0.045 && fabs(dz(iDau)) < 0.2) || byp_vertexS;
+    bool idS =  CHECK_BIT(discr, muIDWP) || byp_idS; // bit 0 is LOOSE id, bit 2 is MEDIUM mu id, bit 3 is TIGHT mu id
+    bool isoS = (combreliso(iDau) < relIso) || byp_isoS;
+    if (whatApply.Contains ("InvertIzo")) isoS = !isoS ;
+    bool ptS = (p4.Pt() > ptMin) || byp_ptS;
+    bool etaS = (fabs(p4.Eta()) < etaMax) || byp_etaS;
+    
+    bool totalS = (vertexS && idS && isoS && ptS && etaS);
+    if (debug)
+    {
+      cout << "@ mu baseline" << endl;
+      cout << " idS     "  << idS     << " skypped? " << byp_idS << endl;
+      cout << " vertexS "  << vertexS << " skypped? " << byp_vertexS << endl;
+      cout << " isoS    "  << isoS    << " skypped? " << byp_isoS << endl;
+      cout << " ptS     "  << ptS     << " skypped? " << byp_ptS << endl;
+      cout << " etaS    "  << etaS    << " skypped? " << byp_etaS << endl;
+    }
+
+
+    return totalS;
+}
+
+
+bool 
+Ntuple_Controller::eleBaseline (int iDau, float ptMin, float etaMax, float relIso, int MVAIDflag, TString whatApply, bool debug)  //----------- to b e checked for a specific analysis
+{ 
+
+   
+  TLorentzVector p4=Daughters_P4(iDau);
+    // bypasser(s) and taker according to the string content
+    bool byp_vertexS = false;
+    bool byp_idS  = false;
+    bool byp_isoS = false;
+    bool byp_ptS  = false;
+    bool byp_etaS = false;
+
+    // whatApply: use "All", "Iso", "LepID", pTMin", "etaMax", "againstEle", "againstMu", "Vertex", "SScharge"; separate various arguments with a semicolon
+    if (!whatApply.Contains("All") && 
+        !whatApply.Contains("SScharge") && 
+        !whatApply.Contains("OScharge"))
+    {
+      byp_vertexS = byp_idS = byp_isoS = byp_ptS = byp_etaS = true;
+      // set selections
+      if (whatApply.Contains("Vertex")) byp_vertexS = false; 
+      if (whatApply.Contains("Iso"))    byp_isoS = false; 
+      if (whatApply.Contains("LepID"))  byp_idS = false; 
+      if (whatApply.Contains("pTMin"))  byp_ptS = false; 
+      if (whatApply.Contains("etaMax")) byp_etaS = false;
+    }
+
+    bool vertexS = (fabs(dxy(iDau)) < 0.045 && fabs(dz(iDau)) < 0.2) || byp_vertexS;
+    bool ptS = (p4.Pt() > ptMin) || byp_ptS;
+    bool etaS = (fabs(p4.Eta()) < etaMax) || byp_etaS;
+    //bool idS = CHECK_BIT (Daughters_iseleCUT(iDau), 3) || byp_idS; // 3 is TIGHT ele id CUT BASED
+
+    // bool idS = EleMVAID (tree->discriminator->at (iDau), tree->daughters_SCeta->at (iDau), p4.Pt (), MVAIDflag) || byp_idS ; // 2015/07/09 PG
+
+    bool idS = Daughters_iseleBDT(iDau) || byp_idS; // use it in ntuples produced after 11 June 2015, contains tight WP bool  
+    //bool idS = tightEleMVAID (tree->discriminator->at(iDau), TMath::Abs(p4.Eta())) || byp_idS; // APPROX! Using lepton eta and not super cluster eta, discriminator contains ele BDT  
+    bool isoS = (combreliso(iDau) < relIso) || byp_isoS;
+    if (whatApply.Contains ("InvertIzo")) isoS = !isoS ;
+    
+    bool totalS = (vertexS && idS && isoS && ptS && etaS);
+
+    if (debug)
+    {
+      cout << "@ ele baseline" << endl;
+      // cout << " debug: stored WP 80: " << tree->daughters_iseleWP80->at(iDau) << endl;
+      // cout << " debug: stored RAW  : " << tree->discriminator->at (iDau) << " pt: " << p4.Pt() << " eta: " << p4.Eta() << endl;
+      cout << " idS     "  << idS     << " skypped? " << byp_idS << endl;
+      cout << " vertexS "  << vertexS << " skypped? " << byp_vertexS << endl;
+      cout << " isoS    "  << isoS    << " skypped? " << byp_isoS << endl;
+      cout << " ptS     "  << ptS     << " skypped? " << byp_ptS << endl;
+      cout << " etaS    "  << etaS    << " skypped? " << byp_etaS << endl;
+    }
+
+    return totalS;
+    
+}
+
+int Ntuple_Controller::getPairType (int type1, int type2)
+{
+    int nmu = 0;
+    int nele = 0;
+    int ntau = 0;
+    
+    if (isMuon (type1) )     nmu++;
+    if (isElectron (type1) ) nele++;
+    if (isTau (type1) )      ntau++;
+
+    if (isMuon (type2) )     nmu++;
+    if (isElectron (type2) ) nele++;
+    if (isTau (type2) )      ntau++;
+
+    if (nmu == 1 && nele == 0 && ntau == 1) return (int) MuHad;
+    if (nmu == 0 && nele == 1 && ntau == 1) return (int) EHad;
+    if (nmu == 0 && nele == 0 && ntau == 2) return (int) HadHad;
+    if (nmu == 2 && nele == 0 && ntau == 0) return (int) MuMu;
+    if (nmu == 0 && nele == 2 && ntau == 0) return (int) EE;
+    if (nmu == 1 && nele == 1 && ntau == 0) return (int) EMu;
+    
+    return -1;
+}
+
+bool Ntuple_Controller::pairPassBaseline (int iPair, TString whatApply, bool debug)
+{
+    int dau1index = indexDau1(iPair);
+    int dau2index = indexDau2(iPair);
+    int type1 = particleType(dau1index);
+    int type2 = particleType(dau2index);
+    int pairType = getPairType (type1, type2);
+
+    if (debug) cout << ".. checking baseline of pair " << iPair << " idx=(" << dau1index << "," << dau2index << ")" << endl;
+        
+    float dR = DeltaRDau(dau1index, dau2index);
+    bool drMin = (dR > 0.1);
+    if (!drMin && debug)
+      cout << "failed dR min as dR=" << dR << endl;
+
+    bool isOS = isOSCand(iPair);
+    if (whatApply.Contains("OScharge") && !isOS) {
+      if (debug) cout<<"check baseline: OSCharge failed"<<endl;
+        return false; // do not even check the rest if requiring the charge
+      }
+    if (whatApply.Contains("SScharge") && isOS) {
+      if (debug) cout<<"check baseline: SSCharge failed"<<endl;
+        return false; // for the same sign selection at the moment full selection over SS pairs
+      }
+
+    // pairs are always ordered as: e mu | e tau | mu tau  (e < mu < tau)
+    // if same type of particle, highest pt one is the first
+    bool leg1=false;
+    bool leg2=false;
+    if (pairType == MuHad)
+    {
+        float tauIso = whatApply.Contains("TauRlxIzo") ? 7.0 : 3.0 ;
+        leg1 = muBaseline (dau1index, 23., 2.1, 0.15, MuTight, whatApply, debug);
+        leg2 = tauBaseline (dau2index, 20., 2.3, aeleVLoose, amuTight, tauIso, whatApply, debug);
+    }
+
+    if (pairType == EHad)
+    {
+        float tauIso = whatApply.Contains("TauRlxIzo") ? 7.0 : 3.0 ;
+        leg1 = eleBaseline (dau1index, 27., 2.1, 0.1, EMVATight, whatApply, debug);
+        leg2 = tauBaseline (dau2index, 20., 2.3, aeleTight, amuLoose, tauIso, whatApply, debug);
+    }
+
+    // ordered by pT and not by most isolated, but baseline asked in sync is the same...
+    if (pairType == HadHad)
+    {
+        float tauIso = whatApply.Contains("TauRlxIzo") ? 7.0 : 2.0 ;
+        leg1 = tauBaseline (dau1index, 40., 2.1, aeleVLoose, amuLoose, tauIso, whatApply, debug);
+        leg2 = tauBaseline (dau2index, 40., 2.1, aeleVLoose, amuLoose, tauIso, whatApply, debug);
+    }
+
+    if (pairType == EMu)
+    {
+        // leg1 = eleBaseline (dau1index, 13., 0.15, EMVALoose, whatApply, debug);
+        // leg2 = muBaseline ( dau2index, 9., 2.4, 0.15, MuTight, whatApply, debug);
+    }
+    
+    // e e, mu mu are still preliminary (not from baseline)
+    if (pairType == EE)
+    {
+      // leg1 = eleBaseline ( dau1index, 25., 0.15, EMVALoose, whatApply, debug);
+      // leg2 = eleBaseline ( dau2index, 25., 0.15, EMVALoose, whatApply, debug);
+    }
+    
+    if (pairType == MuMu)
+    {
+      leg1 = muBaseline ( dau1index, 10., 2.4, 0.15, MuTight, whatApply, debug);
+      leg2 = muBaseline ( dau2index, 10., 2.4, 0.15, MuTight, whatApply, debug);
+      bool leg1ER = muBaseline ( dau1index, 23., 2.1, 0.15, MuTight, whatApply, debug);
+      bool leg2ER = muBaseline ( dau2index, 23., 2.1, 0.15, MuTight, whatApply, debug);
+      
+      //bool Is1in2p1 = leg1ER ;
+      //bool Is2in2p1 = leg2ER ;
+      return ( ((leg1ER && leg2) || (leg2ER && leg1)) && drMin );
+    }
+    
+    bool result = (leg1 && leg2);
+    if(!leg1 && debug){
+      cout<<"check baseline: leg1 failed"<<endl;
+    }
+    if(!leg2 && debug){
+      cout<<"check baseline: leg2 failed"<<endl;
+    }
+    
+    if (leg1&&leg2&&debug)
+      cout << "check baseline: leg1 AND leg2 ok" << endl;
+
+    // bool drMin = (dR > 0.5);
+    result = (result && drMin);
+
+    return result;
+}
+
+
+float Ntuple_Controller::DeltaRDau(int dau1idx, int dau2idx)
+{
+  TLorentzVector v1, v2;
+  v1 =Daughters_P4(dau1idx);
+  v2 =Daughters_P4(dau2idx);
+  return v1.DeltaR(v2);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  bool Ntuple_Controller::muonBaselineSelection(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
    if(particleType(i)==0){
@@ -575,10 +1045,57 @@ bool Ntuple_Controller::tauBaselineSelection(int i){
 
 // electron
 bool Ntuple_Controller::isElectron(int i){
-  int bit(0);
+  //  int bit(0);
   if(particleType(i)==1){
     {
       return true;
+    }
+  }
+  return false;
+}
+bool Ntuple_Controller::ElectronVeto(int i){
+  // ele.pt()         > 10                            and
+  // fabs(ele.eta())  < 2.5                           and
+  // fabs(dxy)        < 0.045                         and
+  // fabs(dz)         < 0.2                           and
+  // MVA ID 90% efficiency WP                         and
+  // elec.passConversionVeto()            and 
+  // elec.gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS))) <=1            and  
+  // iso              < 0.3
+  if(particleType(i)==1){
+    if(Daughters_P4(i).Pt()>10 && fabs(Daughters_P4(i).Eta())<2.5){
+      if(fabs(dz(i))<0.2 &&  fabs(dxy(i))<0.045 ){
+	if(Daughters_passConversionVeto(i)){
+	  if(Daughters_eleMissingHits(i) <=1){
+	    if(Daughters_iseleWP90(i)){
+	      if(combreliso(i) < 0.3){
+		return true;
+	      }
+	    }
+	  }
+	}
+      }
+    }
+  }
+  return false;
+}
+
+bool Ntuple_Controller::MuonVeto(int i){
+  // muon.pt()        > 10                            and
+  // fabs(muon.eta)   < 2.4                           and
+  // fabs(dxy)        < 0.045                         and
+  // fabs(dz)         < 0.2                           and
+  // "Medium" (HIP safe) ID                                      and
+  // iso(cone size 0.4)              < 0.3
+  if(particleType(i)==0){
+    if(Daughters_P4(i).Pt()>10 && fabs(Daughters_P4(i).Eta())<2.4){
+      if(fabs(dz(i))<0.2 &&  fabs(dxy(i))<0.045 ){
+	if(combreliso(i) < 0.3){
+	  if(CHECK_BIT(Daughters_muonID(i), muIDWP::MuMedium) ){
+	    return true;
+	  }
+	}
+      }
     }
   }
   return false;
@@ -588,7 +1105,7 @@ bool Ntuple_Controller::isElectron(int i){
 // muon
  bool Ntuple_Controller::isMuon(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
-   int bit(0);
+   //   int bit(0);
    if(particleType(i)==0){
      //  if( ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 0))  &&	 (((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 1))  ||  ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 2)) )   )
        {
@@ -602,7 +1119,7 @@ bool Ntuple_Controller::isElectron(int i){
 //Loose muon
  bool Ntuple_Controller::isLooseGoodMuon(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
-   int bit(0);
+   //    int bit(0);
    if(particleType(i)==0){
      //  if( ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 0))  &&	 (((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 1))  ||  ((Daughters_typeOfMuon(i) & (1<< 0)) == (1<< 2)) )   )
        {
@@ -1346,7 +1863,7 @@ bool Ntuple_Controller::GetTriggerIndex(TString n,  int &i){
 
 std::vector<int> Ntuple_Controller::GetVectorTriggers(TString n){
     std::vector<int> out;
-    for(unsigned i=0; i<NTriggers();i++){
+    for(int i=0; i<NTriggers();i++){
 	TString name=TriggerName(i);
 	if(name.Contains(n)) out.push_back(i) ;
       } 
@@ -1355,7 +1872,7 @@ std::vector<int> Ntuple_Controller::GetVectorTriggers(TString n){
 
 std::vector<int> Ntuple_Controller::GetVectorTriggers(std::vector<TString>  v){
     std::vector<int> out;
-    for(unsigned i=0; i<NTriggers();i++){
+    for(int i=0; i<NTriggers();i++){
       TString name=TriggerName(i);
       for(unsigned int j=0; j<v.size(); j++){
 	if(name.Contains(v.at(j))) out.push_back(i) ;
@@ -1366,7 +1883,7 @@ std::vector<int> Ntuple_Controller::GetVectorTriggers(std::vector<TString>  v){
 
 std::vector<int> Ntuple_Controller::GetVectorTriggersFullMatch(std::vector<TString>  v){
     std::vector<int> out;
-    for(unsigned i=0; i<NTriggers();i++){
+    for(int i=0; i<NTriggers();i++){
       TString name=TriggerName(i);
       bool cpattern(true);
       for(unsigned int j=0; j<v.size(); j++){
@@ -1382,7 +1899,7 @@ std::vector<int> Ntuple_Controller::GetVectorCrossTriggers(TString n1,TString n2
 
 
 
-    for(unsigned i=0; i<NTriggers();i++){
+    for(int i=0; i<NTriggers();i++){
       TString name=TriggerName(i);
       if(name.Contains(n1) &&  name.Contains(n2)  && (!name.Contains(f1)  && !name.Contains(f2))   ) out.push_back(i) ;
     } 

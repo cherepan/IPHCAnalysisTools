@@ -10,6 +10,9 @@
 #include "cherepanov/ControlSample.h"
 #include "cherepanov/SkimNtupleDiTauHTrigger.h"
 #include "cherepanov/ZTauHTauH.h"
+
+
+
 #endif
 
 #ifdef USE_goe
@@ -19,13 +22,6 @@
 #ifdef USE_lebihan
 
 #endif
-
-
-#ifdef USE_gbourgat
-
-
-#endif
-
 // #ifdef USE_<username>
 
 // #endif
@@ -47,21 +43,13 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   else if(Analysis.Contains("tauspin"))s=new TauSpinExample(Analysis,UncertType);
 #ifdef USE_cherepanov
   else if(Analysis.Contains("mytest"))s=new MyTest(Analysis,UncertType);
-  else if(Analysis.Contains("ntuplevalidation"))s=new NtupleValidation(Analysis,UncertType);
-  else if(Analysis.Contains("skimmingntuples"))s=new SkimmingNtuples(Analysis,UncertType);
-  else if(Analysis.Contains("skimntupleditauhtrigger"))s=new SkimNtupleDiTauHTrigger(Analysis,UncertType);
   else if(Analysis.Contains("ztauhtauh"))s=new ZTauHTauH(Analysis,UncertType);
-  else if(Analysis.Contains("controlsample"))s=new ControlSample(Analysis,UncertType);
 #endif
 // #ifdef USE_goe
 //   else if(Analysis.Contains("bla"))s=new Bla(Analysis,UncertType);
 // #endif
 
 // #ifdef USE_lebihan
-//   else if(Analysis.Contains("bla"))s=new Bla(Analysis,UncertType);
-// #endif
-
-// #ifdef USE_gbourgat
 //   else if(Analysis.Contains("bla"))s=new Bla(Analysis,UncertType);
 // #endif
 

@@ -18,6 +18,8 @@
 #include "SimpleFits/FitSoftware/interface/DiTauConstrainedFitter.h"
 #include "SimpleFits/FitSoftware/interface/GlobalEventFit.h"
 #include "Objects.h"
+#include "PUReweight.h"
+
 class ZTauHTauH : public Selection {
 
  public:
@@ -29,7 +31,8 @@ class ZTauHTauH : public Selection {
 
   enum cuts {TriggerOk=0,
 	     PrimeVtx,
-	     nGoodTaus,
+	     nGoodPairs,
+	     LeptonVeto,
 	     FirstTauIsolation,
 	     SecondTauIsolation,
 	     nGoodMuons,
@@ -46,6 +49,8 @@ class ZTauHTauH : public Selection {
   int Charge;
 
   double  cMu_pt,  cMu_eta,  cTau_pt,  cTau_eta;
+  PUReweight reweight;//(PUReweight::RUN2ANALYSIS);
+
  private:
   // Selection Variables and Histos
 
