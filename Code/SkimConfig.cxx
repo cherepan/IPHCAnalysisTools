@@ -193,12 +193,12 @@ void SkimConfig::CheckNEvents(std::vector<Long64_t> ids, std::vector<float> nevt
 	output << "\\begin{tabular}{|p{3.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|p{3.0cm}|} \\hline" << endl;
 	output << "ID & DQM Status & Events Read & Events Expected & Ratio \\\\  \\hline " << std::endl;
 	for (unsigned int i = 0; i < ids.size(); i++) {
-		if (fabs(nevts.at(i) - NEvents_noweight_sel.at(i)) > 0.0001) {
+		if (fabs(nevts.at(i) - NEvents_noweight.at(i)) > 0.0001) {
 			output << ids.at(i) << " & \\textcolor{red}{FAILED} & ";
 		} else {
 			output << ids.at(i) << " & \\textcolor{green}{PASSED} & ";
 		}
-		output << nevts.at(i) << " & " << NEvents_noweight_sel.at(i) << " & " << nevts.at(i) / NEvents_noweight_sel.at(i) << " \\\\  " << std::endl;
+		output << nevts.at(i) << " & " << NEvents_noweight.at(i) << " & " << nevts.at(i) / NEvents_noweight.at(i) << " \\\\  " << std::endl;
 	}
 	output << " \\hline" << std::endl;
 	output << "\\end{tabular}" << std::endl;
