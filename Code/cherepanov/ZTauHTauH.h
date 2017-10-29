@@ -17,8 +17,11 @@
 #include "SimpleFits/FitSoftware/interface/TauA1NuConstrainedFitter.h"
 #include "SimpleFits/FitSoftware/interface/DiTauConstrainedFitter.h"
 #include "SimpleFits/FitSoftware/interface/GlobalEventFit.h"
+#include "ReferenceScaleFactors.h"
 #include "Objects.h"
 #include "PUReweight.h"
+#include "tauTrigSFreader.h"
+
 
 class ZTauHTauH : public Selection {
 
@@ -30,19 +33,21 @@ class ZTauHTauH : public Selection {
   virtual void  Finish();
 
   enum cuts {TriggerOk=0,
-	     PrimeVtx,
 	     nGoodPairs,
 	     LeptonVeto,
 	     FirstTauIsolation,
 	     SecondTauIsolation,
 	     nGoodMuons,
 	     PairCharge,
+	     PairMass,
+	     deltaR,
 	     NCuts};
 
  protected:
   virtual void doEvent();
   virtual void Store_ExtraDist();
-
+  ReferenceScaleFactors *RSF;
+  tauTrigSFreader tauTrgSF;
   int TriggerOkDummy, selVertexDummy, selMuon_IsoDummy, selMuon_AntiIsoDummy, selTauDummy, ChargeSumDummy;
   double MTDummy, MvisDummy, TauFLSigmaDummy;
 
@@ -70,7 +75,7 @@ class ZTauHTauH : public Selection {
   std::vector<TH1D> Tau1Isolation;
   std::vector<TH1D> Tau2Isolation;
 
-
+  std::vector<TH1D> NPrimeVtx;
 
 };
 #endif

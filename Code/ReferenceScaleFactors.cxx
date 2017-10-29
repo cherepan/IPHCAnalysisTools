@@ -1524,3 +1524,44 @@ double ReferenceScaleFactors::HiggsPtWeight(TLorentzVector vect, int mass, TStri
 	return weightMap[mass]->GetBinContent( weightMap[mass]->FindFixBin( vect.Pt() ) );
 }
 
+double ReferenceScaleFactors::TauTriggerTurnOnPars(TLorentzVector vect, TString type, int dm ){
+  std::vector<double> out; // "m_{0}" "sigma"  "alpha"   "n"  "norm"
+
+
+  int dmindex;
+  if(dm=0) dmindex=0;
+  if(dm=1) dmindex=1;
+  if(dm=10) dmindex=2;
+
+
+
+ 
+  float  data_m0[3]       = {38.73447611695629, 36.690947837524625,   42.83389974719572};
+  float  data_sigma[3]    = {7.407431850780567,  4.615715187723146,   6.618279442098442};
+  float  data_alpha[3]    = {13.773094478855745,6.837452816365016,    5.586768802617782};
+  float  data_n[3]        = {1.2242791989806183,  1.3923658691165495, 138.11526635111798};
+  float  data_norm[3]    = {0.999999999045921, 0.9999998778570275,    0.9846027163460338} ;
+
+
+
+  float mc_m0[3]     = { 38.40062512717636, 36.19161339284503,40.034392442679504};
+  float mc_sigma[3]  = {  6.880123201583417, 4.354633288490193,5.013762507971054};
+  float mc_alpha[3]  = { 11.139690096268433, 5.5715514431807485,2.0072577361956396};
+  float mc_n[3]      = {  1.5069036953587036,  1.6738765374606683,123.76902846216875};
+  float mc_norm[3]   = {  0.999999986561927,  0.9999999897484987,0.9912887339725038};
+
+  double pt = vect.Pt();
+
+  double eff(1);
+  if(type.Contains("data"))     eff = Efficiency(pt, data_m0[dmindex], data_sigma[dmindex], data_alpha[dmindex], data_n[dmindex], data_norm[dmindex]);	
+  if(type.Contains("mc"))     eff = Efficiency(pt, mc_m0[dmindex], mc_sigma[dmindex], mc_alpha[dmindex], mc_n[dmindex], mc_norm[dmindex]);	
+  return eff;
+}
+
+
+ 
+double ReferenceScaleFactors::DiTauTrigger2016_ScaleMCtoData(TLorentzVector vect, int dm){
+  double Data_eff =  TauTriggerTurnOnPars(vect,"data",dm);
+  double MC_eff   =  TauTriggerTurnOnPars(vect,"mc",dm);
+  return Data_eff/MC_eff;
+}

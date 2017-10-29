@@ -3,7 +3,9 @@
 
 #include <TH1F.h>
 #include <string>
-
+#include "TROOT.h"
+#include "TFile.h"
+#include "TString.h"
 class PUReweight {
 public:
   enum Type {NONE=0, RUN1ANALYSIS=1, RUN2ANALYSIS=2};
@@ -15,7 +17,7 @@ public:
   /// Get weights for a sample of MC 
   /// to reproduce conditions of target
   float weight(int MC, int target, int input);
-
+  float PUweightHTT(float npu);
 public:
   Type theType;
 
@@ -38,6 +40,7 @@ public:
   
   // 2012 Samples
   std::vector<float> hT2012 ;
+  TH1D *PUWeightHiso;
   
 };
 #endif

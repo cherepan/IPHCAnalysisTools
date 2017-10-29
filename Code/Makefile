@@ -2,7 +2,7 @@ include make.inc
 #################################################
 ### Defining Compiling variables              ###
 #################################################
-
+#-Wno-parentheses
 CXX           = c++ -Wno-deprecated -Wall -std=c++0x
 #-m32  -Wno-deprecated
 LD            = g++ -Wno-deprecated -Wall

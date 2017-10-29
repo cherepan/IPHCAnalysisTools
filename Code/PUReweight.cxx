@@ -3,6 +3,15 @@
   #include <iostream>
   #include <cstdlib>
 
+
+float PUReweight::PUweightHTT(float npu) {
+
+  int ibin = PUWeightHiso->FindFixBin(npu);
+  return PUWeightHiso->GetBinContent(ibin);
+
+}
+
+
 float PUReweight::weight(int MC, int target, int input) {
 
   if (theType == NONE) return 1.0;
@@ -61,84 +70,89 @@ float PUReweight::weight(int MC, int target, int input) {
 PUReweight::PUReweight(Type type) : 
 theType(type) {
 
+  TString rfilename = (std::string)std::getenv("workdir")+"/Code/CommonFiles/" + "weights/PU/Data_Pileup_2016_271036-284044_13TeVMoriond17_23Sep2016ReReco_69p2mbMinBiasXS.root";
+
+
+  TFile *file = TFile::Open(rfilename);
+  PUWeightHiso = (TH1D*)file->Get("pileup");
   // RUN2ANALYSIS MC Spring2016 target Data 2.6/fb
   double npuSpring16_2c6fb[100] ; 
 
-npuSpring16_2c6fb[0] = 0.35957;
-npuSpring16_2c6fb[1] = 0.936996;
-npuSpring16_2c6fb[2] = 1.2009;
-npuSpring16_2c6fb[3] = 0.96554;
-npuSpring16_2c6fb[4] = 1.11158;
-npuSpring16_2c6fb[5] = 1.16222;
-npuSpring16_2c6fb[6] = 0.784884;
-npuSpring16_2c6fb[7] = 0.495921;
-npuSpring16_2c6fb[8] = 0.742291;
-npuSpring16_2c6fb[9] = 0.883969;
-npuSpring16_2c6fb[10] = 0.966156;
-npuSpring16_2c6fb[11] = 1.07131;
-npuSpring16_2c6fb[12] = 1.12372;
-npuSpring16_2c6fb[13] = 1.17518;
-npuSpring16_2c6fb[14] = 1.20262;
-npuSpring16_2c6fb[15] = 1.20851;
-npuSpring16_2c6fb[16] = 1.19992;
-npuSpring16_2c6fb[17] = 1.18218;
-npuSpring16_2c6fb[18] = 1.14439;
-npuSpring16_2c6fb[19] = 1.09613;
-npuSpring16_2c6fb[20] = 1.06536;
-npuSpring16_2c6fb[21] = 1.0514;
-npuSpring16_2c6fb[22] = 1.05206;
-npuSpring16_2c6fb[23] = 1.05127;
-npuSpring16_2c6fb[24] = 1.04989;
-npuSpring16_2c6fb[25] = 1.05742;
-npuSpring16_2c6fb[26] = 1.07249;
-npuSpring16_2c6fb[27] = 1.08322;
-npuSpring16_2c6fb[28] = 1.09496;
-npuSpring16_2c6fb[29] = 1.10806;
-npuSpring16_2c6fb[30] = 1.09394;
-npuSpring16_2c6fb[31] = 1.08378;
-npuSpring16_2c6fb[32] = 1.04176;
-npuSpring16_2c6fb[33] = 0.984998;
-npuSpring16_2c6fb[34] = 0.909511;
-npuSpring16_2c6fb[35] = 0.819701;
-npuSpring16_2c6fb[36] = 0.715866;
-npuSpring16_2c6fb[37] = 0.610731;
-npuSpring16_2c6fb[38] = 0.503141;
-npuSpring16_2c6fb[39] = 0.405261;
-npuSpring16_2c6fb[40] = 0.309237;
-npuSpring16_2c6fb[41] = 0.22848;
-npuSpring16_2c6fb[42] = 0.163636;
-npuSpring16_2c6fb[43] = 0.113259;
-npuSpring16_2c6fb[44] = 0.0773858;
-npuSpring16_2c6fb[45] = 0.0508944;
-npuSpring16_2c6fb[46] = 0.0317955;
-npuSpring16_2c6fb[47] = 0.0201208;
-npuSpring16_2c6fb[48] = 0.0122621;
-npuSpring16_2c6fb[49] = 0.00742545;
-npuSpring16_2c6fb[50] = 0.00438946;
-npuSpring16_2c6fb[51] = 0.00261391;
-npuSpring16_2c6fb[52] = 0.00157173;
-npuSpring16_2c6fb[53] = 0.000967936;
-npuSpring16_2c6fb[54] = 0.000733011;
-npuSpring16_2c6fb[55] = 0.000678389;
-npuSpring16_2c6fb[56] = 0.000734106;
-npuSpring16_2c6fb[57] = 0.00093438;
-npuSpring16_2c6fb[58] = 0.00134642;
-npuSpring16_2c6fb[59] = 0.00188649;
-npuSpring16_2c6fb[60] = 0.00324721;
-npuSpring16_2c6fb[61] = 0.00397007;
-npuSpring16_2c6fb[62] = 0.00486606;
-npuSpring16_2c6fb[63] = 0.00512447;
-npuSpring16_2c6fb[64] = 0.00545047;
-npuSpring16_2c6fb[65] = 0.00533737;
-npuSpring16_2c6fb[66] = 0.00510738;
-npuSpring16_2c6fb[67] = 0.00439241;
-npuSpring16_2c6fb[68] = 0.00402724;
-npuSpring16_2c6fb[69] = 0.00335518;
-npuSpring16_2c6fb[70] = 0.0029927;
-npuSpring16_2c6fb[71] = 0.00276496;
-npuSpring16_2c6fb[72] = 0.00228015;
-npuSpring16_2c6fb[73] = 0.00197869;
-npuSpring16_2c6fb[74] = 0.00176168;
+  npuSpring16_2c6fb[0] = 0.000742814;
+  npuSpring16_2c6fb[1] = 0.304701;
+  npuSpring16_2c6fb[2] = 0.502264;
+  npuSpring16_2c6fb[3] = 0.31864;
+  npuSpring16_2c6fb[4] = 0.255986;
+  npuSpring16_2c6fb[5] = 0.165771;
+npuSpring16_2c6fb[6] = 0.10131;
+ npuSpring16_2c6fb[7] = 0.0479819;
+ npuSpring16_2c6fb[8] = 0.0358091;
+ npuSpring16_2c6fb[9] = 0.0761316;
+npuSpring16_2c6fb[10] = 0.311539;
+npuSpring16_2c6fb[11] = 0.611502;
+npuSpring16_2c6fb[12] = 0.750352;
+npuSpring16_2c6fb[13] = 0.910011;
+npuSpring16_2c6fb[14] = 1.13723;
+npuSpring16_2c6fb[15] = 1.30276;
+npuSpring16_2c6fb[16] = 1.31735;
+npuSpring16_2c6fb[17] = 1.25068;
+npuSpring16_2c6fb[18] = 1.17809;
+npuSpring16_2c6fb[19] = 1.12926;
+npuSpring16_2c6fb[20] = 1.09844;
+npuSpring16_2c6fb[21] = 1.08951;
+npuSpring16_2c6fb[22] = 1.1057;
+npuSpring16_2c6fb[23] = 1.14519;
+npuSpring16_2c6fb[24] = 1.19177;
+npuSpring16_2c6fb[25] = 1.2404;
+npuSpring16_2c6fb[26] = 1.28033;
+npuSpring16_2c6fb[27] = 1.31176;
+npuSpring16_2c6fb[28] = 1.32758;
+npuSpring16_2c6fb[29] = 1.32955;
+npuSpring16_2c6fb[30] = 1.31349;
+npuSpring16_2c6fb[31] = 1.26994;
+npuSpring16_2c6fb[32] = 1.19741;
+npuSpring16_2c6fb[33] = 1.09729;
+npuSpring16_2c6fb[34] = 0.975624;
+npuSpring16_2c6fb[35] = 0.834355;
+npuSpring16_2c6fb[36] = 0.685461;
+npuSpring16_2c6fb[37] = 0.537743;
+npuSpring16_2c6fb[38] = 0.400891;
+npuSpring16_2c6fb[39] = 0.284578;
+npuSpring16_2c6fb[40] = 0.189982;
+npuSpring16_2c6fb[41] = 0.120726;
+npuSpring16_2c6fb[42] = 0.0726103;
+npuSpring16_2c6fb[43] = 0.0416117;
+npuSpring16_2c6fb[44] = 0.0226113;
+npuSpring16_2c6fb[45] = 0.0116533;
+npuSpring16_2c6fb[46] = 0.00573182;
+npuSpring16_2c6fb[47] = 0.00271033;
+npuSpring16_2c6fb[48] = 0.00122789;
+npuSpring16_2c6fb[49] = 0.000530142;
+npuSpring16_2c6fb[50] = 0.000223599;
+npuSpring16_2c6fb[51] = 9.04503e-05;
+npuSpring16_2c6fb[52] = 3.50052e-05;
+npuSpring16_2c6fb[53] = 1.32528e-05;
+npuSpring16_2c6fb[54] = 4.83543e-06;
+npuSpring16_2c6fb[55] = 1.70496e-06;
+npuSpring16_2c6fb[56] = 5.80111e-07;
+npuSpring16_2c6fb[57] = 1.94334e-07;
+npuSpring16_2c6fb[58] = 6.22689e-08;
+npuSpring16_2c6fb[59] = 1.88726e-08;
+npuSpring16_2c6fb[60] = 5.62208e-09;
+npuSpring16_2c6fb[61] = 1.5831e-09;
+npuSpring16_2c6fb[62] = 4.36956e-10;
+npuSpring16_2c6fb[63] = 1.14331e-10;
+npuSpring16_2c6fb[64] = 2.8621e-11;
+npuSpring16_2c6fb[65] = 6.91382e-12;
+npuSpring16_2c6fb[66] = 1.60877e-12;
+npuSpring16_2c6fb[67] = 3.54273e-13;
+npuSpring16_2c6fb[68] = 7.68168e-14;
+npuSpring16_2c6fb[69] = 1.48237e-14;
+npuSpring16_2c6fb[70] = 2.64857e-15;
+npuSpring16_2c6fb[71] = 2.60659e-16;
+npuSpring16_2c6fb[72] = 0;
+npuSpring16_2c6fb[73] = 0;
+npuSpring16_2c6fb[74] = 0;
 npuSpring16_2c6fb[75] = 0;
 npuSpring16_2c6fb[76] = 0;
 npuSpring16_2c6fb[77] = 0;
@@ -164,7 +178,10 @@ npuSpring16_2c6fb[96] = 0;
 npuSpring16_2c6fb[97] = 0;
 npuSpring16_2c6fb[98] = 0;
 npuSpring16_2c6fb[99] = 0;
- 
+
+
+
+
 
 
 

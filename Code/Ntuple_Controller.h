@@ -417,6 +417,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    Float_t         npu(){return Ntp->npu;}
    Int_t           npv(){return Ntp->npv;}
    Float_t         PUReweight(){return Ntp->PUReweight;}
+   Int_t           PUNumInteractions(){return Ntp->PUNumInteractions;}
    Float_t         rho(){return Ntp->rho;}
 
 
@@ -437,7 +438,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    std::vector<int> GetVectorTriggers(std::vector<TString> v);
    std::vector<int> GetVectorTriggersFullMatch(std::vector<TString> v);
    std::vector<int> GetVectorCrossTriggers(TString n1,TString n2,TString f1,TString f2);
-   Int_t            PUNumInteractions(){return Ntp->PUNumInteractions;}
+
    Float_t         MC_weight(){return Ntp->MC_weight;}
    Float_t         MC_weight_scale_muF0p5(){return Ntp->MC_weight_scale_muF0p5;}
    Float_t         MC_weight_scale_muF2(){return Ntp->MC_weight_scale_muF2;}

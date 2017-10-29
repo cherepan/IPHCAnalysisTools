@@ -2,22 +2,36 @@
 #include <iostream>
 using namespace std;
 
-tauTrigSFreader::tauTrigSFreader(std::string rfilename)
+tauTrigSFreader::tauTrigSFreader(std::string Isotype)
 {
+
+    std::string rfilename = (std::string)std::getenv("workdir")+"/Code/CommonFiles/" + "weights/tau_trigger_SF_2016/tau_trigger_SF_2016.root";
     fIn_ = new TFile(rfilename.c_str());
 
-    fMC_[0] = (TF1*) fIn_->Get("mediumMVAIso_eff_MC_DM0");
-    fMC_[1] = (TF1*) fIn_->Get("mediumMVAIso_eff_MC_DM1");
-    fMC_[2] = (TF1*) fIn_->Get("mediumMVAIso_eff_MC_DM10");
+    // fMC_[0] = (TF1*) fIn_->Get("mediumMVAIso_eff_MC_DM0");
+    // fMC_[1] = (TF1*) fIn_->Get("mediumMVAIso_eff_MC_DM1");
+    // fMC_[2] = (TF1*) fIn_->Get("mediumMVAIso_eff_MC_DM10");
 
-    fDataBG_[0] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataBCDEFG_DM0");
-    fDataBG_[1] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataBCDEFG_DM1");
-    fDataBG_[2] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataBCDEFG_DM10");
+    // fDataBG_[0] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataBCDEFG_DM0");
+    // fDataBG_[1] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataBCDEFG_DM1");
+    // fDataBG_[2] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataBCDEFG_DM10");
 
-    fDataH_[0] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataH_DM0");
-    fDataH_[1] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataH_DM1");
-    fDataH_[2] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataH_DM10");
- 
+    // fDataH_[0] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataH_DM0");
+    // fDataH_[1] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataH_DM1");
+    // fDataH_[2] = (TF1*) fIn_->Get("mediumMVAIso_eff_DataH_DM10");
+    TString IsoPref = Isotype;
+    fMC_[0] = (TF1*) fIn_->Get(IsoPref+"MVAIso_eff_MC_DM0");
+    fMC_[1] = (TF1*) fIn_->Get(IsoPref+"MVAIso_eff_MC_DM1");
+    fMC_[2] = (TF1*) fIn_->Get(IsoPref+"MVAIso_eff_MC_DM10");
+
+    fDataBG_[0] = (TF1*) fIn_->Get(IsoPref+"MVAIso_eff_DataBCDEFG_DM0");
+    fDataBG_[1] = (TF1*) fIn_->Get(IsoPref+"MVAIso_eff_DataBCDEFG_DM1");
+    fDataBG_[2] = (TF1*) fIn_->Get(IsoPref+"MVAIso_eff_DataBCDEFG_DM10");
+
+    fDataH_[0] = (TF1*) fIn_->Get(IsoPref+"MVAIso_eff_DataH_DM0");
+    fDataH_[1] = (TF1*) fIn_->Get(IsoPref+"MVAIso_eff_DataH_DM1");
+    fDataH_[2] = (TF1*) fIn_->Get(IsoPref+"MVAIso_eff_DataH_DM10");
+
     fracBG_ = 27.915/36.772;
     fracH_ = 8.857/36.772;
     
@@ -61,6 +75,7 @@ double tauTrigSFreader::getSF(double pt, int decayMode)
     double effDataBG = fDataBG_[idx]->Eval(pt);
     double effDataH  = fDataH_[idx]->Eval(pt);
 
-    double SF = (effMC > 0 ? ( (fracBG_*effDataBG + fracH_*effDataH) / effMC ) : 0 );
+    //  double SF = (effMC > 0 ? ( (fracBG_*effDataBG + fracH_*effDataH) / effMC ) : 0 );
+    double SF = (effMC > 0 ? ( (effDataBG ) / effMC ) : 0 );
     return SF;
 }
