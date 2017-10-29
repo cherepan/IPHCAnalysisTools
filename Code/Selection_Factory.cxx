@@ -10,7 +10,7 @@
 #include "cherepanov/ControlSample.h"
 #include "cherepanov/SkimNtupleDiTauHTrigger.h"
 #include "cherepanov/ZTauHTauH.h"
-
+#include "cherepanov/SkimNtupleSingleMuonTrigger.h"
 
 
 #endif
@@ -44,6 +44,10 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
 #ifdef USE_cherepanov
   else if(Analysis.Contains("mytest"))s=new MyTest(Analysis,UncertType);
   else if(Analysis.Contains("ztauhtauh"))s=new ZTauHTauH(Analysis,UncertType);
+  else if(Analysis.Contains("skimntuplesinglemuontrigger"))s=new SkimNtupleSingleMuonTrigger(Analysis,UncertType);
+
+
+
 #endif
 // #ifdef USE_goe
 //   else if(Analysis.Contains("bla"))s=new Bla(Analysis,UncertType);

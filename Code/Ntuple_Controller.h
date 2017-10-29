@@ -438,7 +438,8 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    std::vector<int> GetVectorTriggers(std::vector<TString> v);
    std::vector<int> GetVectorTriggersFullMatch(std::vector<TString> v);
    std::vector<int> GetVectorCrossTriggers(TString n1,TString n2,TString f1,TString f2);
-
+   bool  CheckIfAnyPassed(  std::vector<int> list);
+ 
    Float_t         MC_weight(){return Ntp->MC_weight;}
    Float_t         MC_weight_scale_muF0p5(){return Ntp->MC_weight_scale_muF0p5;}
    Float_t         MC_weight_scale_muF2(){return Ntp->MC_weight_scale_muF2;}
@@ -578,7 +579,7 @@ int   decayMode(unsigned int i){return Ntp->decayMode->at(i);}
 
 
  Long64_t  tauID(unsigned int i){return Ntp->tauID->at(i);}
- float   combreliso(unsigned int i){return Ntp->combreliso->at(i);}
+ float  combreliso(unsigned int i){return Ntp->combreliso->at(i);}
  float  combreliso03(unsigned int i){return Ntp->combreliso03->at(i);}
  int    PDGIdDaughters(unsigned int i){return Ntp->PDGIdDaughters->at(i);}
  /* static const int ntauIds = 30;  */
@@ -947,7 +948,7 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
 
 
    bool           tauBaselineSelection(int i, double cutPt, double cutEta, int aele, int amu);
-   bool           muonBaselineSelection( int i);
+   bool           muonBaselineSelection(int i, float ptMin, float etaMax, int muWP);
 
    bool           tauBaseline (int iDau, float ptMin, float etaMax, int againstEleWP, int againstMuWP, float isoRaw3Hits, TString whatApply, bool debug); 
    bool           muBaseline (int iDau, float ptMin, float etaMax, float relIso, int muIDWP, TString whatApply, bool debug);

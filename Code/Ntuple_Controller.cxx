@@ -539,6 +539,25 @@ bool Ntuple_Controller::tauBaselineSelection(int i, double cutPt, double cutEta,
   if(kin && agEleVal && agMuVal && dm && vertexS) return true;
   return false;
 } 
+
+
+bool Ntuple_Controller::muonBaselineSelection (int i, float ptMin, float etaMax, int muWP)
+{
+  bool kin(false),vertexS(false), idS(false), isMuon(false);
+  if (muWP < 0 || muWP > 3)
+    {
+      cout << " ** NTuple_Controller::muBaseline: muWP must be between 0 and 3 --> using 0" << endl;
+      muWP = 0;
+    }
+  isMuon = (particleType(i)==0);
+  vertexS = (fabs(dxy(i)) < 0.045 && fabs(dz(i)) < 0.2);
+  idS = CHECK_BIT(Daughters_muonID(i), muWP);
+  kin     = (Daughters_P4(i).Pt() >ptMin && fabs(Daughters_P4(i).Eta())<etaMax );
+  if(kin && vertexS && idS) return true;
+  return false;
+}
+
+
 	   
 
 
@@ -1008,31 +1027,17 @@ float Ntuple_Controller::DeltaRDau(int dau1idx, int dau2idx)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- bool Ntuple_Controller::muonBaselineSelection(int i){
-  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
-   if(particleType(i)==0){
-     if(Daughters_P4(i).Pt()>25 && fabs(Daughters_P4(i).Eta())<2.1)
-       if(fabs(dz(i))<0.2 &&  fabs(dxy(i))<0.045 )
-	 {
-	 return true;
-	 }
-   }
-   return false;
- }
+ // bool Ntuple_Controller::muonBaselineSelection(int i){
+ //  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
+ //   if(particleType(i)==0){
+ //     if(Daughters_P4(i).Pt()>25 && fabs(Daughters_P4(i).Eta())<2.1)
+ //       if(fabs(dz(i))<0.2 &&  fabs(dxy(i))<0.045 )
+ // 	 {
+ // 	 return true;
+ // 	 }
+ //   }
+ //   return false;
+ // }
 
  bool Ntuple_Controller::electronBaselineSelection(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
@@ -1860,6 +1865,16 @@ bool Ntuple_Controller::GetTriggerIndex(TString n,  int &i){
     } 
 	return false;
  }
+
+
+bool  Ntuple_Controller::CheckIfAnyPassed(  std::vector<int> list){
+  for(unsigned int itrig = 0; itrig < list.size(); itrig++){
+    if(TriggerAccept(list.at(itrig)))      return true;
+    
+  }
+  return false;
+}
+
 
 std::vector<int> Ntuple_Controller::GetVectorTriggers(TString n){
     std::vector<int> out;

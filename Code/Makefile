@@ -79,7 +79,7 @@ ifdef USE_SVfit
 endif
 
 ifdef USE_cherepanov
-	TARGETS += MyTest ZTauHTauH 
+	TARGETS += MyTest ZTauHTauH SkimNtupleSingleMuonTrigger
 	DEFS += -DUSE_cherepanov=1
 endif
 

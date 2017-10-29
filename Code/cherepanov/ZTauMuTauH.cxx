@@ -217,9 +217,11 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
 
 
     if(Ntp->isMediumGoodMuon(iDaugther)){
-      if(Ntp->muonBaselineSelection(iDaugther,20,2.1,2)){
-	goodMuonsIndex.push_back(iDaugther) ;  }}
-    
+      if(Ntp->muonBaselineSelection(iDaugther)){
+	if(Ntp->Daughters_P4(iDaugther).Pt() > cMu_pt){
+	  if(fabs(  Ntp->Daughters_P4(iDaugther).Eta()) < cMu_eta  ){
+	    goodMuonsIndex.push_back(iDaugther) ;  }}}}
+
     if(Ntp->ElectronVeto(iDaugther) || Ntp->MuonVeto(iDaugther)){
       thirdLeptonCounter.push_back(iDaugther);
     }
