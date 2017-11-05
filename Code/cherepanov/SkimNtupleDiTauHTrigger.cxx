@@ -124,15 +124,13 @@ void  SkimNtupleDiTauHTrigger::doEvent(){ //  Method called on every event
 
   for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
     if(Ntp->isTau(iDaugther)) {
-      if(Ntp->isLooseGoodTau(iDaugther)) 
+      if(Ntp->tauBaselineSelection(iDaugther, 35,2.3,4,1)) 
 	{
-	  if(Ntp->tauBaselineSelection(iDaugther)){
-	    GoodTausIndex.push_back(iDaugther);
-	  }
+	  GoodTausIndex.push_back(iDaugther);
 	}
     } 
   }
-
+  
 
 
   // for(int itrig = 0; itrig < TriggerIndex.size(); itrig++){

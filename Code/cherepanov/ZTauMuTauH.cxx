@@ -1,4 +1,4 @@
-#include "ZTauHTauH.h"
+#include "ZTauMuTauH.h"
 #include "TLorentzVector.h"
 #include <cstdlib>
 #include "HistoConfig.h"
@@ -30,19 +30,19 @@
 
 
 
-ZTauHTauH::ZTauHTauH(TString Name_, TString id_):
+ZTauMuTauH::ZTauMuTauH(TString Name_, TString id_):
   Selection(Name_,id_),
   cMu_pt(20),
   cMu_eta(2.1),
   cTau_pt(20),
-  cTau_eta(2.1),
-  tauTrgSF("vtight")
+  cTau_eta(2.1)
+  // tauTrgSF("vtight")
 {
   ChargeSumDummy = -999;
   selMuon_IsoDummy = 999.;
 }
 
-ZTauHTauH::~ZTauHTauH(){
+ZTauMuTauH::~ZTauMuTauH(){
   for(unsigned int j=0; j<Npassed.size(); j++){
 	 Logger(Logger::Info) << "Selection Summary before: "
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
@@ -51,7 +51,7 @@ ZTauHTauH::~ZTauHTauH(){
   Logger(Logger::Info) << "complete." << std::endl;
 }
 
-void  ZTauHTauH::Configure(){
+void  ZTauMuTauH::Configure(){
   // Setup Cut Values
   for(int i=0; i<NCuts;i++){
     cut.push_back(0);
@@ -174,7 +174,7 @@ void  ZTauHTauH::Configure(){
 
  
 
-void  ZTauHTauH::Store_ExtraDist(){
+void  ZTauMuTauH::Store_ExtraDist(){
 
   //every new histo should be addedd to Extradist1d vector, just push it back;
   Extradist1d.push_back(&Tau1PT);
@@ -196,7 +196,7 @@ void  ZTauHTauH::Store_ExtraDist(){
 
 }
 
-void  ZTauHTauH::doEvent(){ //  Method called on every event
+void  ZTauMuTauH::doEvent(){ //  Method called on every event
   unsigned int t;                // sample type, you may manage in your further analysis, if needed
   int id(Ntp->GetMCID());  //read event ID of a sample
   if(!HConfig.GetHisto(Ntp->isData(),id,t)){ Logger(Logger::Error) << "failed to find id" <<std::endl; return;}  //  gives a warining if list of samples in Histo.txt  and SkimSummary.log do not coincide 
@@ -314,8 +314,8 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
     w *= reweight.PUweightHTT(Ntp->npu());
       //std::cout<<" pu weigh HTT  "<< reweight.PUweightHTT(Ntp->npu())<<std::endl;
     if(!Ntp->isData() && pass.at(nGoodPairs) ){
-      double w1 = tauTrgSF.getSF(Ntp->Daughters_P4(TauIndex_1).Pt(),  Ntp->decayMode(TauIndex_1)) ;  //from Luca
-      double w2 = tauTrgSF.getSF(Ntp->Daughters_P4(TauIndex_2).Pt(),  Ntp->decayMode(TauIndex_2)) ;
+      //   double w1 = tauTrgSF.getSF(Ntp->Daughters_P4(TauIndex_1).Pt(),  Ntp->decayMode(TauIndex_1)) ;  //from Luca
+      //   double w2 = tauTrgSF.getSF(Ntp->Daughters_P4(TauIndex_2).Pt(),  Ntp->decayMode(TauIndex_2)) ;
       // double w1 = RSF->DiTauTrigger2016_ScaleMCtoData(Ntp->Daughters_P4(TauIndex_1),Ntp->decayMode(TauIndex_1));  // other implemenation
       // double w2 = RSF->DiTauTrigger2016_ScaleMCtoData(Ntp->Daughters_P4(TauIndex_2),Ntp->decayMode(TauIndex_2));
           w*=w1;
@@ -449,7 +449,7 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
 
 
 //  This is a function if you want to do something after the event loop
-void  ZTauHTauH::Finish(){
+void  ZTauMuTauH::Finish(){
   if(mode == RECONSTRUCT){
     std::cout<<" Starting Finish!  " <<std::endl;
     
