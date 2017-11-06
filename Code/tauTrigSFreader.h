@@ -4,7 +4,7 @@
 
 class tauTrigSFreader {
     public:
-        tauTrigSFreader(std::string rfilename);
+        tauTrigSFreader(std::string Isotype);
         ~tauTrigSFreader();
         double getSF(double pt, int decayMode);
     private:

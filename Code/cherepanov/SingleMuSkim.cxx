@@ -1,4 +1,4 @@
-#include "SkimNtupleDiTauHTrigger.h"
+#include "SingleMuSkim.h"
 #include "TLorentzVector.h"
 #include <cstdlib>
 #include "HistoConfig.h"
@@ -6,12 +6,12 @@
 #include "SVFitObject.h"
 #include "SimpleFits/FitSoftware/interface/Logger.h"
  
-SkimNtupleDiTauHTrigger::SkimNtupleDiTauHTrigger(TString Name_, TString id_):
+SingleMuSkim::SingleMuSkim(TString Name_, TString id_):
   Selection(Name_,id_)
 {
 }
 
-SkimNtupleDiTauHTrigger::~SkimNtupleDiTauHTrigger(){
+SingleMuSkim::~SingleMuSkim(){
   for(unsigned int j=0; j<Npassed.size(); j++){
 	 Logger(Logger::Info) << "Selection Summary before: "
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
@@ -20,7 +20,7 @@ SkimNtupleDiTauHTrigger::~SkimNtupleDiTauHTrigger(){
   Logger(Logger::Info) << "complete." << std::endl;
 }
 
-void  SkimNtupleDiTauHTrigger::Configure(){
+void  SingleMuSkim::Configure(){
   // Setup Cut Values
   for(int i=0; i<NCuts;i++){
     cut.push_back(0);
@@ -29,6 +29,7 @@ void  SkimNtupleDiTauHTrigger::Configure(){
     if(i==TriggerOk)      cut.at(TriggerOk)=1;
     if(i==PrimeVtx)       cut.at(PrimeVtx)=1;
     if(i==ntaus)          cut.at(ntaus)=1;
+    if(i==nmuons)         cut.at(nmuons)=1;
 
   }
   // Setup cut plots
@@ -62,6 +63,12 @@ void  SkimNtupleDiTauHTrigger::Configure(){
       Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_ntaus_",htitle,10,-0.5,9.5,hlabel,"Events"));
       Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_ntaus_",htitle,10,-0.5,9.5,hlabel,"Events"));
     }
+    else if(i==nmuons){
+      title.at(i)="Number of muons ";
+      hlabel="Number of muons  ";
+      Nminus1.push_back(HConfig.GetTH1D(Name+c+"_Nminus1_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
+      Nminus0.push_back(HConfig.GetTH1D(Name+c+"_Nminus0_nmuons_",htitle,10,-0.5,9.5,hlabel,"Events"));
+    }
 
   } 
   // Setup NPassed Histogams
@@ -83,7 +90,7 @@ void  SkimNtupleDiTauHTrigger::Configure(){
 
  
 
-void  SkimNtupleDiTauHTrigger::Store_ExtraDist(){
+void  SingleMuSkim::Store_ExtraDist(){
 
   //every new histo should be addedd to Extradist1d vector, just push it back;
   Extradist1d.push_back(&TauDecayMode);
@@ -96,7 +103,7 @@ void  SkimNtupleDiTauHTrigger::Store_ExtraDist(){
 
 }
 
-void  SkimNtupleDiTauHTrigger::doEvent(){ //  Method called on every event
+void  SingleMuSkim::doEvent(){ //  Method called on every event
   unsigned int t;                // sample type, you may manage in your further analysis, if needed
   int id(Ntp->GetMCID());  //read event ID of a sample
   if(!HConfig.GetHisto(Ntp->isData(),id,t)){ Logger(Logger::Error) << "failed to find id" <<std::endl; return;}  //  gives a warining if list of samples in Histo.txt  and SkimSummary.log do not coincide 
@@ -104,10 +111,11 @@ void  SkimNtupleDiTauHTrigger::doEvent(){ //  Method called on every event
   bool PassedTrigger(false);
   int triggerindex;
   std::vector<int> TriggerIndex; 
-  std::vector<int>TriggerIndexVector ;
+  std::vector<int> TriggerIndexVector ;
   std::vector<TString>  MatchedTriggerNames;
 
-  MatchedTriggerNames.push_back("HLT_DoubleMediumIsoPFTau");
+  MatchedTriggerNames.push_back("HLT_IsoMu");
+  MatchedTriggerNames.push_back("HLT_IsoTkMu");
   TriggerIndexVector=Ntp->GetVectorTriggers(MatchedTriggerNames);
    
 
@@ -120,17 +128,20 @@ void  SkimNtupleDiTauHTrigger::doEvent(){ //  Method called on every event
       //      std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
       PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
   }
+
   std::vector<int> GoodTausIndex;
+  std::vector<int> GoodMuonsIndex;
 
   for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
-    if(Ntp->isTau(iDaugther)) {
-      if(Ntp->tauBaselineSelection(iDaugther, 35,2.3,4,1)) 
-	{
-	  GoodTausIndex.push_back(iDaugther);
-	}
-    } 
+    if(Ntp->tauBaselineSelection(iDaugther, 20,2.3,4,1)){
+      GoodTausIndex.push_back(iDaugther);
+    }
+    if(Ntp->muonBaselineSelection(iDaugther,20,2.1,2)){
+      GoodMuonsIndex.push_back(iDaugther);
+    }
   }
-  
+
+
 
 
   // for(int itrig = 0; itrig < TriggerIndex.size(); itrig++){
@@ -153,6 +164,8 @@ void  SkimNtupleDiTauHTrigger::doEvent(){ //  Method called on every event
   value.at(ntaus)=GoodTausIndex.size();
   pass.at(ntaus) = (value.at(ntaus) >= cut.at(ntaus));
 
+  value.at(nmuons)=GoodMuonsIndex.size();
+  pass.at(nmuons) = (value.at(nmuons) >= cut.at(nmuons));
 
   // Here you can defined different type of weights you want to apply to events. At the moment only PU weight is considered if event is not data
   double wobs=1;
@@ -189,7 +202,7 @@ void  SkimNtupleDiTauHTrigger::doEvent(){ //  Method called on every event
 
 
 //  This is a function if you want to do something after the event loop
-void  SkimNtupleDiTauHTrigger::Finish(){
+void  SingleMuSkim::Finish(){
 
   Selection::Finish();
 

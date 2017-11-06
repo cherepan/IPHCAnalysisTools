@@ -469,17 +469,46 @@ void Selection::suppressDrawingHistOfType(unsigned int t) {
 
 // Returns true, if all cuts except for those in vector 'indices' passed.
 // Elements of vector 'indices' are the indices i_cut of the vector cut
+// bool Selection::passAllBut(std::vector<unsigned int> indices) {
+
+//   std::cout<<" indices size "<< indices.size() <<std::endl;
+// 	for (unsigned int i_c = 0; i_c < indices.size(); i_c++) {
+
+// 	  std::cout<< " indices  "<< i_c <<"    value:   "<< indices.at(i_c)  <<std::endl;
+// 	}
+
+// 	for (unsigned int i_cut = 0; i_cut < pass.size(); i_cut++) {
+// 	  std::vector<unsigned int>::iterator it;
+// 		it = std::find(indices.begin(), indices.end(), i_cut);	// tries to find i_cut in vector 'indices'
+// 		std::cout<< " it "<< *it <<" i_cut  "<< i_cut<< "   pass  "  << pass.at(i_cut)<<std::endl;
+
+// 		if (i_cut != *it) {		// checks if cut at i_cut is not a cut you want to exclude
+
+// 		  std::cout<<" cut_i is not a cut i want to exclude   " << " it "<< *it <<" i_cut  "<< i_cut<< "   pass  "  << pass.at(i_cut)<<std::endl;
+// 		    if (!pass.at(i_cut))return false;	
+// 		    std::cout<<" is false returned ? "<<std::endl;					// checks whether cut passed or not
+// 		}
+// 	}
+// 	return true;
+// }
+
+
 bool Selection::passAllBut(std::vector<unsigned int> indices) {
-	std::vector<unsigned int>::iterator it;
-	for (unsigned int i_cut = 0; i_cut < pass.size(); i_cut++) {
-		it = std::find(indices.begin(), indices.end(), i_cut);	// tries to find i_cut in vector 'indices'
-		if (i_cut != *it) {											// checks if cut at i_cut is not a cut you want to exclude
-			if (!pass.at(i_cut))
-				return false;						// checks whether cut passed or not
-		}
-	}
-	return true;
+  for (unsigned int i_cut = 0; i_cut < pass.size(); i_cut++) {
+    bool found(false);
+    for (unsigned int i_indices = 0; i_indices < indices.size(); i_indices++) {
+      if(indices.at(i_indices) == i_cut) {
+	found=true;
+      }
+    }
+    if(!found){
+      if (!pass.at(i_cut))return false;
+    }
+  }
+  return true;
 }
+
+
 
 bool Selection::passAllBut(unsigned int i_cut) {
 	std::vector<unsigned int> index;

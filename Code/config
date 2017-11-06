@@ -79,7 +79,7 @@ else
 		echo "USE_lebihan=1" >> make.inc
 	    fi
 	    if [ "${var}" == "--gbourgat" ]; then
-		echo "Configuring Code to use directory lebihan"
+		echo "Configuring Code to use directory gbourgat"
 		echo "USE_gbourgat=1" >> make.inc
 	    fi
 

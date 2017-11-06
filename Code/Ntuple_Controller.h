@@ -24,10 +24,13 @@
 #include "TSystem.h"
 
 // Include files (C & C++ libraries)
-#include<iostream>
+#include <iostream>
 #include <fstream>
 #include <vector>
 #include <string.h>
+#include <utility>      // std::pair
+#include <tuple>
+#include <functional>
 
 #include "NtupleReader.h"
 
@@ -224,6 +227,53 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
 
 
+  enum particleType {
+  MUON = 0,
+  ELECTRON = 1,
+  TAU =2
+  };
+  float m_MVAEleIDCuts[2][2][3] ;
+
+  enum pairType {
+    MuHad  = 0,
+    EHad   = 1,
+    HadHad = 2,
+    MuMu   = 3,
+    EE     = 4,
+    EMu    = 5,
+    EEPrompt = 6, // prompt Z->ee/mumu decays
+    MuMuPrompt = 7,
+    Other  = 8 // for e.g. h->bb
+  };
+
+  enum eleMVAIDWP {
+    EMVATight = 0, // 80% eff
+    EMVALoose = 1  // 90% eff
+  };
+
+  enum muIDWP {
+    MuLoose  = 0,
+    MuSoft   = 1,
+    MuMedium = 2, 
+    MuTight  = 3,
+    MuHighPt = 4
+  };
+
+  enum aeleWP {
+    aeleVLoose = 0,
+    aeleLoose  = 1,
+    aeleMedium = 2,
+    aeleTight  = 3,
+    aeleVTight = 4
+  };
+
+  enum amuWP {
+    amuLoose = 0,
+    amuTight = 1
+  };
+
+  typedef std::vector<float> tauPair_t; // pt1 - iso1 - idx1 - pt2 - iso2 - idx2 - idxoriginalPair
+  typedef std::tuple <float, float, int, float, float, int, int> tauPair_tuple; // pt1 - iso1 - idx1 - pt2 - iso2 - idx2 - idxoriginalPair
   // access to SVFit
   #ifdef USE_SVfit
   SVFitObject* getSVFitResult_MuTauh(SVFitStorage& svFitStor, TString metType, unsigned muIdx, unsigned tauIdx, unsigned rerunEvery = 5000, TString suffix = "", double scaleMu = 1 , double scaleTau = 1);
@@ -354,7 +404,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    Int_t           lumi(){return Ntp->lumi;}
    Int_t           NBadMu(){return Ntp->NBadMu;}
    Long64_t        triggerbit(){return Ntp->triggerbit;}
-   Int_t           metfilterbit(){return Ntp->metfilterbit;}
+   Long64_t           metfilterbit(){return Ntp->metfilterbit;}
    Float_t         MET(){return Ntp->met;}
    Float_t         METphi(){return Ntp->metphi;}
    Float_t         PUPPImet(){return Ntp->PUPPImet;}
@@ -365,8 +415,9 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    Float_t         PFMETCov11(){return Ntp->PFMETCov11;}
    Float_t         PFMETsignif(){return Ntp->PFMETsignif;}
    Float_t         npu(){return Ntp->npu;}
-   Int_t         npv(){return Ntp->npv;}
+   Int_t           npv(){return Ntp->npv;}
    Float_t         PUReweight(){return Ntp->PUReweight;}
+   Int_t           PUNumInteractions(){return Ntp->PUNumInteractions;}
    Float_t         rho(){return Ntp->rho;}
 
 
@@ -387,7 +438,8 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    std::vector<int> GetVectorTriggers(std::vector<TString> v);
    std::vector<int> GetVectorTriggersFullMatch(std::vector<TString> v);
    std::vector<int> GetVectorCrossTriggers(TString n1,TString n2,TString f1,TString f2);
-   Int_t            PUNumInteractions(){return Ntp->PUNumInteractions;}
+   bool  CheckIfAnyPassed(  std::vector<int> list);
+ 
    Float_t         MC_weight(){return Ntp->MC_weight;}
    Float_t         MC_weight_scale_muF0p5(){return Ntp->MC_weight_scale_muF0p5;}
    Float_t         MC_weight_scale_muF2(){return Ntp->MC_weight_scale_muF2;}
@@ -464,7 +516,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 
 
 
-   float  METx(unsigned int i){return Ntp->METx->at(i);}
+   float  METx(unsigned int i){return Ntp->METx->at(i);}   // index here is a pair
    float  METy(unsigned int i){return Ntp->METy->at(i);}
    float  uncorrMETx(unsigned int i){return Ntp->uncorrMETx->at(i);}
    float  uncorrMETy(unsigned int i){return Ntp->uncorrMETy->at(i);}
@@ -481,7 +533,13 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    float mT_Dau2(unsigned int i){return Ntp->mT_Dau2->at(i);}
    int   indexDau1(unsigned int i){return Ntp->indexDau1->at(i);}
    int   indexDau2(unsigned int i){return Ntp->indexDau2->at(i);}
+   int   getBestPairHTauTau (TString whatApply = "All", bool debug = false); // returns best pair formed by idx1, idx2, using HTauTau strategy - for studies
+   int   getBestPairPtAndRawIsoOrd ( TString whatApply = "All", bool debug = false); // returns best pair formed by idx1, idx2, sorting them by pt in each pair, then by raw iso
+   static bool pairSort (const tauPair_t& pA, const tauPair_t& pB);
+   static bool pairSortRawIso (const tauPair_t& pA, const tauPair_t& pB);
 
+   /* static bool pairSort (const tauPair_tuple& pA, const tauPair_tuple& pB); */
+   /* static bool pairSortRawIso (const tauPair_tuple& pA, const tauPair_tuple& pB); */
 
    unsigned int    NDaughters() { return Ntp->daughters_px->size();}
    TLorentzVector Daughters_P4(unsigned int i){return TLorentzVector(Ntp->daughters_px->at(i), Ntp->daughters_py->at(i), Ntp->daughters_pz->at(i),Ntp->daughters_e->at(i));}
@@ -502,13 +560,13 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 bool  Daughters_iseleBDT(unsigned int i){return Ntp->daughters_iseleBDT->at(i);}
 bool  Daughters_iseleWP80(unsigned int i){return Ntp->daughters_iseleWP80->at(i);}
 bool  Daughters_iseleWP90(unsigned int i){return Ntp->daughters_iseleWP90->at(i);}
-float  Daughters_eleMVAnt(unsigned int i){return Ntp->daughters_eleMVAnt->at(i);}
-float  Daughters_eleMVA_HZZ(unsigned int i){return Ntp->daughters_eleMVA_HZZ->at(i);}
+float Daughters_eleMVAnt(unsigned int i){return Ntp->daughters_eleMVAnt->at(i);}
+float Daughters_eleMVA_HZZ(unsigned int i){return Ntp->daughters_eleMVA_HZZ->at(i);}
 bool  Daughters_passConversionVeto(unsigned int i){return Ntp->daughters_passConversionVeto->at(i);}
-int    Daughters_eleMissingHits(unsigned int i){return Ntp->daughters_eleMissingHits->at(i);}
+int   Daughters_eleMissingHits(unsigned int i){return Ntp->daughters_eleMissingHits->at(i);}
 bool  Daughters_iseleChargeConsistent(unsigned int i){return Ntp->daughters_iseleChargeConsistent->at(i);}
-int    Daughters_eleCUTID(unsigned int i){return Ntp->daughters_eleCUTID->at(i);}
-int    decayMode(unsigned int i){return Ntp->decayMode->at(i);}
+int   Daughters_eleCUTID(unsigned int i){return Ntp->daughters_eleCUTID->at(i);}
+int   decayMode(unsigned int i){return Ntp->decayMode->at(i);}
 /* 0: 1prong + 0 pi0 */
 /* 1: 1prong + 1pi0 */
 /* 2: 1prong + 2pi0s */
@@ -521,7 +579,7 @@ int    decayMode(unsigned int i){return Ntp->decayMode->at(i);}
 
 
  Long64_t  tauID(unsigned int i){return Ntp->tauID->at(i);}
- float   combreliso(unsigned int i){return Ntp->combreliso->at(i);}
+ float  combreliso(unsigned int i){return Ntp->combreliso->at(i);}
  float  combreliso03(unsigned int i){return Ntp->combreliso03->at(i);}
  int    PDGIdDaughters(unsigned int i){return Ntp->PDGIdDaughters->at(i);}
  /* static const int ntauIds = 30;  */
@@ -764,7 +822,7 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
 
  bool CHECK_BIT(int var, int pos){  return ((var & (1 << pos)) == (1 << pos)); }
 
-
+ // bool res = word & (1 << bitpos);
 
 
 
@@ -886,15 +944,25 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
    bool           isMediumGoodTau( int i);
    bool           isTightGoodTau( int i);
 
-   bool           isLooseIsolatedTau(int i);
-   bool           isMediumIsolatedTau(int i);
-   bool           isTightIsolatedTau(int i);
-   bool           isVTightIsolatedTau(int i);
+   bool           isIsolatedTau(int i, TString isotype);
 
 
-   bool           tauBaselineSelection( int i);
-   bool           muonBaselineSelection( int i);
- 
+   bool           tauBaselineSelection(int i, double cutPt, double cutEta, int aele, int amu);
+   bool           muonBaselineSelection(int i, float ptMin, float etaMax, int muWP);
+
+   bool           tauBaseline (int iDau, float ptMin, float etaMax, int againstEleWP, int againstMuWP, float isoRaw3Hits, TString whatApply, bool debug); 
+   bool           muBaseline (int iDau, float ptMin, float etaMax, float relIso, int muIDWP, TString whatApply, bool debug);
+   bool           eleBaseline (int iDau, float ptMin, float etaMax, float relIso, int MVAIDflag, TString whatApply, bool debug);
+   int            getPairType (int type1, int type2);
+
+   bool           MuonVeto(int i);
+   bool           ElectronVeto(int i);
+
+   std::vector<int>  SortTauHTauHPair(std::vector<int>  PairIndices);
+
+   bool           pairPassBaseline (int iPair, TString whatApply, bool debug);
+   float          DeltaRDau(int dau1idx, int dau2idx);
+
   /* bool			 isTightMuon(unsigned int i); */
   /* bool			 isTightMuon(unsigned int i, unsigned int j, TString corr = "default"); */
   /* bool           isSelectedMuon(unsigned int i, unsigned int ja, double impact_xy, double impact_z, TString corr = "default"); */

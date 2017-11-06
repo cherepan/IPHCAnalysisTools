@@ -82,6 +82,14 @@ public:
 	// Higgs pT reweighting
 	double HiggsPtWeight(TLorentzVector vect, int mass, TString shift = "nominal");
 
+
+
+
+	//Final state tau+tau
+	double TauTriggerTurnOnPars(TLorentzVector vect, TString type, int dm );
+ 	double DiTauTrigger2016_ScaleMCtoData(TLorentzVector vect, int dm);
+ 
+
 private:
 	// booleans to switch on/off individual scale factors
 	bool loadElectronID;
