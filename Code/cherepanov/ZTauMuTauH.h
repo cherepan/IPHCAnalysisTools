@@ -35,12 +35,12 @@ class ZTauMuTauH : public Selection {
   enum cuts {TriggerOk=0,
 	     nGoodPairs,
 	     LeptonVeto,
-	     FirstTauIsolation,
-	     SecondTauIsolation,
-	     nGoodMuons,
+	     MuonIsolation,
+	     TauIsolation,
 	     PairCharge,
 	     PairMass,
 	     deltaR,
+	     MTM,
 	     NCuts};
 
  protected:
@@ -59,23 +59,20 @@ class ZTauMuTauH : public Selection {
  private:
   // Selection Variables and Histos
 
-  std::vector<TH1D> Tau1PT;
-  std::vector<TH1D> Tau1E;
-  std::vector<TH1D> Tau1HPSDecayMode;
+  std::vector<TH1D> TauPT;
+  std::vector<TH1D> TauE;
  
-  std::vector<TH1D> Tau2PT;
-  std::vector<TH1D> Tau2E;
-  std::vector<TH1D> Tau2HPSDecayMode;
+  std::vector<TH1D> MuonPT;
+  std::vector<TH1D> MuonE;
+  std::vector<TH1D> TauHPSDecayMode;
   std::vector<TH1D> TauTauMass;
 
   std::vector<TH1D> dRTauTau;
   std::vector<TH1D> QCDShape;
 
   std::vector<TH1D> NQCD;
-  std::vector<TH1D> Tau1Isolation;
-  std::vector<TH1D> Tau2Isolation;
 
   std::vector<TH1D> NPrimeVtx;
-
+  std::vector<TH1D> PVSVSignificance;
 };
 #endif
