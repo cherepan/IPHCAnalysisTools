@@ -22,9 +22,13 @@
 #ifdef USE_lebihan
 
 #endif
-// #ifdef USE_<username>
 
-// #endif
+
+
+#ifdef USE_gbourgat
+#include "gbourgat/Synchronization.h"
+
+#endif
 
 
 Selection_Factory::Selection_Factory(){
@@ -57,6 +61,9 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
 // #ifdef USE_lebihan
 //   else if(Analysis.Contains("bla"))s=new Bla(Analysis,UncertType);
 // #endif
+ #ifdef USE_gbourgat
+   else if(Analysis.Contains("synchronization"))s=new Synchronization(Analysis,UncertType);
+ #endif
 
 
   else{

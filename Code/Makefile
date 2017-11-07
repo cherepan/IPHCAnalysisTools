@@ -95,7 +95,7 @@ ifdef USE_lebihan
 endif
 
 ifdef USE_gbourgat
-	TARGETS += 
+	TARGETS += Synchronization
 	DEFS += -DUSE_lebihan=1
 endif
 
