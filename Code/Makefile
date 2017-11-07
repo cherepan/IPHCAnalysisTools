@@ -127,6 +127,12 @@ ifdef USE_lebihan
 	vpath %.cxx lebihan
 	vpath %.h lebihan
 endif
+
+ifdef USE_gbourgat
+	vpath %.cxx gbourgat
+	vpath %.h gbourgat
+endif
+
 vpath %.cxx CommonFiles
 vpath %.h CommonFiles
 

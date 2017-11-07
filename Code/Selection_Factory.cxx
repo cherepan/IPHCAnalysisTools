@@ -22,6 +22,14 @@
 #ifdef USE_lebihan
 
 #endif
+
+#ifdef USE_gbourgat
+
+#endif
+
+
+
+
 // #ifdef USE_<username>
 
 // #endif
@@ -57,6 +65,10 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
 // #ifdef USE_lebihan
 //   else if(Analysis.Contains("bla"))s=new Bla(Analysis,UncertType);
 // #endif
+
+ // #ifdef USE_gbourgat
+ //   else if(Analysis.Contains("bla"))s=new Bla(Analysis,UncertType);
+ // #endif
 
 
   else{
