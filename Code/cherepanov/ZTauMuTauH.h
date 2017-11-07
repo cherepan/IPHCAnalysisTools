@@ -1,5 +1,5 @@
-#ifndef ZTauHTauH_h
-#define ZTauHTauH_h
+#ifndef ZTauMuTauH_h
+#define ZTauMuTauH_h
 
 #include "Selection.h"
 #include <vector>
@@ -23,11 +23,11 @@
 #include "tauTrigSFreader.h"
 
 
-class ZTauHTauH : public Selection {
+class ZTauMuTauH : public Selection {
 
  public:
-  ZTauHTauH(TString Name_, TString id_);
-  virtual ~ZTauHTauH();
+  ZTauMuTauH(TString Name_, TString id_);
+  virtual ~ZTauMuTauH();
 
   virtual void  Configure();
   virtual void  Finish();
@@ -47,7 +47,7 @@ class ZTauHTauH : public Selection {
   virtual void doEvent();
   virtual void Store_ExtraDist();
   ReferenceScaleFactors *RSF;
-  tauTrigSFreader tauTrgSF;
+  //  tauTrigSFreader tauTrgSF;
   int TriggerOkDummy, selVertexDummy, selMuon_IsoDummy, selMuon_AntiIsoDummy, selTauDummy, ChargeSumDummy;
   double MTDummy, MvisDummy, TauFLSigmaDummy;
 

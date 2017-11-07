@@ -79,7 +79,7 @@ ifdef USE_SVfit
 endif
 
 ifdef USE_cherepanov
-	TARGETS += MyTest ZTauHTauH SingleMuSkim
+	TARGETS += MyTest ZTauHTauH SingleMuSkim ZTauMuTauH
 	DEFS += -DUSE_cherepanov=1
 endif
 
@@ -93,6 +93,13 @@ ifdef USE_lebihan
 	TARGETS += 
 	DEFS += -DUSE_lebihan=1
 endif
+
+ifdef USE_gbourgat
+	TARGETS += 
+	DEFS += -DUSE_lebihan=1
+endif
+
+
 
 HDRS          = $(TARGETS:=.h) 		
 SRCS          = $(TARGETS:=.cxx)  Analysis.cxx

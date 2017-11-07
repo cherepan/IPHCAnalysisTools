@@ -1,3 +1,7 @@
+#ifndef tauTrigSFreader_h
+#define tauTrigSFreader_h
+
+
 #include <string>
 #include "TFile.h"
 #include "TF1.h"
@@ -23,3 +27,4 @@ class tauTrigSFreader {
 };
 
 
+#endif

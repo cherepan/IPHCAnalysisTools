@@ -1,10 +1,10 @@
 Thin: False
 Skim: True
 HistoFile: InputData/HistoSkim.txt
-Analysis: SingleMuSkim
+Analysis: SkimNtupleDiTauHTrigger
 UncertType: default
-SkimInfo: InputData/SkimSummaryRunESingleMuon.log
-Lumi: 4009.1
+SkimInfo: InputData/SkimSummaryTauFull13TeV.log
+Lumi: 35825.829
 PlotStyle: style2
 
 
