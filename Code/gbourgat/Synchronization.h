@@ -23,7 +23,6 @@
 #include "tauTrigSFreader.h"
 
 
-
 class Synchronization : public Selection {
 
  public:
@@ -61,15 +60,29 @@ class Synchronization : public Selection {
   // Selection Variables and Histos
 
   std::vector<TH1D> Tau1PT;
+  std::vector<TH1D> Tau1Eta;
+  std::vector<TH1D> Tau1Phi;
   std::vector<TH1D> Tau1E;
   std::vector<TH1D> Tau1HPSDecayMode;
  
   std::vector<TH1D> Tau2PT;
+  std::vector<TH1D> Tau2Eta;
+  std::vector<TH1D> Tau2Phi;
   std::vector<TH1D> Tau2E;
   std::vector<TH1D> Tau2HPSDecayMode;
-  std::vector<TH1D> TauTauMass;
 
+  std::vector<TH1D> TauTauEta;
+  std::vector<TH1D> TauTauPhi;
+  std::vector<TH1D> TauTauMass;
   std::vector<TH1D> dRTauTau;
+
+  std::vector<TH1D> AllJetsE;
+  std::vector<TH1D> AllJetsPT;
+  std::vector<TH1D> LeadingJetE;
+  std::vector<TH1D> LeadingJetPT;
+  std::vector<TH1D> LeadingJetEta;
+  std::vector<TH1D> LeadingJetPhi;
+
   std::vector<TH1D> QCDShape;
 
   std::vector<TH1D> NQCD;

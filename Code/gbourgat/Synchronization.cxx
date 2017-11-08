@@ -11,8 +11,6 @@
 #include "HistoConfig.h"
 #include <iostream>
 #include "PDG_Var.h"
-
-
 #include "SkimConfig.h"
 
 
@@ -159,6 +157,7 @@ void  Synchronization::Configure(){
   Tau2E=HConfig.GetTH1D(Name+"_Tau2E","Energy of selected #tau candidate",25,24.5,99.5," E(#tau), GeV","Events");
   Tau2HPSDecayMode=HConfig.GetTH1D(Name+"_Tau2HPSDecayMode","Decay mode of the selected #tau candidate",11,-0.5,10.5," HPS Mode ","Events");
 
+  Tau2Eta=HConfig.GetTH1D(Name+"_Tau2Eta","Pseudorapidity of the second tau candidate",30,-2.3,2.3," #eta(#tau)","Events");
 
   TauTauMass=HConfig.GetTH1D(Name+"_TauTauMass","Visible invariant mass of a tau pair",35,50 ,100," M(#tau#tau), GeV","Events");
   NQCD=HConfig.GetTH1D(Name+"_NQCD","NQCD",6,0.5,6.5,"NQCD in ABCD","Events");
@@ -184,6 +183,10 @@ void  Synchronization::Store_ExtraDist(){
   Extradist1d.push_back(&Tau1HPSDecayMode);
 
   Extradist1d.push_back(&Tau2PT);
+  Extradist1d.push_back(&Tau2Eta);
+
+
+
   Extradist1d.push_back(&Tau2E);
   Extradist1d.push_back(&Tau2HPSDecayMode);
 
@@ -274,7 +277,7 @@ void  Synchronization::doEvent(){ //  Method called on every event
   pass.at(LeptonVeto) = ( value.at(LeptonVeto) ==  value.at(LeptonVeto));
 
   value.at(nGoodMuons)=goodMuonsIndex.size();
-  pass.at(nGoodMuons) =(value.at(nGoodMuons) == cut.at(nGoodMuons));
+  pass.at(nGoodMuons) =( value.at(nGoodMuons) == cut.at(nGoodMuons) );
   
   int TauIndex_1= -1;
   int TauIndex_2= -1;
@@ -438,10 +441,20 @@ void  Synchronization::doEvent(){ //  Method called on every event
   Tau1HPSDecayMode.at(t).Fill(Ntp->decayMode(TauIndex_1),w);
 
   Tau2PT.at(t).Fill(Tau2P4.Pt(),w);  // Fill transverse momentum
+  Tau2Eta.at(t).Fill(Tau2P4.Eta(), w);
+
+
   Tau2E.at(t).Fill(Tau2P4.E(),w);  // Fill transverse momentum
   Tau2HPSDecayMode.at(t).Fill(Ntp->decayMode(TauIndex_2),w);
   TauTauMass.at(t).Fill((Tau1P4+Tau2P4).M(),w);
   dRTauTau.at(t).Fill(Tau1P4.DeltaR(Tau2P4),w);
+
+  // std::cout<<" The missing transverse energy of this event is:  ">>    Ntp->MET() <<std::endl;
+  // for(unsigned int ijet=0; ijet< Ntp->JetsNumber(); ijet++{
+  //     std::cout<<"  ijet  "<< ijet << " pT :  " << Ntp->Jet_P4(ijet).Pt() <<std::endl;
+  //   }
+
+
   }
 }
 
