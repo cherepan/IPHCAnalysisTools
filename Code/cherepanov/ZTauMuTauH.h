@@ -74,5 +74,10 @@ class ZTauMuTauH : public Selection {
 
   std::vector<TH1D> NPrimeVtx;
   std::vector<TH1D> PVSVSignificance;
+  std::vector<TH1D> SVChi2;
+  std::vector<TH1D> SVQuality;
+  std::vector<TH2D> SVQualityVsSignificance;
+
+
 };
 #endif

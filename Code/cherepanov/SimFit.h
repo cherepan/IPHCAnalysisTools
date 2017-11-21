@@ -121,8 +121,11 @@ class SimFit : public Selection {
   std::vector<TH1D> A1PhiResolution;
   std::vector<TH1D> A1EtaResolution;
 
-
-
+  std::vector<TH1D> TrackMatchingQuality;
+  std::vector<TH2D> MQVsVisA1Resolution;
+  std::vector<TH1D> A1VisiblePtResolutionMuA1;
+  std::vector<TH1D> A1VisiblePtResolution;
+  std::vector<TH1D> TrackVisiblePtResolution;
 
 
 };

@@ -12,6 +12,7 @@
 #include "cherepanov/ZTauHTauH.h"
 #include "cherepanov/SingleMuSkim.h"
 #include "cherepanov/ZTauMuTauH.h"
+#include "cherepanov/TTBar.h"
 
 #endif
 
@@ -54,6 +55,7 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   else if(Analysis.Contains("ztauhtauh"))s=new ZTauHTauH(Analysis,UncertType);
   else if(Analysis.Contains("singlemuskim"))s=new SingleMuSkim(Analysis,UncertType);
   else if(Analysis.Contains("ztaumutauh"))s=new ZTauMuTauH(Analysis,UncertType);
+  else if(Analysis.Contains("ttbar"))s=new TTBar(Analysis,UncertType);
 
 
 

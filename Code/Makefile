@@ -49,6 +49,7 @@ TARGETS       =	Ntuple_Controller \
 		ReferenceScaleFactors \
 		rochcor2012jan22 \
 		Objects \
+		DataMCCorrections \
 		PUReweight \
 		ScaleFactor \
 		tauTrigSFreader \
@@ -79,7 +80,7 @@ ifdef USE_SVfit
 endif
 
 ifdef USE_cherepanov
-	TARGETS += MyTest ZTauHTauH SingleMuSkim ZTauMuTauH
+	TARGETS += MyTest ZTauHTauH SingleMuSkim ZTauMuTauH TTBar
 	DEFS += -DUSE_cherepanov=1
 endif
 

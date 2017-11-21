@@ -67,7 +67,7 @@ void  SimFit::Configure(){
     DaughtersPt=HConfig.GetTH1D(Name+"_DaughtersPt","Transverse momentum of reco particles",50,-0.05,99.5," P_{T}, GeV","Events");
     particletype=HConfig.GetTH1D(Name+"_particletype","Particle Type:0-muon,1-electron,2-tau",4,-0.5,3.5," pType","Events");
     taudecaytype=HConfig.GetTH1D(Name+"_taudecaytype","HPS decay type",11,-0.5,10.5," pType","Events");
-    PVSVSignificance=HConfig.GetTH1D(Name+"_PVSVSignificance"," PV-SV significance for tau decay mode = 10",51,-0.5,10.5," pType","Events");
+    PVSVSignificance=HConfig.GetTH1D(Name+"_PVSVSignificance"," PV-SV significance for tau decay mode = 10",21,0,4.5," pType","Events");
     SVchi2=HConfig.GetTH1D(Name+"_SVchi2"," #chi^{2} of SV",50,0,10,"#chi^{2} of SV","Events");
     SVMatchingQuality=HConfig.GetTH1D(Name+"_SVMatchingQuality"," Matching qualtiy of tracks used to build PV and general tracks",50,0,0.01," Sum #Delta R","Events");
 
@@ -85,8 +85,8 @@ void  SimFit::Configure(){
     s12reco=HConfig.GetTH1D(Name+"_s12reco","reco dalitz s12",50,0,1.5," s_{12}, GeV","Events");
     s13reco=HConfig.GetTH1D(Name+"_s13reco","reco dalitz s13",50,0,1.5," s_{13}, GeV","Events");
     s23reco=HConfig.GetTH1D(Name+"_s23reco","reco dalitz s23",50,0,1.5," s_{23}, GeV","Events");
-    TauA1PtResolution=HConfig.GetTH1D(Name+"_TauA1PtResolution","  pT resolution #tau_{a1}",50,-100,100," #Delta pT, GeV","Events");
-    TauMuPtResolution=HConfig.GetTH1D(Name+"_TauMuPtResolution","  pT resolution #tau_{a1}",50,-100,100," #Delta pT, GeV","Events");
+    TauA1PtResolution=HConfig.GetTH1D(Name+"_TauA1PtResolution","  pT resolution #tau_{a1}",50,-3,3," #Delta pT/pT, GeV","Events");
+    TauMuPtResolution=HConfig.GetTH1D(Name+"_TauMuPtResolution","  pT resolution #tau_{a1}",50,-3,3," #Delta pT/pT, GeV","Events");
 
     TauA1EResolution=HConfig.GetTH1D(Name+"_TauA1EResolution","  E resolution #tau_{a1}",50,-100,100," #Delta E, GeV","Events");
     TauMuEResolution=HConfig.GetTH1D(Name+"_TauMuEResolution","  E resolution #tau_{a1}",50,-100,100," #Delta E, GeV","Events");
@@ -99,13 +99,13 @@ void  SimFit::Configure(){
 
 
 
-    TrackPtResolution=HConfig.GetTH1D(Name+"_TrackPtResolution","  pT resolution #tau_{h}",50,-100,100," #Delta pT, GeV","Events");
+    TrackPtResolution=HConfig.GetTH1D(Name+"_TrackPtResolution","  pT resolution #tau_{h}",50,-3,3," #Delta pT/pT, GeV","Events");
     TrackEResolution=HConfig.GetTH1D(Name+"_TrackEResolution","  E resolution #tau_{h}",50,-100,100," #Delta E, GeV","Events");
     TrackPhiResolution=HConfig.GetTH1D(Name+"_TrackPhiResolution","  #phi resolution #tau_{h}",50,-3,3," #Delta #phi, GeV","Events");
     TrackEtaResolution=HConfig.GetTH1D(Name+"_TrackEtaResolution","  #eta resolution #tau_{h}",50,-3,3," #Delta #eta, GeV","Events");
 
 
-    A1PtResolution=HConfig.GetTH1D(Name+"_A1PtResolution","  pT resolution #tau_{a1}",50,-100,100," #Delta pT, GeV","Events");
+    A1PtResolution=HConfig.GetTH1D(Name+"_A1PtResolution","  pT resolution #tau_{a1}",50,-3,3," #Delta pT/pT, GeV","Events");
     A1EResolution=HConfig.GetTH1D(Name+"_A1EResolution","  E resolution #tau_{a1}",50,-100,100," #Delta E, GeV","Events");
     A1PhiResolution=HConfig.GetTH1D(Name+"_A1PhiResolution","  #phi resolution #tau_{a1}",50,-3,3," #Delta #phi, GeV","Events");
     A1EtaResolution=HConfig.GetTH1D(Name+"_A1EtaResolution","  #eta resolution #tau_{a1}",50,-3,3," #Delta #eta, GeV","Events");
@@ -128,7 +128,11 @@ void  SimFit::Configure(){
     EventFitZEtaResolution=HConfig.GetTH1D(Name+"_EventFitZEtaResolution","",50,-3,3," ","Events");
 
 
-
+    A1VisiblePtResolution=HConfig.GetTH1D(Name+"_A1VisiblePtResolution","  pT resolution a1",50,-100,100," #Delta pT, GeV","Events");
+    TrackVisiblePtResolution=HConfig.GetTH1D(Name+"_TrackVisiblePtResolution","  pT resolution track",50,-100,100," #Delta pT, GeV","Events");
+    A1VisiblePtResolutionMuA1=HConfig.GetTH1D(Name+"_A1VisiblePtResolutionMuA1","  pT resolution track",50,-100,100," #Delta pT, GeV","Events");
+    TrackMatchingQuality=HConfig.GetTH1D(Name+"_TrackMatchingQuality","  Track  Matching Quality",50,0,0.1," dR sum tracks","Events");
+    MQVsVisA1Resolution=HConfig.GetTH2D(Name+"_MQVsVisA1Resolution","  Track  Matching Quality",50,0,1,50,-40,40," dR sum tracks","Events");
     Selection::ConfigureHistograms();   //   do not remove
     HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);  // do not remove
 }
@@ -138,6 +142,7 @@ void  SimFit::Configure(){
 void  SimFit::Store_ExtraDist(){
 
   //every new histo should be addedd to Extradist1d vector, just push it back;
+   Extradist1d.push_back(&TrackMatchingQuality);
    Extradist1d.push_back(&NumVertices);
    Extradist1d.push_back(&MissingTEnergy);
    Extradist1d.push_back(&DaughtersPt);
@@ -206,6 +211,11 @@ void  SimFit::Store_ExtraDist(){
    Extradist1d.push_back(&A1EtaResolution);
 
 
+   Extradist1d.push_back(&A1VisiblePtResolution);
+   Extradist1d.push_back(&TrackVisiblePtResolution);
+   Extradist1d.push_back(&A1VisiblePtResolutionMuA1);
+   Extradist2d.push_back(&MQVsVisA1Resolution);
+
 }
 
 void  SimFit::doEvent(){ //  Method called on every event
@@ -213,7 +223,7 @@ void  SimFit::doEvent(){ //  Method called on every event
   int id(Ntp->GetMCID());  //read event ID of a sample
   if(!HConfig.GetHisto(Ntp->isData(),id,t)){ Logger(Logger::Error) << "failed to find id" <<std::endl; return;}  //  gives a warining if list of samples in Histo.txt  and SkimSummary.log do not coincide 
 
-  std::cout<<" id  "<<id<<std::endl;
+  //  std::cout<<" id  "<<id<<std::endl;
   value.at(PrimeVtx)=Ntp->NVtx();
   pass.at(PrimeVtx)=(value.at(PrimeVtx)>=cut.at(PrimeVtx));
   
@@ -273,7 +283,7 @@ void  SimFit::doEvent(){ //  Method called on every event
       //   std::cout<<" isTauTrack   "<< Ntp->PFTau_TrackParticleHasMomentum(iDaugther) <<std::endl;
       if(Ntp->particleType(iDaugther)==2){
 
-	std::cout<<" decMode  "<<Ntp->decayMode(iDaugther)<< "  isA1   "<< Ntp->PFTau_TIP_hasA1Momentum(iDaugther)<<"  is Track "<< Ntp->PFTau_TrackParticleHasMomentum(iDaugther) <<std::endl;
+	//	std::cout<<" decMode  "<<Ntp->decayMode(iDaugther)<< "  isA1   "<< Ntp->PFTau_TIP_hasA1Momentum(iDaugther)<<"  is Track "<< Ntp->PFTau_TrackParticleHasMomentum(iDaugther) <<std::endl;
 
 	if(Ntp->PFTau_TrackParticleHasMomentum(iDaugther)){	 TauTrackCandidate= iDaugther; isTauTrack=true;}
 
@@ -283,21 +293,28 @@ void  SimFit::doEvent(){ //  Method called on every event
     
       if(Ntp->PFTau_TIP_hasA1Momentum(iDaugther) && Ntp->isPVCovAvailable() && Ntp->PFTau_hassecondaryVertex(iDaugther) && Ntp->particleType(iDaugther) == 2) {TauCandidate = iDaugther; isTau=true;}
 
-
-
-      std::cout<<"isTau   is Track "<< isTau<<"  " << isTauTrack<<std::endl;
-	taudecaytype.at(t).Fill(Ntp->decayMode(iDaugther),w);
     
+
+      //      std::cout<<"isTau   is Track "<< isTau<<"  " << isTauTrack<<std::endl;
+      //  Ntp->deb(0); std::cout<<" id  "<< id <<std::endl;
+      //  Ntp->deb(1157);
+	taudecaytype.at(t).Fill(Ntp->decayMode(iDaugther),w);
+	//	Ntp->deb(101);
 	if(Ntp->PFTau_hassecondaryVertex(iDaugther) && Ntp->isPVCovAvailable()){
-	  
-	  PVSVSignificance.at(t).Fill( Ntp->PFTau_FlightLength_significance(Ntp->PVtx(),Ntp->PFTau_TIP_primaryVertex_cov(), Ntp->PFTau_secondaryVertex_pos(iDaugther), Ntp->PFTau_TIP_secondaryVertex_cov(iDaugther)),w);
+	  //  Ntp->deb(102);
+	  if(Ntp->PFTau_secondaryVertex_TracksMatchingQuality(iDaugther) < 0.01)	  PVSVSignificance.at(t).Fill( Ntp->PFTau_FlightLength_significance(Ntp->PVtx(),Ntp->PFTau_TIP_primaryVertex_cov(), Ntp->PFTau_secondaryVertex_pos(iDaugther), Ntp->PFTau_TIP_secondaryVertex_cov(iDaugther)),w);
+	  //  Ntp->deb(103);
 	  SVchi2.at(t).Fill(Ntp->PFTau_secondaryVertex_vtxchi2(iDaugther),w);
+	  // Ntp->deb(104);
 	  SVMatchingQuality.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQuality(iDaugther),w);
 	}
+ 	
+	//	Ntp->deb(1.5);
     }
-
+    
     if(isTau && isMuon){
     if(Ntp->decayMode(TauCandidate)==10  &&  Ntp->PFtauHasPions(TauCandidate) && Ntp->PFtauHasThreePions(TauCandidate) && id == 10230533  ){
+      //	Ntp->deb(2);
       TLorentzVector SSPion1,SSPion2, OSPion;
       unsigned int ssindex2(0);
       unsigned int OSPionIndex,SSPion1Index,SSPion2Index;
@@ -344,12 +361,14 @@ void  SimFit::doEvent(){ //  Method called on every event
 	
 	TLorentzVector TruthTauMu = Ntp->GetTruthTauLV(2);
 	TLorentzVector TruthTauA1 = Ntp->GetTruthTauLV(5);
-
-	 
+	TrackMatchingQuality.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQuality(TauCandidate),1);
 	  double phiz = 0.01;
 	  
 	  LorentzVectorParticle LVPTauA1 =Ntp->PFTau_a1_lvp(TauCandidate) ;
-	 
+	  
+	  if(Ntp->PFTau_secondaryVertex_TracksMatchingQuality(TauCandidate) < 0.01) A1VisiblePtResolutionMuA1.at(t).Fill(LVPTauA1.LV().Pt() - (mc_ospion+mc_ss1pion+mc_ss2pion).Pt(),1);       
+	  MQVsVisA1Resolution.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQuality(TauCandidate),LVPTauA1.LV().Pt() - (mc_ospion+mc_ss1pion+mc_ss2pion).Pt());
+	
 	  TMatrixT<double> METpar(2,1); METpar(0,0) = Ntp->MET()*cos(Ntp->METphi()); METpar(1,0) = Ntp->MET()*sin(Ntp->METphi());
 	  TMatrixTSym<double> METCov; METCov.ResizeTo(2,2);
 
@@ -358,7 +377,7 @@ void  SimFit::doEvent(){ //  Method called on every event
 	  METCov[0][1] = Ntp->PFMETCov10();
 	  METCov[1][1] = Ntp->PFMETCov11();
 	  
-
+	  //	Ntp->deb(3);
       //      METCov = MET.significanceMatrix<TMatrixTSym<double> >();                                                                                                                                      
 	  PTObject METObj(METpar, METCov);
 
@@ -373,10 +392,8 @@ void  SimFit::doEvent(){ //  Method called on every event
 	  GEFObject GEF = EF.Fit();
 	  
 	  for(unsigned int iSigParticle =0; iSigParticle < Ntp->NMCSignalParticles() ; iSigParticle++ ){
-
-	    std::cout<<"pdgId   "<< Ntp-> MCSignalParticle_pdgid(iSigParticle)<< " Px   "<< Ntp->MCSignalParticle_p4(iSigParticle).Px() <<  " =  px2   " << (TruthTauMu+TruthTauA1).Px()  << std::endl;
-	    std::cout<< Ntp->MCSignalParticle_p4(iSigParticle).M() <<  " =     " << (TruthTauMu+TruthTauA1).M()  << std::endl;
-
+	    // std::cout<<"pdgId   "<< Ntp-> MCSignalParticle_pdgid(iSigParticle)<< " Px   "<< Ntp->MCSignalParticle_p4(iSigParticle).Px() <<  " =  px2   " << (TruthTauMu+TruthTauA1).Px()  << std::endl;
+	    // std::cout<< Ntp->MCSignalParticle_p4(iSigParticle).M() <<  " =  " << (TruthTauMu+TruthTauA1).M()  << std::endl;
 	  }
 
 
@@ -385,7 +402,7 @@ void  SimFit::doEvent(){ //  Method called on every event
 
 
 	 
-	  if(GEF.isValid()  ){
+	  if(GEF.isValid()  &&  TruthTauA1.Pt() > 25 && TruthTauMu.Pt() > 25 ){
 
 	    TLorentzVector EventFitTauA1 =GEF.getTauH().LV();
 	    TLorentzVector EventFitTauMu =GEF.getTauMu().LV();
@@ -402,14 +419,11 @@ void  SimFit::doEvent(){ //  Method called on every event
 	    EventFitZEResolution.at(t).Fill((EventFitZ.E()-TruthZ.E())/TruthZ.E(),1);
 	    EventFitZPhiResolution.at(t).Fill(EventFitZ.Phi()-TruthZ.Phi(),1);
 	    EventFitZEtaResolution.at(t).Fill(EventFitZ.Eta()-TruthZ.Eta(),1);
-	    TauA1PtResolution.at(t).Fill(EventFitTauA1.Pt() - TruthTauA1.Pt(),1);
-	    TauMuPtResolution.at(t).Fill(EventFitTauMu.Pt() - TruthTauMu.Pt(),1);
+	    TauA1PtResolution.at(t).Fill(  (EventFitTauA1.Pt() - TruthTauA1.Pt() )/TruthTauA1.Pt(),1);
+	    TauMuPtResolution.at(t).Fill(  (EventFitTauMu.Pt() - TruthTauMu.Pt()) /TruthTauMu.Pt() ,1);
 
 	    TauA1EResolution.at(t).Fill(EventFitTauA1.E() - TruthTauA1.E(),1);
 	    TauMuEResolution.at(t).Fill(EventFitTauMu.E() - TruthTauMu.E(),1);
-
-
-
 
 	    TauA1EtaResolution.at(t).Fill(EventFitTauA1.Eta() - TruthTauA1.Eta(),1);
 	    TauMuEtaResolution.at(t).Fill(EventFitTauA1.Eta() - TruthTauA1.Eta(),1);
@@ -445,59 +459,76 @@ void  SimFit::doEvent(){ //  Method called on every event
     }
 
     if(isTau && isTauTrack){
-      std::cout<<"  passed ? "<< id<< std::endl;
-
+      //      std::cout<<"  passed ? "<< id<< std::endl;
+      //	Ntp->deb(4);
       if(Ntp->CheckDecayID(3,5) && id == 10330533 || id == 10430533 && Ntp->PFtauHasPions(TauCandidate) && Ntp->PFtauHasThreePions(TauCandidate)){
-	TLorentzVector TruthTauTrack = Ntp->GetTruthTauLV(3);
+
+	TLorentzVector TruthTauTrack(0,0,0,0);
 	TLorentzVector TruthTauA1 = Ntp->GetTruthTauLV(5);
 
-	  LorentzVectorParticle LVPTauA1 =Ntp->PFTau_a1_lvp(TauCandidate) ;
-	 
-	  TMatrixT<double> METpar(2,1); METpar(0,0) = Ntp->MET()*cos(Ntp->METphi()); METpar(1,0) = Ntp->MET()*sin(Ntp->METphi());
-	  TMatrixTSym<double> METCov; METCov.ResizeTo(2,2);
-
-	  METCov[0][0] = Ntp->PFMETCov00();
-	  METCov[1][0] = Ntp->PFMETCov01();
-	  METCov[0][1] = Ntp->PFMETCov10();
-	  METCov[1][1] = Ntp->PFMETCov11();
-	  
-
-                                                                                     
-	  PTObject METObj(METpar, METCov);
+	TLorentzVector  TruthPi(0,0,0,0);
+	TLorentzVector  TruthPiRho(0,0,0,0);
+	if(id ==10330533){ TruthPi= Ntp->GetTruthTauProductLV(3,211);TruthTauTrack = Ntp->GetTruthTauLV(3); }
+	if(id ==10430533){ TruthPiRho= Ntp->GetTruthTauProductLV(4,211);TruthTauTrack = Ntp->GetTruthTauLV(4); }
 
 
-	  GlobalEventFit EF(Ntp->PFTau_TrackParticle(TauTrackCandidate), LVPTauA1,METObj , Ntp->PVtx(),Ntp->PFTau_TIP_primaryVertex_cov());
-	  Ntp->PFTau_TrackParticle(TauTrackCandidate).getParMatrix().Print();
-	  GEFObject GEF = EF.Fit();
-	  TLorentzVector EventFitTauA1 =GEF.getTauH().LV();
-	  TLorentzVector EventFitTauPi =GEF.getTauMu().LV();
 
-	  std::cout<<"   GEF Status   Track "<< GEF.isValid() <<EventFitTauA1.Pt()  << " = " <<TruthTauA1.Pt() <<std::endl;
-	  if(GEF.isValid()  ){ 
-	    TrackPtResolution.at(t).Fill(EventFitTauPi.Pt() - TruthTauTrack.Pt(),1);
-	    TrackEResolution.at(t).Fill(EventFitTauPi.E() - TruthTauTrack.E(),1);
-	    TrackPhiResolution.at(t).Fill(EventFitTauPi.Phi() - TruthTauTrack.Phi(),1);
-	    TrackEtaResolution.at(t).Fill(EventFitTauPi.Eta() - TruthTauTrack.Eta(),1);
-
-
-	    A1PtResolution.at(t).Fill(EventFitTauA1.Pt() - TruthTauA1.Pt(),1);
-	    A1EResolution.at(t).Fill(EventFitTauA1.E() - TruthTauA1.E(),1);
-	    A1PhiResolution.at(t).Fill(EventFitTauA1.Phi() - TruthTauA1.Phi(),1);
-	    A1EtaResolution.at(t).Fill(EventFitTauA1.Eta() - TruthTauA1.Eta(),1);
-
+	  if(Ntp->isPFTauTrackAvailable(TauTrackCandidate)){
+	    // std::cout<<"  id  "<< id<< "   truth pt   "<< TruthTauTrack.Pt() << "   reco pt "<< Ntp->PFTauLeadTrackLV(TauTrackCandidate).Pt() <<  "  dR  " << Ntp->PFTauTrack_deltaR(TauTrackCandidate) <<std::endl;
+	    // std::cout<<" truth pi  "<< TruthPi.Pt() << "  truth piro "<< TruthPiRho.Pt()<< std::endl;
 	  }
-      }
- }
+  
 
+	LorentzVectorParticle LVPTauA1 =Ntp->PFTau_a1_lvp(TauCandidate) ;
+	 
+	TMatrixT<double> METpar(2,1); METpar(0,0) = Ntp->MET()*cos(Ntp->METphi()); METpar(1,0) = Ntp->MET()*sin(Ntp->METphi());
+	TMatrixTSym<double> METCov; METCov.ResizeTo(2,2);
+
+	METCov[0][0] = Ntp->PFMETCov00();
+	METCov[1][0] = Ntp->PFMETCov01();
+	METCov[0][1] = Ntp->PFMETCov10();
+	METCov[1][1] = Ntp->PFMETCov11();
+	  
+	TLorentzVector TruthA1LV=	Ntp->GetTruthPionsFromA1().at(0) + Ntp->GetTruthPionsFromA1().at(1) + Ntp->GetTruthPionsFromA1().at(2);
+	if(Ntp->PFTau_secondaryVertex_TracksMatchingQuality(TauCandidate) < 0.01)	A1VisiblePtResolution.at(t).Fill(LVPTauA1.LV().Pt() - TruthA1LV.Pt(),1);       
+	TrackVisiblePtResolution.at(t).Fill( Ntp->PFTauLeadTrackLV(TauTrackCandidate).Pt() - TruthTauTrack.Pt(),1);                                                            
+	PTObject METObj(METpar, METCov);
+
+
+	GlobalEventFit EF(Ntp->PFTau_TrackParticle(TauTrackCandidate), LVPTauA1,METObj , Ntp->PVtx(),Ntp->PFTau_TIP_primaryVertex_cov());
+	//	Ntp->PFTau_TrackParticle(TauTrackCandidate).getParMatrix().Print();
+	GEFObject GEF = EF.Fit();
+	TLorentzVector EventFitTauA1 =GEF.getTauH().LV();
+	TLorentzVector EventFitTauPi =GEF.getTauMu().LV();
+	
+	std::cout<<"   GEF Status   Track "<< GEF.isValid() << "  " <<EventFitTauA1.Pt()  << " = " <<TruthTauA1.Pt() <<std::endl;
+	if(GEF.isValid()  && Ntp->PFTau_secondaryVertex_TracksMatchingQuality(TauCandidate) < 0.01 && TruthTauTrack.Px()!=0 && TruthTauA1.Pt() > 25 && TruthTauTrack.Pt() > 25 ){ 
+
+	  std::cout<<" Mass  "<< (EventFitTauPi+EventFitTauA1 ).M() << "   id  "<< id <<std::endl;
+	  TrackPtResolution.at(t).Fill(  (EventFitTauPi.Pt() - TruthTauTrack.Pt())/TruthTauTrack.Pt(),1);
+	  TrackEResolution.at(t).Fill(EventFitTauPi.E() - TruthTauTrack.E(),1);
+	  TrackPhiResolution.at(t).Fill(EventFitTauPi.Phi() - TruthTauTrack.Phi(),1);
+	  TrackEtaResolution.at(t).Fill(EventFitTauPi.Eta() - TruthTauTrack.Eta(),1);
+	  
+	  
+	  A1PtResolution.at(t).Fill(  (EventFitTauA1.Pt() - TruthTauA1.Pt())/TruthTauA1.Pt(),1);
+	  A1EResolution.at(t).Fill(EventFitTauA1.E() - TruthTauA1.E(),1);
+	  A1PhiResolution.at(t).Fill(EventFitTauA1.Phi() - TruthTauA1.Phi(),1);
+	  A1EtaResolution.at(t).Fill(EventFitTauA1.Eta() - TruthTauA1.Eta(),1);
+	  
+	}
+      }
+    }
+    
+
+    
+  }
+  
+    
+  
+  
 
   
-  }
-
-    
-    
-
-
-
 
 }
 

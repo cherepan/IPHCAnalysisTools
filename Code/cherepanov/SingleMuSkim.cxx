@@ -77,7 +77,7 @@ void  SingleMuSkim::Configure(){
 
   TauPT=HConfig.GetTH1D(Name+"_TauPT","Transverse momentum #tau",50,15,75," P_{T}, GeV","Events");
   JetPT=HConfig.GetTH1D(Name+"_JetPT","Transverse momentum jet",50,15,125," P_{T}, GeV","Events");
-  MissingTEnergy=HConfig.GetTH1D(Name+"_MissingTEnergy","Missing Transverse Energy",50,-0.05,99.5," M_{T}, GeV","Events");
+  MissingTEnergy=HConfig.GetTH1D(Name+"_MissingTEnergy","Missing Transverse Energy",50,-0.05,149.5," M_{T}, GeV","Events");
   OSPairMass=HConfig.GetTH1D(Name+"_OSPairMass"," Mass of two OS candidates",50,50,100," M_{pair}, GeV","Events");
   SSPairMass=HConfig.GetTH1D(Name+"_SSPairMass"," Mass of two SS candidates",50,50,100," M_{pair}, GeV","Events");
 
@@ -133,10 +133,10 @@ void  SingleMuSkim::doEvent(){ //  Method called on every event
   std::vector<int> GoodMuonsIndex;
 
   for(unsigned int iDaugther=0;   iDaugther  <  Ntp->NDaughters() ;iDaugther++ ){  // loop over all daughters in the event
-    if(Ntp->tauBaselineSelection(iDaugther, 20,2.3,4,1)){
+    if(Ntp->tauBaselineSelection(iDaugther, 28,2.3,4,1)){
       GoodTausIndex.push_back(iDaugther);
     }
-    if(Ntp->muonBaselineSelection(iDaugther,20,2.1,2)){
+    if(Ntp->muonBaselineSelection(iDaugther,25,2.3,3)){
       GoodMuonsIndex.push_back(iDaugther);
     }
   }

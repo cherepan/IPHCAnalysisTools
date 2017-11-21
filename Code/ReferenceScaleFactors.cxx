@@ -1529,9 +1529,9 @@ double ReferenceScaleFactors::TauTriggerTurnOnPars(TLorentzVector vect, TString 
 
 
   int dmindex;
-  if(dm=0) dmindex=0;
-  if(dm=1) dmindex=1;
-  if(dm=10) dmindex=2;
+  if(dm==0) dmindex=0;
+  if(dm==1) dmindex=1;
+  if(dm==10)dmindex=2;
 
 
 

@@ -2084,6 +2084,22 @@ TLorentzVector Ntuple_Controller::MCTau_visiblePart(unsigned int i){
 	return lv;
 }
 
+float Ntuple_Controller::ttbarPtWeight(){
+  //https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
+  float w(1);
+  float tpt(0);
+  float tbarpt(0);
+  for(unsigned int imc=0; imc < NMCParticles(); imc++){
+    if(MCParticle_pdgid(imc)==6) tpt=MCParticle_p4(imc).Pt();
+    if(MCParticle_pdgid(imc)==-6) tbarpt=MCParticle_p4(imc).Pt();
+  }
+  
+  if(tpt!=0 && tbarpt!=0)  w=sqrt(pow(TMath::E(),0.0615 - 0.0005*tpt) * pow(TMath::E(),0.0615 - 0.0005*tbarpt));
+  return w;
+  
+}
+
+
 //// draw decay chain
 void Ntuple_Controller::printMCDecayChainOfEvent(bool printStatus, bool printPt, bool printEtaPhi, bool printQCD){
 	Logger(Logger::Info) << "=== Draw MC decay chain of event ===" << std::endl;

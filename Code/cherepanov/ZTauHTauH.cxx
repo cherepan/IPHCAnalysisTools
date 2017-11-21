@@ -35,8 +35,8 @@ ZTauHTauH::ZTauHTauH(TString Name_, TString id_):
   cMu_pt(20),
   cMu_eta(2.1),
   cTau_pt(20),
-  cTau_eta(2.1),
-  tauTrgSF("vtight")
+  cTau_eta(2.1)
+  //  tauTrgSF("vtight")
 {
   ChargeSumDummy = -999;
   selMuon_IsoDummy = 999.;
@@ -149,16 +149,16 @@ void  ZTauHTauH::Configure(){
   Npassed=HConfig.GetTH1D(Name+"_NPass","Cut Flow",NCuts+1,-1,NCuts,"Number of Accumulative Cuts Passed","Events");
 
 
-  Tau1PT=HConfig.GetTH1D(Name+"_Tau1PT","Transverse momentum of selected #tau candidate",30,32,80.5," P_{T}(#tau), GeV","Events");
-  Tau1E=HConfig.GetTH1D(Name+"_Tau1E","Energy of selected #tau candidate",25,24.5,99.5," E(#tau), GeV","Events");
+  Tau1PT=HConfig.GetTH1D(Name+"_Tau1PT","Transverse momentum of selected #tau candidate",20,32,80.5," P_{T}(#tau), GeV","Events");
+  Tau1E=HConfig.GetTH1D(Name+"_Tau1E","Energy of selected #tau candidate",20,24.5,99.5," E(#tau), GeV","Events");
   Tau1HPSDecayMode=HConfig.GetTH1D(Name+"_Tau1HPSDecayMode","Decay mode of the selected #tau candidate",11,-0.5,10.5," HPS Mode ","Events");
 
-  Tau2PT=HConfig.GetTH1D(Name+"_Tau2PT","Transverse momentum of selected #tau candidate",30,32.5,60.5," P_{T}(#tau), GeV","Events");
-  Tau2E=HConfig.GetTH1D(Name+"_Tau2E","Energy of selected #tau candidate",25,24.5,99.5," E(#tau), GeV","Events");
+  Tau2PT=HConfig.GetTH1D(Name+"_Tau2PT","Transverse momentum of selected #tau candidate",20,32.5,60.5," P_{T}(#tau), GeV","Events");
+  Tau2E=HConfig.GetTH1D(Name+"_Tau2E","Energy of selected #tau candidate",20,24.5,99.5," E(#tau), GeV","Events");
   Tau2HPSDecayMode=HConfig.GetTH1D(Name+"_Tau2HPSDecayMode","Decay mode of the selected #tau candidate",11,-0.5,10.5," HPS Mode ","Events");
 
 
-  TauTauMass=HConfig.GetTH1D(Name+"_TauTauMass","Visible invariant mass of a tau pair",35,50 ,100," M(#tau#tau), GeV","Events");
+  TauTauMass=HConfig.GetTH1D(Name+"_TauTauMass","Visible invariant mass of a tau pair",20,50 ,100," M(#tau#tau), GeV","Events");
   NQCD=HConfig.GetTH1D(Name+"_NQCD","NQCD",6,0.5,6.5,"NQCD in ABCD","Events");
 
   QCDShape=HConfig.GetTH1D(Name+"_QCDShape","QCDShape",2,0,2,"QCD Shape","");
@@ -167,7 +167,7 @@ void  ZTauHTauH::Configure(){
   Tau1Isolation=HConfig.GetTH1D(Name+"_Tau1Isolation","First Tau Isoaltion 1- Loose, 2- Medium, 3 Tight, 4-VTight",5,0.5,5.5," Discrimiantor","Events");
   Tau2Isolation=HConfig.GetTH1D(Name+"_Tau2Isolation","First Tau Isoaltion 1- Loose, 2- Medium, 3 Tight, 4-VTight",5,0.5,5.5," Discrimiantor","Events");
 
-  NPrimeVtx=HConfig.GetTH1D(Name+"_NPrimeVtx","NPrimeVtx",100,0,100,"N vtx","Events");
+  NPrimeVtx=HConfig.GetTH1D(Name+"_NPrimeVtx","NPrimeVtx",20,0,40,"N vtx","Events");
     Selection::ConfigureHistograms();   //   do not remove
     HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);  // do not remove
 }
@@ -312,12 +312,12 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
     w *= reweight.PUweightHTT(Ntp->npu());
       //std::cout<<" pu weigh HTT  "<< reweight.PUweightHTT(Ntp->npu())<<std::endl;
     if(!Ntp->isData() && pass.at(nGoodPairs) ){
-      double w1 = tauTrgSF.getSF(Ntp->Daughters_P4(TauIndex_1).Pt(),  Ntp->decayMode(TauIndex_1)) ;  //from Luca
-      double w2 = tauTrgSF.getSF(Ntp->Daughters_P4(TauIndex_2).Pt(),  Ntp->decayMode(TauIndex_2)) ;
+      // double w1 = tauTrgSF.getSF(Ntp->Daughters_P4(TauIndex_1).Pt(),  Ntp->decayMode(TauIndex_1)) ;  //from Luca
+      // double w2 = tauTrgSF.getSF(Ntp->Daughters_P4(TauIndex_2).Pt(),  Ntp->decayMode(TauIndex_2)) ;
       // double w1 = RSF->DiTauTrigger2016_ScaleMCtoData(Ntp->Daughters_P4(TauIndex_1),Ntp->decayMode(TauIndex_1));  // other implemenation
       // double w2 = RSF->DiTauTrigger2016_ScaleMCtoData(Ntp->Daughters_P4(TauIndex_2),Ntp->decayMode(TauIndex_2));
-          w*=w1;
-	  w*=w2;
+          // w*=w1;
+	  // w*=w2;
     }
     if(!Ntp->isData() && pass.at(nGoodPairs)){
       //   w *= 0.95;  // Tau ID  correction
