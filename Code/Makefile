@@ -14,7 +14,7 @@ SHELL = /bin/sh
 ###                              ###
 ####################################
 
-SHAREDLIBFLAGS =-L./CommonUtils/lib -lTauNtuple -L./DataFormats/lib -lDataFormats
+SHAREDLIBFLAGS =-L./CommonUtils/lib -lTauNtuple -lTauPol -L./DataFormats/lib -lDataFormats  
 SHAREDCXXFLAGS =-I./CommonUtils -I./DataFormats
 SUBDIRS = CommonUtils/ 
 TAUSPINERFLAG = 

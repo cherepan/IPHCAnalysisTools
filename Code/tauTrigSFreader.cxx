@@ -73,9 +73,9 @@ double tauTrigSFreader::getSF(double pt, int decayMode)
 
     double effMC     = fMC_[idx]->Eval(pt);
     double effDataBG = fDataBG_[idx]->Eval(pt);
-    //double effDataH  = fDataH_[idx]->Eval(pt);
+    double effDataH  = fDataH_[idx]->Eval(pt);
 
-    //  double SF = (effMC > 0 ? ( (fracBG_*effDataBG + fracH_*effDataH) / effMC ) : 0 );
-    double SF = (effMC > 0 ? ( (effDataBG ) / effMC ) : 0 );
+    double SF = (effMC > 0 ? ( (fracBG_*effDataBG + fracH_*effDataH) / effMC ) : 0 );
+      // double SF = (effMC > 0 ? ( (effDataBG ) / effMC ) : 0 );
     return SF;
 }

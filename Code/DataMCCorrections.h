@@ -28,8 +28,8 @@ public:
 	float ZPTWeight(float genMass, float genPt);
 	float ZPTWeightErr(float genMass, float genPt);
 
- 
-
+	float AgainstElectronDataMCCorrection(TLorentzVector p4, TString type);
+	float AgainstMuonDataMCCorrection(TLorentzVector p4, TString type);
 private:
 	// booleans to switch on/off individual scale factors
 	bool loadZPtWeights;

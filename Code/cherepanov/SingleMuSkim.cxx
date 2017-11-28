@@ -109,7 +109,7 @@ void  SingleMuSkim::doEvent(){ //  Method called on every event
   if(!HConfig.GetHisto(Ntp->isData(),id,t)){ Logger(Logger::Error) << "failed to find id" <<std::endl; return;}  //  gives a warining if list of samples in Histo.txt  and SkimSummary.log do not coincide 
   //  std::cout<<"------------------ New Event -----------------------"<<std::endl;
   bool PassedTrigger(false);
-  int triggerindex;
+  //  int triggerindex;
   std::vector<int> TriggerIndex; 
   std::vector<int> TriggerIndexVector ;
   std::vector<TString>  MatchedTriggerNames;
@@ -177,7 +177,7 @@ void  SingleMuSkim::doEvent(){ //  Method called on every event
   if(status){
 
 
-    for(unsigned int ipair=0; ipair < Ntp->NPairCandidates(); ipair++){
+    for(int ipair=0; ipair < Ntp->NPairCandidates(); ipair++){
       isPairCandOS.at(t).Fill(Ntp->isOSCand(ipair),w);
       if(Ntp->isOSCand(ipair)==1)      OSPairMass.at(t).Fill((  (Ntp->Daughters_P4(Ntp->indexDau1(ipair)) +  Ntp->Daughters_P4(Ntp->indexDau2(ipair) ) ).M()  ),w);
       if(Ntp->isOSCand(ipair)==0)      SSPairMass.at(t).Fill((  (Ntp->Daughters_P4(Ntp->indexDau1(ipair)) +  Ntp->Daughters_P4( Ntp->indexDau2(ipair) ) ).M()  ),w);
@@ -203,27 +203,14 @@ void  SingleMuSkim::doEvent(){ //  Method called on every event
 
 //  This is a function if you want to do something after the event loop
 void  SingleMuSkim::Finish(){
-
   Selection::Finish();
-
-	for (unsigned int i = 0; i < CrossSectionandAcceptance.size(); i++) {
-	  std::cout<< "  i  "<< i<< "  HConfig.GetID(i) "<< HConfig.GetID(i) << " Npassed.GetBinContent(0) "<< Npassed.at(i).GetBinContent(0) << " Npassed.GetBinContent(1) "<< Npassed.at(i).GetBinContent(1) << " Npassed.GetBinContent(NCuts) "<< Npassed.at(i).GetBinContent(NCuts) <<  "   no weight 0  "<< Npassed_noweight.at(i).GetBinContent(0)<<  "   no weight 1  "<< Npassed_noweight.at(i).GetBinContent(1)<<  "   no weight Ncuts   "<< Npassed_noweight.at(i).GetBinContent(NCuts)<< " scale   "<< Selection::scaleFactorToLumi(HConfig.GetID(i))  << std::endl;
-
-	  int nbins = Npassed.at(0).GetNbinsX();
-
-	  for(unsigned int ibn=0; ibn < nbins+1; ibn ++){
-	    std::cout<<"   "<<  HConfig.GetID(i) << "  Npassed  "<< Npassed.at(i).GetBinContent(ibn)<< "  nowe  " << Npassed_noweight.at(i).GetBinContent(ibn)<<std::endl;
-
-	  }
-
-
-	}
-
-
-
-	
-
-
+  for (unsigned int i = 0; i < CrossSectionandAcceptance.size(); i++) {
+    std::cout<< "  i  "<< i<< "  HConfig.GetID(i) "<< HConfig.GetID(i) << " Npassed.GetBinContent(0) "<< Npassed.at(i).GetBinContent(0) << " Npassed.GetBinContent(1) "<< Npassed.at(i).GetBinContent(1) << " Npassed.GetBinContent(NCuts) "<< Npassed.at(i).GetBinContent(NCuts) <<  "   no weight 0  "<< Npassed_noweight.at(i).GetBinContent(0)<<  "   no weight 1  "<< Npassed_noweight.at(i).GetBinContent(1)<<  "   no weight Ncuts   "<< Npassed_noweight.at(i).GetBinContent(NCuts)<< " scale   "<< Selection::scaleFactorToLumi(HConfig.GetID(i))  << std::endl;
+    int nbins = Npassed.at(0).GetNbinsX();
+    for(int ibn=0; ibn < nbins+1; ibn ++){
+      std::cout<<"   "<<  HConfig.GetID(i) << "  Npassed  "<< Npassed.at(i).GetBinContent(ibn)<< "  nowe  " << Npassed_noweight.at(i).GetBinContent(ibn)<<std::endl;
+    }
+  }
 }
 
 

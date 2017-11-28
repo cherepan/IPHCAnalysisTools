@@ -93,6 +93,10 @@ class SimFit : public Selection {
   std::vector<TH1D> EventFitZPhi;
   std::vector<TH1D> EventFitZEta;
 
+  std::vector<TH1D> EventFitTauA1E;
+  std::vector<TH1D> EventFitTauMuE;
+
+
   std::vector<TH1D> EventFitZPtResolution;
   std::vector<TH1D> EventFitZEResolution;
   std::vector<TH1D> EventFitZPhiResolution;

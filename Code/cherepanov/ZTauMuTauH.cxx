@@ -150,13 +150,13 @@ void  ZTauMuTauH::Configure(){
   Npassed=HConfig.GetTH1D(Name+"_NPass","Cut Flow",NCuts+1,-1,NCuts,"Number of Accumulative Cuts Passed","Events");
 
 
-  TauPT=HConfig.GetTH1D(Name+"_TauPT","Transverse momentum of selected #tau candidate",20,27,80.5," P_{T}(#tau), GeV","Events");
+  TauPT=HConfig.GetTH1D(Name+"_TauPT","Transverse momentum of selected #tau candidate",30,32,80.5," P_{T}(#tau), GeV","Events");
   TauE=HConfig.GetTH1D(Name+"_TauE","Energy of selected #tau candidate",25,24.5,99.5," E(#tau), GeV","Events");
 
-  MuonPT=HConfig.GetTH1D(Name+"_MuonPT","Transverse momentum of selected #tau candidate",20,27,60.5," P_{T}(#mu), GeV","Events");
+  MuonPT=HConfig.GetTH1D(Name+"_MuonPT","Transverse momentum of selected #tau candidate",30,32.5,60.5," P_{T}(#mu), GeV","Events");
   MuonE=HConfig.GetTH1D(Name+"_MuonE","Energy of selected #tau candidate",25,24.5,99.5," E(#mu), GeV","Events");
   TauHPSDecayMode=HConfig.GetTH1D(Name+"_TauHPSDecayMode","Decay mode of the selected #tau candidate",11,-0.5,10.5," HPS Mode ","Events");
-  PVSVSignificance=HConfig.GetTH1D(Name+"_PVSVSignificance"," PV-SV significance for tau decay mode = 10",31,-0.5,5.5," PVSV significance ","Events");
+  PVSVSignificance=HConfig.GetTH1D(Name+"_PVSVSignificance"," PV-SV significance for tau decay mode = 10",31,-0.5,5.5," pType","Events");
 
   TauTauMass=HConfig.GetTH1D(Name+"_TauTauMass","Visible invariant mass of a tau pair",25,50 ,100," M(#tau#tau), GeV","Events");
   NQCD=HConfig.GetTH1D(Name+"_NQCD","NQCD",6,0.5,6.5,"NQCD in ABCD","Events");
@@ -164,14 +164,8 @@ void  ZTauMuTauH::Configure(){
   QCDShape=HConfig.GetTH1D(Name+"_QCDShape","QCDShape",2,0,2,"QCD Shape","");
   dRTauTau=HConfig.GetTH1D(Name+"_dRTauTau","#Delta R",25,0,5," #Delta R","Events");
 
-  SVChi2=HConfig.GetTH1D(Name+"_SVChi2","SV  #chi^{2}",30,0,25,"#chi^{2}","Events");
-  SVQuality=HConfig.GetTH1D(Name+"_SVQuality","Track mathicn #DeltaR",25,0,2,"#Sigma#Delta R","Events");
 
   NPrimeVtx=HConfig.GetTH1D(Name+"_NPrimeVtx","NPrimeVtx",100,0,100,"N vtx","Events");
-
-  SVQualityVsSignificance=HConfig.GetTH2D(Name+"_SVQualityVsSignificance","Track mathicn #DeltaR vs significance",25,0,3,31,-0.5,5.5,"","Events");
-
-
   Selection::ConfigureHistograms();   //   do not remove
   HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);  // do not remove
 }
@@ -195,12 +189,6 @@ void  ZTauMuTauH::Store_ExtraDist(){
 
   Extradist1d.push_back(&NPrimeVtx);
   Extradist1d.push_back(&PVSVSignificance);
-
-  Extradist1d.push_back(&SVChi2);
-  Extradist1d.push_back(&SVQuality);
-  Extradist2d.push_back(&SVQualityVsSignificance);
-
-
 }
 
 void  ZTauMuTauH::doEvent(){ //  Method called on every event
@@ -210,17 +198,17 @@ void  ZTauMuTauH::doEvent(){ //  Method called on every event
   //  std::cout<<"------------------ New Event -----------------------"<<std::endl;
   Charge = ChargeSumDummy;
   bool PassedTrigger(false);
-  int triggerindex;
+  // int triggerindex;
   std::vector<int> TriggerIndex; 
   std::vector<int> TriggerIndexVector ;
   std::vector<TString>  MatchedTriggerNames;
 
-  MatchedTriggerNames.push_back("HLT_IsoMu24_v");
-  MatchedTriggerNames.push_back("HLT_IsoTkMu24_v");
+  MatchedTriggerNames.push_back("HLT_IsoMu");
+  MatchedTriggerNames.push_back("HLT_IsoTkMu");
   TriggerIndexVector=Ntp->GetVectorTriggers(MatchedTriggerNames);
   for(unsigned int itrig = 0; itrig < TriggerIndexVector.size(); itrig++){
     if(Ntp->TriggerAccept(TriggerIndexVector.at(itrig))){  
-      //    std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
+      //      std::cout<<"  Name  "<< Ntp->TriggerName(TriggerIndexVector.at(itrig)) << "   status   "<< Ntp->TriggerAccept(TriggerIndexVector.at(itrig)) <<std::endl;
       PassedTrigger =Ntp->TriggerAccept(TriggerIndexVector.at(itrig)); }
   }
 
@@ -246,7 +234,7 @@ void  ZTauMuTauH::doEvent(){ //  Method called on every event
     if(Ntp->ElectronVeto(iDaugther) || Ntp->MuonVeto(iDaugther)){
       thirdLeptonCounter.push_back(iDaugther);
     }
-  } 
+  }
     
  
   value.at(TriggerOk)=PassedTrigger;
@@ -255,7 +243,7 @@ void  ZTauMuTauH::doEvent(){ //  Method called on every event
   std::vector<int>  PairsIndex;
   std::vector<int>  SSPairsIndex;
 
-  for(unsigned int ipair =0; ipair < Ntp->NPairCandidates(); ipair++){
+  for(int ipair =0; ipair < Ntp->NPairCandidates(); ipair++){
     //    if(Ntp->isOSCand(ipair))
     {
       if(Ntp->getPairType(Ntp->indexDau1(ipair),Ntp->indexDau2(ipair))==0){
@@ -296,7 +284,7 @@ void  ZTauMuTauH::doEvent(){ //  Method called on every event
       }
 
 
-    if(Ntp->tauBaselineSelection(TauIndex, 20,2.3,4,1) && Ntp->muonBaselineSelection(MuonIndex, 20,2.3,2)) {
+    if(Ntp->tauBaselineSelection(TauIndex, 30,2.3,4,1) && Ntp->muonBaselineSelection(MuonIndex, 25,2.3,2)) {
       //      if(Ntp->decayMode(TauIndex)==10)
       SortedPair_PassedBaseline.push_back(Sorted.at(ipair));
     }
@@ -315,7 +303,7 @@ void  ZTauMuTauH::doEvent(){ //  Method called on every event
 	MuonIndex=Ntp->indexDau2(SortedSS.at(ipair));
 	TauIndex=Ntp->indexDau1(SortedSS.at(ipair));
       }
-    if(Ntp->tauBaselineSelection(TauIndex, 20,2.3,4,1) && Ntp->muonBaselineSelection(MuonIndex, 20,2.3,2)){
+    if(Ntp->tauBaselineSelection(TauIndex, 30,2.3,4,1) && Ntp->muonBaselineSelection(MuonIndex, 25,2.3,2)){
       //      if(Ntp->decayMode(TauIndex)==10)
       SortedSSPair_PassedBaseline.push_back(SortedSS.at(ipair));
     }
@@ -323,7 +311,7 @@ void  ZTauMuTauH::doEvent(){ //  Method called on every event
 
   int Muon= -1;
   int Tau= -1;
-  int Pair=-1;
+
 	
   value.at(nGoodPairs)=SortedPair_PassedBaseline.size();
   pass.at(nGoodPairs) = (value.at(nGoodPairs) > cut.at(nGoodPairs));
@@ -349,7 +337,7 @@ void  ZTauMuTauH::doEvent(){ //  Method called on every event
       Muon=Ntp->indexDau2(SortedPair_PassedBaseline.back());
       Tau=Ntp->indexDau1(SortedPair_PassedBaseline.back());
     }
-    Pair=SortedPair_PassedBaseline.back();
+
     //    value.at(PairCharge) = Ntp->Daughters_charge(TauIndex_1) + Ntp->Daughters_charge(TauIndex_2);
     if(Ntp->isOSCand(SortedPair_PassedBaseline.back()))    value.at(PairCharge) =1;
     else  value.at(PairCharge) =0;
@@ -478,14 +466,8 @@ void  ZTauMuTauH::doEvent(){ //  Method called on every event
      if(id !=DataMCType::Data && id !=DataMCType::QCD)	  pvx = Ntp->PUNumInteractions();
 
      if(Ntp->PFTau_hassecondaryVertex(Tau) && Ntp->isPVCovAvailable()){
-       if(Ntp->PFTau_secondaryVertex_TracksMatchingQuality(Tau) < 0.01)   PVSVSignificance.at(t).Fill( Ntp->PFTau_FlightLength_significance(Ntp->PVtx(),Ntp->PFTau_TIP_primaryVertex_cov(), Ntp->PFTau_secondaryVertex_pos(Tau), Ntp->PFTau_TIP_secondaryVertex_cov(Tau)),w);
-      
-       SVChi2.at(t).Fill(Ntp->PFTau_secondaryVertex_vtxchi2(Tau),w);
-       SVQuality.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQuality(Tau),w);
-       SVQualityVsSignificance.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQuality(Tau),Ntp->PFTau_FlightLength_significance(Ntp->PVtx(),Ntp->PFTau_TIP_primaryVertex_cov(), Ntp->PFTau_secondaryVertex_pos(Tau), Ntp->PFTau_TIP_secondaryVertex_cov(Tau)));
+       PVSVSignificance.at(t).Fill( Ntp->PFTau_FlightLength_significance(Ntp->PVtx(),Ntp->PFTau_TIP_primaryVertex_cov(), Ntp->PFTau_secondaryVertex_pos(Tau), Ntp->PFTau_TIP_secondaryVertex_cov(Tau)),w);
      }
-
-
 
   NPrimeVtx.at(t).Fill(pvx,w);
   TLorentzVector MuonP4 = Ntp->Daughters_P4(Muon);
@@ -499,7 +481,7 @@ void  ZTauMuTauH::doEvent(){ //  Method called on every event
   MuonE.at(t).Fill(MuonP4.E(),w);  // Fill transverse momentum
 
   TauHPSDecayMode.at(t).Fill(Ntp->decayMode(Tau),w);
- 
+
   TauTauMass.at(t).Fill((MuonP4+TauP4).M(),w);
   dRTauTau.at(t).Fill(MuonP4.DeltaR(TauP4),w);
   }
@@ -557,7 +539,7 @@ void  ZTauMuTauH::Finish(){
     }
 
     double OS2SS = (QCD_Integral_C_Data_minus_MC  - QCD_IntegralMC_C )/ (QCD_Integral_D_Data_minus_MC - QCD_IntegralMC_D);
-    double QCD_ScaleFactor = QCD_Integral_B_Data_minus_MC *OS2SS*0.4;
+    double QCD_ScaleFactor = QCD_Integral_B_Data_minus_MC *OS2SS;
 
 
     std::cout << "OS/SS QCD Sample: " << OS2SS << std::endl;

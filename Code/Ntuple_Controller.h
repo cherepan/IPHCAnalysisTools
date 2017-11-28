@@ -500,7 +500,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    TLorentzVector GenJet_P4(unsigned int i){return TLorentzVector(Ntp->genjet_px->at(i), Ntp->genjet_py->at(i), Ntp->genjet_pz->at(i),Ntp->genjet_e->at(i));}
    int Genjet_partonFlavour(unsigned int i){return Ntp->genjet_partonFlavour->at(i);}
    int Genjet_hadronFlavour(unsigned int i){return Ntp->genjet_hadronFlavour->at(i);}
- 
+   TLorentzVector TauP4_Corrected(unsigned int i);
 
    Int_t           NUP(){return Ntp->NUP;}
    bool isSVFitInfoAvailable(){if(Ntp->SVfit_fitMETPhiTauUp->size()!=0) return true; return false;}

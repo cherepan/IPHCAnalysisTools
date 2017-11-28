@@ -20,8 +20,8 @@
 #include "ReferenceScaleFactors.h"
 #include "Objects.h"
 #include "PUReweight.h"
-//#include "tauTrigSFreader.h"
-
+#include "tauTrigSFreader.h"
+#include "DataMCCorrections.h"
 
 class ZTauHTauH : public Selection {
 
@@ -47,13 +47,16 @@ class ZTauHTauH : public Selection {
   virtual void doEvent();
   virtual void Store_ExtraDist();
   ReferenceScaleFactors *RSF;
-  //  tauTrigSFreader tauTrgSF;
+
   int TriggerOkDummy, selVertexDummy, selMuon_IsoDummy, selMuon_AntiIsoDummy, selTauDummy, ChargeSumDummy;
   double MTDummy, MvisDummy, TauFLSigmaDummy;
 
   int Charge;
 
   double  cMu_pt,  cMu_eta,  cTau_pt,  cTau_eta;
+  tauTrigSFreader tauTrgSF;
+  DataMCCorrections DataMC_Corr;
+
   PUReweight reweight;//(PUReweight::RUN2ANALYSIS);
 
  private:
@@ -67,6 +70,13 @@ class ZTauHTauH : public Selection {
   std::vector<TH1D> Tau2E;
   std::vector<TH1D> Tau2HPSDecayMode;
   std::vector<TH1D> TauTauMass;
+  std::vector<TH1D> MET;
+  std::vector<TH1D> TauHMass1;
+  std::vector<TH1D> TauHMass2;
+
+  std::vector<TH1D> Tau1Eta;
+  std::vector<TH1D> Tau2Eta;
+
 
   std::vector<TH1D> dRTauTau;
   std::vector<TH1D> QCDShape;

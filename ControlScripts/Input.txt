@@ -1,10 +1,10 @@
 Thin: False
 Skim: False
 HistoFile: InputData/Histo.txt
-Analysis: ZTauHTauH
+Analysis: SimFit
 UncertType: default
-SkimInfo: InputData/SkimSummaryRunE.log
-Lumi: 4008.663
+SkimInfo: InputData/SkimSummaryTauFull13TeV.log
+Lumi: 35825.829
 PlotStyle: style2
 
 
@@ -12,5 +12,5 @@ PlotStyle: style2
 # DO NOT modify the fields in curly brackets {xyz}, they are set by the framework
 InputFileSVFit: 
 OutputFileSVFit: 
-GRIDSite: 
+GRIDSite: grid-srm.physik.rwth-aachen.de
 InputNtuples: {FileDir}
