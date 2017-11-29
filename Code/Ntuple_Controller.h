@@ -187,6 +187,26 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    };
   enum TrackPar{i_qoverp = 0, i_lambda, i_phi, i_dxy,i_dsz};
 
+  enum GenParticleFlag{Bit_isPrompt=0,
+		       Bit_isDecayedLeptonHadron,
+		       Bit_isTauDecayProduct,
+		       Bit_isPromptTauDecayProduct,
+		       Bit_isDirectTauDecayProduct,
+		       Bit_isDirectPromptTauDecayProduct,
+		       Bit_isDirectHadronDecayProduct,
+		       Bit_isHardProcess,
+		       Bit_fromHardProcess,
+		       Bit_isHardProcessTauDecayProduct,
+		       Bit_isDirectHardProcessTauDecayProduct,
+		       Bit_fromHardProcessBeforeFSR,
+		       Bit_isFirstCopy,
+		       Bit_isLastCopy,
+		       Bit_isLastCopyBeforeFSR,
+		       Bit_isVBFParton};
+
+
+
+
   enum TauQualityBitMask{Bit_byLoosePileupWeightedIsolation3Hits=0,
 			 Bit_byMediumPileupWeightedIsolation3Hits,
 			 Bit_byTightPileupWeightedIsolation3Hits,    
@@ -217,6 +237,10 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
 			 Bit_byMediumIsolationMVArun2v1DBdR03oldDMwLT,
 			 Bit_byTightIsolationMVArun2v1DBdR03oldDMwLT,
 			 Bit_byVTightIsolationMVArun2v1DBdR03oldDMwLT };
+
+
+
+
 
   enum MuonQualityBitMask{Bit_MuonLoose=0,
 			 Bit_MuonSoft,
@@ -476,7 +500,7 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
    TLorentzVector GenJet_P4(unsigned int i){return TLorentzVector(Ntp->genjet_px->at(i), Ntp->genjet_py->at(i), Ntp->genjet_pz->at(i),Ntp->genjet_e->at(i));}
    int Genjet_partonFlavour(unsigned int i){return Ntp->genjet_partonFlavour->at(i);}
    int Genjet_hadronFlavour(unsigned int i){return Ntp->genjet_hadronFlavour->at(i);}
- 
+   TLorentzVector TauP4_Corrected(unsigned int i);
 
    Int_t           NUP(){return Ntp->NUP;}
    bool isSVFitInfoAvailable(){if(Ntp->SVfit_fitMETPhiTauUp->size()!=0) return true; return false;}
@@ -720,6 +744,7 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  TLorentzVector             MCParticle_p4(unsigned int i){return TLorentzVector(Ntp->MC_p4->at(i).at(1),Ntp->MC_p4->at(i).at(2),Ntp->MC_p4->at(i).at(3),Ntp->MC_p4->at(i).at(0));}
  int                        MCParticle_pdgid(unsigned int i){return Ntp->MC_pdgid->at(i);}
  int                        MCParticle_charge(unsigned int i){return Ntp->MC_charge->at(i);}
+ //int              		  MCParticle_midx(unsigned int i){return Ntp->MC_midx->at(i);}
  int              		  MCParticle_midx(unsigned int i){return Ntp->MC_midx->at(i);}
  std::vector<int>           MCParticle_childpdgid(unsigned int i){return Ntp->MC_childpdgid->at(i);}
  std::vector<int>           MCParticle_childidx(unsigned int i){return Ntp->MC_childidx->at(i);}
@@ -736,7 +761,7 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  TLorentzVector GetTruthTauLV(unsigned int jak);
  TLorentzVector GetTruthTauProductLV(unsigned int jak, int pdgID);
  std::vector<TLorentzVector> GetTruthPionsFromA1();
-
+ 
 
 
  // Tau decays (Tau is first element of vector)
@@ -766,7 +791,7 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  bool hasSignalTauDecay(PDGInfo::PDGMCNumbering parent_pdgid,unsigned int &Boson_idx,unsigned int &tau1_idx, unsigned int &tau2_idx);
 
 
-
+ 
  Int_t           JetsNumber(){return Ntp->JetsNumber;}
  unsigned int NJets(){return Ntp->jets_px->size();}
  TLorentzVector Jet_P4(unsigned int i){return TLorentzVector(Ntp->jets_px->at(i), Ntp->jets_py->at(i), Ntp->jets_pz->at(i),Ntp->jets_e->at(i));}
@@ -800,7 +825,7 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  float  pfCombinedMVAV2BJetTags(unsigned int i){return Ntp->pfCombinedMVAV2BJetTags->at(i);}
  float  jetRawf(unsigned int i){return Ntp->jetRawf->at(i);}
  int  PFjetID(unsigned int i){return Ntp->PFjetID->at(i);}
- 
+ float ttbarPtWeight();
 
  unsigned int NAK8Jets(){return Ntp->ak8jets_px->size();}
  TLorentzVector AK8Jet_P4(unsigned int i){return TLorentzVector(Ntp->ak8jets_px->at(i), Ntp->ak8jets_py->at(i), Ntp->ak8jets_pz->at(i),Ntp->ak8jets_e->at(i));}

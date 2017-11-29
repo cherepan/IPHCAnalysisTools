@@ -1,7 +1,7 @@
 Thin: False
 Skim: False
 HistoFile: InputData/Histo.txt
-Analysis: SimFit
+Analysis: TTBar
 UncertType: default
 SkimInfo: InputData/SkimSummaryTauFull13TeV.log
 Lumi: 35825.829

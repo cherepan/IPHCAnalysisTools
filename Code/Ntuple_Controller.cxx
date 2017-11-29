@@ -12,7 +12,7 @@
 // External code
 #include "TauDataFormat/TauNtuple/interface/DataMCType.h"
 #include "SimpleFits/FitSoftware/interface/PDGInfo.h"
-
+ 
 ///////////////////////////////////////////////////////////////////////
 //
 // Constructor
@@ -518,6 +518,17 @@ bool Ntuple_Controller::isIsolatedTau(int i, TString isotype){
   if(isotype.Contains("VTight")) return  CHECK_BIT(tauID(i),Bit_byVTightIsolationMVArun2v1DBoldDMwLT);
   return true;
 }
+TLorentzVector Ntuple_Controller::TauP4_Corrected(unsigned int i){
+  //   https://twiki.cern.ch/twiki/bin/view/CMS/TauIDRecommendation13TeV#Tau_energy_scale
+  double scalecorr(1);  // in %
+  if(particleType(i)==2 && Daughters_decayModeFindingOldDMs(i) > 0.5){
+    if(decayMode(i)==10) scalecorr = 0.004;
+    if(decayMode(i)==1) scalecorr = 0.01;
+    if(decayMode(i)==0) scalecorr = -0.018;
+  }
+  TLorentzVector p4New = (1 + scalecorr)*Daughters_P4(i);
+  return p4New;
+}
 
 
 bool Ntuple_Controller::tauBaselineSelection(int i, double cutPt, double cutEta, int aele, int amu){
@@ -532,7 +543,7 @@ bool Ntuple_Controller::tauBaselineSelection(int i, double cutPt, double cutEta,
   if ( amu== 0)      agMuVal = CHECK_BIT(tauID(i),Bit_againstMuonLoose3);
   else if ( amu== 1) agMuVal = CHECK_BIT(tauID(i),Bit_againstMuonTight3);
 
-  kin     = (Daughters_P4(i).Pt() >cutPt && fabs(Daughters_P4(i).Eta())<cutEta );
+  kin     = (TauP4_Corrected(i).Pt() >cutPt && fabs(TauP4_Corrected(i).Eta())<cutEta );
   vertexS = (fabs(dz(i)) < 0.2); 
   dm      =(particleType(i)==2 && Daughters_decayModeFindingOldDMs(i) > 0.5);
 
@@ -2083,6 +2094,22 @@ TLorentzVector Ntuple_Controller::MCTau_visiblePart(unsigned int i){
 	lv -= MCTau_invisiblePart(i);
 	return lv;
 }
+
+float Ntuple_Controller::ttbarPtWeight(){
+  //https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting
+  float w(1);
+  float tpt(0);
+  float tbarpt(0);
+  for(unsigned int imc=0; imc < NMCParticles(); imc++){
+    if(MCParticle_pdgid(imc)==6) tpt=MCParticle_p4(imc).Pt();
+    if(MCParticle_pdgid(imc)==-6) tbarpt=MCParticle_p4(imc).Pt();
+  }
+  
+  if(tpt!=0 && tbarpt!=0)  w=sqrt(pow(TMath::E(),0.0615 - 0.0005*tpt) * pow(TMath::E(),0.0615 - 0.0005*tbarpt));
+  return w;
+  
+}
+
 
 //// draw decay chain
 void Ntuple_Controller::printMCDecayChainOfEvent(bool printStatus, bool printPt, bool printEtaPhi, bool printQCD){

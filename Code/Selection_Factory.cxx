@@ -12,6 +12,7 @@
 #include "cherepanov/ZTauHTauH.h"
 #include "cherepanov/SingleMuSkim.h"
 #include "cherepanov/ZTauMuTauH.h"
+#include "cherepanov/TTBar.h"
 
 #endif
 
@@ -23,10 +24,8 @@
 
 #endif
 
-
-
 #ifdef USE_gbourgat
-#include "gbourgat/Synchronization.h"
+
 
 #endif
 
@@ -50,6 +49,7 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   else if(Analysis.Contains("ztauhtauh"))s=new ZTauHTauH(Analysis,UncertType);
   else if(Analysis.Contains("singlemuskim"))s=new SingleMuSkim(Analysis,UncertType);
   else if(Analysis.Contains("ztaumutauh"))s=new ZTauMuTauH(Analysis,UncertType);
+  else if(Analysis.Contains("ttbar"))s=new TTBar(Analysis,UncertType);
 
 
 
@@ -61,9 +61,10 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
 // #ifdef USE_lebihan
 //   else if(Analysis.Contains("bla"))s=new Bla(Analysis,UncertType);
 // #endif
- #ifdef USE_gbourgat
-   else if(Analysis.Contains("synchronization"))s=new Synchronization(Analysis,UncertType);
- #endif
+
+ // #ifdef USE_gbourgat
+ //   else if(Analysis.Contains("bla"))s=new Bla(Analysis,UncertType);
+ // #endif
 
 
   else{

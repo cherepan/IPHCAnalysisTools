@@ -1,9 +1,9 @@
 Thin: False
 Skim: False
 HistoFile: InputData/Histo.txt
-Analysis: SimFit
+Analysis: ZTauMuTauH
 UncertType: default
-SkimInfo: InputData/SkimSummaryTauFull13TeV.log
+SkimInfo: InputData/SkimSummarySingleMuonFullData.log
 Lumi: 35825.829
 PlotStyle: style2
 
