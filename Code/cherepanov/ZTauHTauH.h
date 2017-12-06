@@ -38,9 +38,9 @@ class ZTauHTauH : public Selection {
 	     FirstTauIsolation,
 	     SecondTauIsolation,
 	     nGoodMuons,
-	     PairCharge,
 	     PairMass,
 	     deltaR,
+	     PairCharge,
 	     NCuts};
 
  protected:
