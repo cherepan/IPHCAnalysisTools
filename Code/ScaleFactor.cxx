@@ -1,30 +1,56 @@
 //#include "HTT-utilities/LepEffInterface/interface/ScaleFactor.h"
 #include "ScaleFactor.h"
 
-void ScaleFactor::init_ScaleFactor(TString inputRootFile){
+ void ScaleFactor::init_ScaleFactor(TString inputRootFile){
+   //	std::cout<<"check 1  "<<std::endl;
+ 	TFile *fileIn = new TFile(inputRootFile, "READ");
+ 	// if root file not found
+ 	if (fileIn->IsZombie() ) { std::cout << "ERROR in ScaleFactor::init_ScaleFactor(TString inputRootFile) from NTupleMaker/src/ScaleFactor.cc : ‎File " <<inputRootFile << " does not exist. Please check. " <<std::endl; exit(1); };
+ 	//	std::cout<<"check 2  "<<std::endl;
+ 	std::string HistoBaseName = "ZMass";
+ 	std::cout<<"check 21  "<<std::endl;
+ 	etaBinsH =(TH1D*)(fileIn->Get("etaBinsH"));
+ 	std::cout<<"check 215  "<<std::endl;
+ 	//	etaBinsH = etaBinsHTemp;
+ 	//	std::cout<<"check 22  "<<std::endl;
 
-	TFile * fileIn = new TFile(inputRootFile, "read");
-	// if root file not found
-	if (fileIn->IsZombie() ) { std::cout << "ERROR in ScaleFactor::init_ScaleFactor(TString inputRootFile) from NTupleMaker/src/ScaleFactor.cc : ‎File " <<inputRootFile << " does not exist. Please check. " <<std::endl; exit(1); };
+ 	// ETrigIdEffFile = new TFile(basedir+"ElectronEfficiencies_Run2012ReReco_53X_Trig.root", "READ");
+ 	// ENonTrigIdEffFile = new TFile(basedir+"ElectronEfficiencies_Run2012ReReco_53X_NonTrig.root", "READ");
+ 	// ERecoEffFile = new TFile(basedir+"Electrons_ScaleFactors_Reco_8TeV.root", "READ");
+ 	// // load histograms
+ 	// ElectronTrigEff = (TH2D*)(ETrigIdEffFile->Get("electronsDATAMCratio_FO_ID_ISO"));
+ 	// ElectronNonTrigEff = (TH2D*)(ENonTrigIdEffFile->Get("h_electronScaleFactor_IdIsoSip"));
+
+
+ 	std::string etaLabel, GraphName;
+ 	//	std::cout<<"check 23  "<<std::endl;
+ 	int nEtaBins = etaBinsH->GetNbinsX();
+ 	std::cout<<"check 3  "<<std::endl;
+  	for (int iBin=0; iBin<nEtaBins; iBin++){
+	  std::cout<<"check 31  "<<std::endl;    
+	  etaLabel = etaBinsH->GetXaxis()->GetBinLabel(iBin+1);
+	  std::cout<<"check 32  "<<std::endl;
+	  GraphName = HistoBaseName+etaLabel+"_Data";
+	  std::cout<<"check 33  "<<std::endl;
+	  eff_data[etaLabel] = (TGraphAsymmErrors*)fileIn->Get(TString(GraphName)); 
+	  std::cout<<"check 34  "<<std::endl;
+	  SetAxisBins(eff_data[etaLabel]);
+	  std::cout<<"check 35  "<<std::endl;
+	  GraphName = HistoBaseName+etaLabel+"_MC";
+	  std::cout<<"check 36  "<<std::endl;
+	  eff_mc[etaLabel] = (TGraphAsymmErrors*)fileIn->Get(TString(GraphName));
+	  std::cout<<"check 4  "<<std::endl;
+	  SetAxisBins(eff_mc[etaLabel]); 
+	  bool sameBinning = check_SameBinning(eff_data[etaLabel], eff_mc[etaLabel]);
+	  if (!sameBinning) {std::cout<< "ERROR in ScaleFactor::init_ScaleFactor(TString inputRootFile) from LepEffInterface/src/ScaleFactor.cc . Can not proceed because ScaleFactor::check_SameBinning returned different pT binning for data and MC for eta label " << etaLabel << std::endl; exit(1); }; 
+ 	}
 	
-	std::string HistoBaseName = "ZMass";
-	etaBinsH = (TH1D*)fileIn->Get("etaBinsH"); 
-	std::string etaLabel, GraphName;
-	int nEtaBins = etaBinsH->GetNbinsX();
- 	for (int iBin=0; iBin<nEtaBins; iBin++){    
-		etaLabel = etaBinsH->GetXaxis()->GetBinLabel(iBin+1);
-		GraphName = HistoBaseName+etaLabel+"_Data";
-		eff_data[etaLabel] = (TGraphAsymmErrors*)fileIn->Get(TString(GraphName)); 
-		SetAxisBins(eff_data[etaLabel]);
-		GraphName = HistoBaseName+etaLabel+"_MC";
-		eff_mc[etaLabel] = (TGraphAsymmErrors*)fileIn->Get(TString(GraphName));
-		SetAxisBins(eff_mc[etaLabel]); 
-		bool sameBinning = check_SameBinning(eff_data[etaLabel], eff_mc[etaLabel]);
-		if (!sameBinning) {std::cout<< "ERROR in ScaleFactor::init_ScaleFactor(TString inputRootFile) from LepEffInterface/src/ScaleFactor.cc . Can not proceed because ScaleFactor::check_SameBinning returned different pT binning for data and MC for eta label " << etaLabel << std::endl; exit(1); }; 
-	}
-	
-	return;
-}
+ 	return;
+ }
+
+
+
+
 
 void ScaleFactor::init_ScaleFactor(TString inputRootFile, std::string HistoBaseName){
 
@@ -32,7 +58,8 @@ void ScaleFactor::init_ScaleFactor(TString inputRootFile, std::string HistoBaseN
   // if root file not found                                                                                                                                                                          
   if (fileIn->IsZombie() ) { std::cout << "ERROR in ScaleFactor::init_ScaleFactor(TString inputRootFile) from LepEffInterface/src/ScaleFactor.cc : File " <<inputRootFile << " does not exist. Please check. " <<std::endl; exit(1); };
 
-  etaBinsH = (TH1D*)fileIn->Get("etaBinsH");
+  TH1D *etaBinsH = (TH1D*)fileIn->Get("etaBinsH");
+
   std::string etaLabel, GraphName;
   int nEtaBins = etaBinsH->GetNbinsX();
   for (int iBin=0; iBin<nEtaBins; iBin++){

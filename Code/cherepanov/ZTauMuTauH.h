@@ -18,9 +18,11 @@
 #include "SimpleFits/FitSoftware/interface/DiTauConstrainedFitter.h"
 #include "SimpleFits/FitSoftware/interface/GlobalEventFit.h"
 #include "ReferenceScaleFactors.h"
+#include "ScaleFactor.h"
 #include "Objects.h"
 #include "PUReweight.h"
 #include "tauTrigSFreader.h"
+#include "DataMCCorrections.h"
 
 
 class ZTauMuTauH : public Selection {
@@ -42,12 +44,12 @@ class ZTauMuTauH : public Selection {
 	     deltaR,
 	     MTM,
 	     NCuts};
-
+ 
  protected:
   virtual void doEvent();
   virtual void Store_ExtraDist();
   ReferenceScaleFactors *RSF;
-  //  tauTrigSFreader tauTrgSF;
+
   int TriggerOkDummy, selVertexDummy, selMuon_IsoDummy, selMuon_AntiIsoDummy, selTauDummy, ChargeSumDummy;
   double MTDummy, MvisDummy, TauFLSigmaDummy;
 
@@ -55,6 +57,9 @@ class ZTauMuTauH : public Selection {
 
   double  cMu_pt,  cMu_eta,  cTau_pt,  cTau_eta;
   PUReweight reweight;//(PUReweight::RUN2ANALYSIS);
+  //  tauTrigSFreader tauTrgSF;
+  DataMCCorrections DataMC_Corr;
+  DataMCCorrections DataMC_CorrLeptonIso;
 
  private:
   // Selection Variables and Histos

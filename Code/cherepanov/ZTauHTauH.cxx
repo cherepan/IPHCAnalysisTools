@@ -65,7 +65,7 @@ void  ZTauHTauH::Configure(){
     if(i==SecondTauIsolation)  cut.at(SecondTauIsolation)=1;
     if(i==nGoodMuons)          cut.at(nGoodMuons)=0;
     if(i==PairCharge)          cut.at(PairCharge)=1;
-    if(i==PairMass)            cut.at(PairMass)=95;
+    if(i==PairMass)            cut.at(PairMass)=115;
     if(i==deltaR)              cut.at(deltaR)=3.3;
   }
   // Setup cut plots
@@ -149,17 +149,16 @@ void  ZTauHTauH::Configure(){
   // Setup NPassed Histogams
   Npassed=HConfig.GetTH1D(Name+"_NPass","Cut Flow",NCuts+1,-1,NCuts,"Number of Accumulative Cuts Passed","Events");
 
-
-  Tau1PT=HConfig.GetTH1D(Name+"_Tau1PT","Transverse momentum of selected #tau candidate",20,32,80.5," P_{T}(#tau), GeV","Events");
+  Tau1PT=HConfig.GetTH1D(Name+"_Tau1PT","Transverse momentum of selected #tau candidate",40,0,200," P_{T}(#tau), GeV","Events");
   Tau1E=HConfig.GetTH1D(Name+"_Tau1E","Energy of selected #tau candidate",20,24.5,99.5," E(#tau), GeV","Events");
   Tau1HPSDecayMode=HConfig.GetTH1D(Name+"_Tau1HPSDecayMode","Decay mode of the selected #tau candidate",11,-0.5,10.5," HPS Mode ","Events");
 
-  Tau2PT=HConfig.GetTH1D(Name+"_Tau2PT","Transverse momentum of selected #tau candidate",20,32.5,60.5," P_{T}(#tau), GeV","Events");
+  Tau2PT=HConfig.GetTH1D(Name+"_Tau2PT","Transverse momentum of selected #tau candidate",40,0,200," P_{T}(#tau), GeV","Events");
   Tau2E=HConfig.GetTH1D(Name+"_Tau2E","Energy of selected #tau candidate",20,24.5,99.5," E(#tau), GeV","Events");
   Tau2HPSDecayMode=HConfig.GetTH1D(Name+"_Tau2HPSDecayMode","Decay mode of the selected #tau candidate",11,-0.5,10.5," HPS Mode ","Events");
 
 
-  TauTauMass=HConfig.GetTH1D(Name+"_TauTauMass","Visible invariant mass of a tau pair",20,50 ,100," M(#tau#tau), GeV","Events");
+  TauTauMass=HConfig.GetTH1D(Name+"_TauTauMass","Visible invariant mass of a tau pair",30,0 ,300," M(#tau#tau), GeV","Events");
   NQCD=HConfig.GetTH1D(Name+"_NQCD","NQCD",6,0.5,6.5,"NQCD in ABCD","Events");
 
   QCDShape=HConfig.GetTH1D(Name+"_QCDShape","QCDShape",2,0,2,"QCD Shape","");
@@ -172,8 +171,12 @@ void  ZTauHTauH::Configure(){
   TauHMass1=HConfig.GetTH1D(Name+"_TauHMass1","InvariantMass of tauH",30,0.3,1.7," M, GeV","Events");
   TauHMass2=HConfig.GetTH1D(Name+"_TauHMass2","InvariantMass of tauH",30,0.3,1.7," M, GeV","Events");
 
-  Tau1Eta=HConfig.GetTH1D(Name+"_Tau1Eta","Pseudorapidity tau1",30,-2.5,2.5," #eta","Events");
-  Tau2Eta=HConfig.GetTH1D(Name+"_Tau2Eta","Pseudorapidity tau2",30,-2.5,2.5," #eta","Events");
+  Tau1Eta=HConfig.GetTH1D(Name+"_Tau1Eta","Pseudorapidity tau1",15,-3,3," #eta","Events");
+  Tau2Eta=HConfig.GetTH1D(Name+"_Tau2Eta","Pseudorapidity tau2",15,-3,3," #eta","Events");
+
+
+
+
 
 
 
@@ -184,7 +187,7 @@ void  ZTauHTauH::Configure(){
 
  
 
-void  ZTauHTauH::Store_ExtraDist(){
+void  ZTauHTauH::Store_ExtraDist(){ 
 
   //every new histo should be addedd to Extradist1d vector, just push it back;
   Extradist1d.push_back(&Tau1PT);
@@ -206,9 +209,9 @@ void  ZTauHTauH::Store_ExtraDist(){
   Extradist1d.push_back(&TauHMass1);
   Extradist1d.push_back(&TauHMass2);
 
+
   Extradist1d.push_back(&Tau1Eta);
   Extradist1d.push_back(&Tau2Eta);
-
 
 
   Extradist1d.push_back(&NPrimeVtx);
@@ -251,7 +254,7 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
   std::vector<int>  PairsIndex;
   std::vector<int>  SSPairsIndex;
 
-  for(int ipair =0; ipair < Ntp->NPairCandidates(); ipair++){
+  for(unsigned int ipair =0; ipair < Ntp->NPairCandidates(); ipair++){
     //    if(Ntp->isOSCand(ipair))
     {
       if(Ntp->getPairType(Ntp->indexDau1(ipair),Ntp->indexDau2(ipair))==2){
@@ -310,9 +313,10 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
     value.at(SecondTauIsolation) = Ntp->isIsolatedTau(TauIndex_2,"VTight");
 
     value.at(deltaR) = Ntp->Daughters_P4(TauIndex_1).DeltaR(Ntp->Daughters_P4(TauIndex_2));
-    value.at(PairMass) = (Ntp->TauP4_Corrected(TauIndex_1) +Ntp->TauP4_Corrected(TauIndex_2)).M();
+    value.at(PairMass) = (Ntp->Daughters_P4(TauIndex_1) +Ntp->Daughters_P4(TauIndex_2)).M();
    
-   // std::cout<<"  isOS  "<< Ntp->isOSCand(SortedPair_PassedBaseline.back()) <<std::endl;
+
+    // std::cout<<"  isOS  "<< Ntp->isOSCand(SortedPair_PassedBaseline.back()) <<std::endl;
     // std::cout<< "  1st charge  "<< Ntp->Daughters_charge(TauIndex_1) <<" 2nd charge " << Ntp->Daughters_charge(TauIndex_2) <<std::endl;
 
   }
@@ -330,18 +334,16 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
     w *= reweight.PUweightHTT(Ntp->npu());
       //std::cout<<" pu weigh HTT  "<< reweight.PUweightHTT(Ntp->npu())<<std::endl;
     if(!Ntp->isData() && pass.at(nGoodPairs) ){
-       double w1 = tauTrgSF.getSF(Ntp->TauP4_Corrected(TauIndex_1).Pt(),  Ntp->decayMode(TauIndex_1)) ;  //from Luca
-       double w2 = tauTrgSF.getSF(Ntp->TauP4_Corrected(TauIndex_2).Pt(),  Ntp->decayMode(TauIndex_2)) ;
-      // double w1 = RSF->DiTauTrigger2016_ScaleMCtoData(Ntp->Daughters_P4(TauIndex_1),Ntp->decayMode(TauIndex_1));  // other implemenation
-      // double w2 = RSF->DiTauTrigger2016_ScaleMCtoData(Ntp->Daughters_P4(TauIndex_2),Ntp->decayMode(TauIndex_2));
-       w*=w1;
-       w*=w2;
+       double w1 = tauTrgSF.getSF(Ntp->Daughters_P4(TauIndex_1).Pt(),  Ntp->decayMode(TauIndex_1)) ;  //from Luca
+       double w2 = tauTrgSF.getSF(Ntp->Daughters_P4(TauIndex_2).Pt(),  Ntp->decayMode(TauIndex_2)) ;
+       // w*=w1;
+       // w*=w2;
     }
     if(!Ntp->isData() && pass.at(nGoodPairs)){
       //   w *= 0.95;  // Tau ID  correction
     }
-
-
+  }
+  //------------------ Z Pt weights --------------------
     TLorentzVector genMomentum(0,0,0,0);
     if( id == 33){
       for(unsigned int imc=0; imc < Ntp->NGenParts(); imc++){
@@ -371,57 +373,80 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
     if(genMomentum.Pt()!=0 && genMomentum.M() > 75 && genMomentum.M() < 120){
       zptw = DataMC_Corr.ZPTWeight(genMomentum.M(),genMomentum.Pt());
     }
-    double WT(1);
+    //-------------------------  mu/e tau fake rate weights 
     double wAgainstMuon1(1);
     double wAgainstElectron1(1);
     double wAgainstMuon2(1);
     double wAgainstElectron2(1);
-
     if(id == 33){
-      WT =  Ntp->TauSpinerGet(TauSpinerInterface::Spin);
-      if(isnan(WT))WT=1;
       if(pass.at(nGoodPairs)){
 	TauIndex_1 = Ntp->indexDau1(SortedPair_PassedBaseline.back());
 	TauIndex_2 = Ntp->indexDau2(SortedPair_PassedBaseline.back());
+	int matchedIndex1(-1);
+	int matchedIndex2(-1);
+	double dR1(999);
+	double dR2(999);
+	for(unsigned int imc=0; imc < Ntp->NGenParts(); imc++){
+	  if(fabs(Ntp->Genpart_pdg(imc)) ==11 || fabs(Ntp->Genpart_pdg(imc)) ==13)
+	    {
+	      if(sqrt(pow(Ntp->TauP4_Corrected(Ntp->indexDau1(SortedPair_PassedBaseline.back())).Phi() - Ntp->Genpart_P4(imc).Phi(),2) + 
+		      pow(Ntp->TauP4_Corrected(Ntp->indexDau1(SortedPair_PassedBaseline.back())).Eta() - Ntp->Genpart_P4(imc).Eta(),2)) < dR1)
+		{
+		  dR1 = sqrt(pow(Ntp->TauP4_Corrected(Ntp->indexDau1(SortedPair_PassedBaseline.back())).Phi() - Ntp->Genpart_P4(imc).Phi(),2) + 
+			     pow(Ntp->TauP4_Corrected(Ntp->indexDau1(SortedPair_PassedBaseline.back())).Eta() - Ntp->Genpart_P4(imc).Eta(),2));
+		  matchedIndex1=imc;
+		}
+	      if(sqrt(pow(Ntp->TauP4_Corrected(Ntp->indexDau2(SortedPair_PassedBaseline.back())).Phi() - Ntp->Genpart_P4(imc).Phi(),2) + 
+		      pow(Ntp->TauP4_Corrected(Ntp->indexDau2(SortedPair_PassedBaseline.back())).Eta() - Ntp->Genpart_P4(imc).Eta(),2)) < dR2)
+		{
+		  dR2 = sqrt(pow(Ntp->TauP4_Corrected(Ntp->indexDau2(SortedPair_PassedBaseline.back())).Phi() - Ntp->Genpart_P4(imc).Phi(),2) + 
+			     pow(Ntp->TauP4_Corrected(Ntp->indexDau2(SortedPair_PassedBaseline.back())).Eta() - Ntp->Genpart_P4(imc).Eta(),2));
+		  matchedIndex2=imc;
+		}
+	    }
+	}
+	if(dR1 < 0.2  && matchedIndex1!=-1 ){
+	  if(fabs(Ntp->Genpart_pdg(matchedIndex1)) ==13 &&  ( Ntp->CHECK_BIT(Ntp->Genpart_flags(matchedIndex1),0) || Ntp->CHECK_BIT(Ntp->Genpart_flags(matchedIndex1),5)   ) )
+	    {
+	      wAgainstMuon1 = DataMC_Corr.AgainstMuonDataMCCorrection(Ntp->TauP4_Corrected(TauIndex_1),"AgainstMuonMVATight3");
+	    }
+	  if(fabs(Ntp->Genpart_pdg(matchedIndex1)) ==11 &&  ( Ntp->CHECK_BIT(Ntp->Genpart_flags(matchedIndex1),0) || Ntp->CHECK_BIT(Ntp->Genpart_flags(matchedIndex1),5)   ) )
+	    {
+	      wAgainstElectron1 = DataMC_Corr.AgainstElectronDataMCCorrection(Ntp->TauP4_Corrected(TauIndex_1),"AgainstElectronMVATight");
+	    }
 
-	wAgainstElectron1 = DataMC_Corr.AgainstElectronDataMCCorrection(Ntp->TauP4_Corrected(TauIndex_1),"AgainstElectronMVATight");
-	wAgainstMuon1 = DataMC_Corr.AgainstMuonDataMCCorrection(Ntp->TauP4_Corrected(TauIndex_1),"AgainstMuonMVATight3");
-
-	wAgainstElectron2 = DataMC_Corr.AgainstElectronDataMCCorrection(Ntp->TauP4_Corrected(TauIndex_2),"AgainstElectronMVATight");
-	wAgainstMuon2 = DataMC_Corr.AgainstMuonDataMCCorrection(Ntp->TauP4_Corrected(TauIndex_2),"AgainstMuonMVATight3");
-
-	// std::cout<< " wAgainstElectron1 "<<wAgainstElectron1<<std::endl;
-	// std::cout<< " wAgainstMuon1 "<<wAgainstMuon1<<std::endl;
-	// std::cout<< "wAgainstElectron2  "<<wAgainstElectron2<<std::endl;
-	// std::cout<< "wAgainstElectron1  "<<wAgainstElectron1<<std::endl;
-
+	}
+	if(dR2 < 0.2  && matchedIndex2!=-1 ){
+	  if(fabs(Ntp->Genpart_pdg(matchedIndex2)) ==13 &&  ( Ntp->CHECK_BIT(Ntp->Genpart_flags(matchedIndex2),0) || Ntp->CHECK_BIT(Ntp->Genpart_flags(matchedIndex2),5)   ) )
+	    {
+	      wAgainstMuon2 = DataMC_Corr.AgainstMuonDataMCCorrection(Ntp->TauP4_Corrected(TauIndex_2),"AgainstMuonMVATight3");
+	    }
+	  if(fabs(Ntp->Genpart_pdg(matchedIndex2)) ==11 &&  ( Ntp->CHECK_BIT(Ntp->Genpart_flags(matchedIndex2),0) || Ntp->CHECK_BIT(Ntp->Genpart_flags(matchedIndex2),5)   ) )
+	    {
+	      wAgainstElectron2 = DataMC_Corr.AgainstElectronDataMCCorrection(Ntp->TauP4_Corrected(TauIndex_2),"AgainstElectronMVATight");
+	    }
+	}
       }
     }
-    //    w*=WT;
-    //std::cout<< "1:  w "<<w<<std::endl;
-    w*=zptw;
-    // w*=wAgainstMuon1;
-    // w*=wAgainstElectron1;
-    // w*=wAgainstMuon2;
-    // w*=wAgainstElectron2;
-    
-    //std::cout<< "2:  w "<<w<<std::endl;
-    
 
-  }
+     w*=wAgainstMuon1;
+     w*=wAgainstElectron1;
+     w*=wAgainstMuon2;
+     w*=wAgainstElectron2;
+
 
 
  // QCD ABCD BG Method
   /*******************
    *        |        *
-   *    C   |    D   *  AntiIso
+   *    C   |    D   *  SS
    *        |        *       S
    * ----------------*------ i
    *        |        *       g
-   *    A   |    B   *  ISO  n
+   *    A   |    B   *  OS   n
    *        |        *
    *******************
-   *  OS   |   SS
+   *  Iso   | AntiIso
    *
    *     TauIsolation
    */
@@ -454,33 +479,34 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
       if(pass.at(FirstTauIsolation) && pass.at(SecondTauIsolation)){
 	NQCD.at(t).Fill(1.,w); //A
       }
-      if(Ntp->isIsolatedTau(TauIndex_1,"Medium") && Ntp->isIsolatedTau(TauIndex_2,"Loose") && !Ntp->isIsolatedTau(TauIndex_2,"Tight")){
-	NQCD.at(t).Fill(3.,w); //C
+      if(!Ntp->isIsolatedTau(TauIndex_1,"VTight") && Ntp->isIsolatedTau(TauIndex_2,"Loose")){
+	NQCD.at(t).Fill(2.,w); //B
       }
     }
     
     if(!pass.at(PairCharge)){
       if(pass.at(FirstTauIsolation) && pass.at(SecondTauIsolation)){
-	NQCD.at(t).Fill(2.,w); //B
+	NQCD.at(t).Fill(3.,w); //С
       }
-      if(Ntp->isIsolatedTau(TauIndex_1,"Medium") && Ntp->isIsolatedTau(TauIndex_2,"Loose") && !Ntp->isIsolatedTau(TauIndex_2,"Tight")){
+      if(!Ntp->isIsolatedTau(TauIndex_1,"VTight") && Ntp->isIsolatedTau(TauIndex_2,"Loose")){
 	NQCD.at(t).Fill(4.,w); //D
       }
     }
-
   }
 
   bool IsQCDEvent = false;
-  if(passAllBut(FirstTauIsolation) && passAllBut(SecondTauIsolation)){
-    if(!Ntp->isIsolatedTau(TauIndex_1,"VTight") && Ntp->isIsolatedTau(TauIndex_2,"Loose")){
-      if(id == DataMCType::Data){
-	QCDShape.at(t).Fill(1,w);
-	t=HConfig.GetType(DataMCType::QCD);
-	IsQCDEvent = true;
+  //  if(passAllBut(exclude_cuts)){
+    if(pass.at(PairCharge)){
+      if(!Ntp->isIsolatedTau(TauIndex_1,"VTight") && Ntp->isIsolatedTau(TauIndex_2,"Loose")){
+	if(id == DataMCType::Data){
+	  QCDShape.at(t).Fill(1,w);
+	  t=HConfig.GetType(DataMCType::QCD);
+	  IsQCDEvent = true;
+	} 
       }
     }
-  }
-  if(IsQCDEvent){pass.at(FirstTauIsolation)= true;pass.at(SecondTauIsolation)= true;}
+    //  }
+  if(IsQCDEvent){    pass.at(PairCharge)= true;pass.at(FirstTauIsolation)= true;pass.at(SecondTauIsolation)= true;}
      
 
   std::vector<unsigned int> exclude_cuts_ForTauIso;
@@ -510,8 +536,8 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
      if(id !=DataMCType::Data && id !=DataMCType::QCD)	  pvx = Ntp->PUNumInteractions();
 
   NPrimeVtx.at(t).Fill(pvx,w);
-  TLorentzVector Tau1P4 = Ntp->TauP4_Corrected(TauIndex_1);
-  TLorentzVector Tau2P4 = Ntp->TauP4_Corrected(TauIndex_2);
+  TLorentzVector Tau1P4 = Ntp->Daughters_P4(TauIndex_1);
+  TLorentzVector Tau2P4 = Ntp->Daughters_P4(TauIndex_2);
 
 
   Tau1PT.at(t).Fill(Tau1P4.Pt(),w);  // Fill transverse momentum
@@ -523,13 +549,13 @@ void  ZTauHTauH::doEvent(){ //  Method called on every event
   Tau2HPSDecayMode.at(t).Fill(Ntp->decayMode(TauIndex_2),w);
   TauTauMass.at(t).Fill((Tau1P4+Tau2P4).M(),w);
   dRTauTau.at(t).Fill(Tau1P4.DeltaR(Tau2P4),w);
+  Tau1Eta.at(t).Fill(Tau2P4.Eta(),w); 
+  Tau2Eta.at(t).Fill(Tau2P4.Eta(),w); 
+
 
   MET.at(t).Fill(Ntp->MET(),w);
   TauHMass1.at(t).Fill(Tau1P4.M(),w); 
   TauHMass2.at(t).Fill(Tau2P4.M(),w); 
-  Tau1Eta.at(t).Fill(Tau2P4.Eta(),w); 
-  Tau2Eta.at(t).Fill(Tau2P4.Eta(),w); 
-
 
 
   }
@@ -586,8 +612,8 @@ void  ZTauHTauH::Finish(){
       }
     }
 
-    double OS2SS = (QCD_Integral_B_Data_minus_MC  - QCD_IntegralMC_B )/ (QCD_Integral_D_Data_minus_MC - QCD_IntegralMC_D);
-    double QCD_ScaleFactor = QCD_Integral_C_Data_minus_MC *OS2SS;
+    double OS2SS = (QCD_Integral_C_Data_minus_MC  - QCD_IntegralMC_C )/ (QCD_Integral_D_Data_minus_MC - QCD_IntegralMC_D);
+    double QCD_ScaleFactor = QCD_Integral_B_Data_minus_MC *OS2SS*1.1;
 
 
     std::cout << "OS/SS QCD Sample: " << OS2SS << std::endl;
