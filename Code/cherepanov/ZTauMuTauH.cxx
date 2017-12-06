@@ -283,50 +283,57 @@ void  ZTauMuTauH::doEvent(){ //  Method called on every event
 
   int MuonIndex= -1;
   int TauIndex= -1;
-
+  bool OSpairFound(false);
+  bool SSpairFound(false);
 
   for(unsigned int ipair =0; ipair < Sorted.size(); ipair++){
     //   bool PairPassBase = (Ntp->tauBaselineSelection(Ntp->indexDau1(Sorted.at(ipair)), 25,2.3,4,1) && Ntp->tauBaselineSelection(Ntp->indexDau2(Sorted.at(ipair)), 25,2.3,4,1));
-
+    
     //    std::cout<<"   "<<Ntp->particleType(Ntp->indexDau1(Sorted.at(ipair))) <<"   "<< Ntp->particleType(Ntp->indexDau2(Sorted.at(ipair)) )<<std::endl; 
     if(Ntp->particleType(Ntp->indexDau1(Sorted.at(ipair)))==0 && Ntp->particleType(Ntp->indexDau2(Sorted.at(ipair)) ) == 2    )
       {
 	MuonIndex=Ntp->indexDau1(Sorted.at(ipair));
 	TauIndex=Ntp->indexDau2(Sorted.at(ipair));
+	OSpairFound = true;
       }
-
+    
     if(Ntp->particleType(Ntp->indexDau1(Sorted.at(ipair)))==2 && Ntp->particleType(Ntp->indexDau2(Sorted.at(ipair)) ) == 0    )
       {
 	MuonIndex=Ntp->indexDau2(Sorted.at(ipair));
 	TauIndex=Ntp->indexDau1(Sorted.at(ipair));
+	OSpairFound = true;
       }
 
-
-    if(Ntp->tauBaselineSelection(TauIndex, 20,2.3,4,1) && Ntp->muonBaselineSelection(MuonIndex, 20,2.3,2)) {
-      //      if(Ntp->decayMode(TauIndex)==10)
-      SortedPair_PassedBaseline.push_back(Sorted.at(ipair));
+    
+    if(OSpairFound){
+      if(Ntp->tauBaselineSelection(TauIndex, 20,2.3,4,1) && Ntp->muonBaselineSelection(MuonIndex, 20,2.3,2)) {
+	//      if(Ntp->decayMode(TauIndex)==10)
+	SortedPair_PassedBaseline.push_back(Sorted.at(ipair));
+      }
     }
   }
-
-
+  
   for(unsigned int ipair =0; ipair < SortedSS.size(); ipair++){
 
     if(Ntp->particleType(Ntp->indexDau1(SortedSS.at(ipair)))==0 && Ntp->particleType(Ntp->indexDau2(SortedSS.at(ipair)) ) == 2    )
       {
 	MuonIndex=Ntp->indexDau1(SortedSS.at(ipair));
 	TauIndex=Ntp->indexDau2(SortedSS.at(ipair));
+	SSpairFound = true;
       }
     if(Ntp->particleType(Ntp->indexDau1(SortedSS.at(ipair)))==2 && Ntp->particleType(Ntp->indexDau2(SortedSS.at(ipair)) ) == 0    )
       {
 	MuonIndex=Ntp->indexDau2(SortedSS.at(ipair));
 	TauIndex=Ntp->indexDau1(SortedSS.at(ipair));
+	SSpairFound = true;
       }
-    if(Ntp->tauBaselineSelection(TauIndex, 20,2.3,4,1) && Ntp->muonBaselineSelection(MuonIndex, 20,2.3,2)){
-      //      if(Ntp->decayMode(TauIndex)==10)
-      SortedSSPair_PassedBaseline.push_back(SortedSS.at(ipair));
+    if(SSpairFound){
+      if(Ntp->tauBaselineSelection(TauIndex, 20,2.3,4,1) && Ntp->muonBaselineSelection(MuonIndex, 20,2.3,2)){
+	//      if(Ntp->decayMode(TauIndex)==10)
+	SortedSSPair_PassedBaseline.push_back(SortedSS.at(ipair));
+      }
     }
   }
-
   int Muon= -1;
   int Tau= -1;
   int Pair=-1;
