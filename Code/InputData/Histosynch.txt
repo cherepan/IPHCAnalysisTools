@@ -1,2 +1,0 @@
-Histo: 1   -1 Data Data 1
-Histo: 12 0.2371314 H_tautau_VBF H_tautau_VBF 10
