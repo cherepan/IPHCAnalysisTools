@@ -35,7 +35,7 @@ if($UserID eq "gbourgat"){
 }
 
 
-#Default vaules
+#Default values
 $InputDir="/home-pbs/$UserID/InputTest";
 $OutputDir="/home-pbs/$UserID/Test";
 #$OutputDir="~/";
@@ -416,7 +416,7 @@ if( $ARGV[0] eq "--Local" ){
 			$s1_char='\${que}';
 			$s2_char='\${output}';
 			$s3_char='\${error}';
-			system(sprintf("echo \" #PBS -u vcherepa\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
+			system(sprintf("echo \" #PBS -u gbourgat\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
 			system(sprintf("echo \" #! /bin/bash\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
 			system(sprintf("echo \" export HOME=\\\"$OutputDir/workdir$set/\\\"         \"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
 			system(sprintf("echo \" que=\\\"$QsubQue\\\"\" >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
@@ -677,7 +677,7 @@ if( $ARGV[0] eq "--Local" ){
 			$s1_char='\${que}';
 			$s2_char='\${output}';
 			$s3_char='\${error}';
-			system(sprintf("echo \" #PBS -u vcherepa\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
+			system(sprintf("echo \" #PBS -u gbourgat\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
 			system(sprintf("echo \" #! /bin/bash\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
 			system(sprintf("echo \" export HOME=\\\"$OutputDir/workdir$set/\\\"         \"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
 			system(sprintf("echo \" export X509_USER_PROXY=\\\"$Proxy\\\"    \"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));

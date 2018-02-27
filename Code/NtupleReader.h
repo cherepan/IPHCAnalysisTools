@@ -312,13 +312,13 @@ public :
    vector<float>   *jets_leptonPtRel;
    vector<float>   *jets_leptonPt;
    vector<float>   *jets_leptonDeltaR;
-   vector<float>   *jets_chEmEF;
-   vector<float>   *jets_chHEF;
-   vector<float>   *jets_nEmEF;
-   vector<float>   *jets_nHEF;
+   vector<float>   *_jets_chEmEF;
+   vector<float>   *_jets_chHEF;
+   vector<float>   *_jets_nEmEF;
+   vector<float>   *_jets_nHEF;
    vector<float>   *jets_MUF;
-   vector<int>     *jets_neMult;
-   vector<int>     *jets_chMult;
+   vector<int>     *_jets_neMult;
+   vector<int>     *_jets_chMult;
    vector<float>   *jets_jecUnc;
    vector<float>   *bDiscriminator;
    vector<float>   *bCSVscore;
@@ -355,7 +355,6 @@ public :
    Float_t         pvGen_y;
    Float_t         pvGen_z;
    Bool_t          isRefitPV;
-
    // List of branches
    TBranch        *b_EventNumber;   //!
    TBranch        *b_RunNumber;   //!
@@ -589,7 +588,7 @@ public :
    TBranch        *b_Muon_M;   //!
    TBranch        *b_Muon_par;   //!
    TBranch        *b_Muon_cov;   //!
-    TBranch        *b_PFTauSVPos;   //!
+   TBranch        *b_PFTauSVPos;   //!
    TBranch        *b_PFTauSVCov;   //!
    TBranch        *b_PFTauPionsP4;   //!
    TBranch        *b_PFTauPionsCharge;   //!
@@ -646,6 +645,12 @@ public :
    TBranch        *b_jets_neMult;   //!
    TBranch        *b_jets_chMult;   //!
    TBranch        *b_jets_jecUnc;   //!
+   TBranch        *b_PFJet_chargedMultiplicity;   //!
+   TBranch        *b_PFJet_neutralMultiplicity;   //!
+   TBranch        *b_PFJet_chargedEmEnergyFraction;   //!
+   TBranch        *b_PFJet_chargedHadronEnergyFraction;   //!
+   TBranch        *b_PFJet_neutralHadronEnergyFraction;   //!
+   TBranch        *b_PFJet_neutralEmEnergyFraction;   //!
    TBranch        *b_bDiscriminator;   //!
    TBranch        *b_bCSVscore;   //!
    TBranch        *b_pfCombinedMVAV2BJetTags;   //!
@@ -1011,13 +1016,13 @@ void NtupleReader::Init(TTree *tree)
    jets_leptonPtRel = 0;
    jets_leptonPt = 0;
    jets_leptonDeltaR = 0;
-   jets_chEmEF = 0;
-   jets_chHEF = 0;
-   jets_nEmEF = 0;
-   jets_nHEF = 0;
+   _jets_chEmEF = 0;
+   _jets_chHEF = 0;
+   _jets_nEmEF = 0;
+   _jets_nHEF = 0;
    jets_MUF = 0;
-   jets_neMult = 0;
-   jets_chMult = 0;
+   _jets_neMult = 0;
+   _jets_chMult = 0;
    jets_jecUnc = 0;
    bDiscriminator = 0;
    bCSVscore = 0;
@@ -1332,14 +1337,20 @@ void NtupleReader::Init(TTree *tree)
    fChain->SetBranchAddress("jets_leptonPtRel", &jets_leptonPtRel, &b_jets_leptonPtRel);
    fChain->SetBranchAddress("jets_leptonPt", &jets_leptonPt, &b_jets_leptonPt);
    fChain->SetBranchAddress("jets_leptonDeltaR", &jets_leptonDeltaR, &b_jets_leptonDeltaR);
-   fChain->SetBranchAddress("jets_chEmEF", &jets_chEmEF, &b_jets_chEmEF);
-   fChain->SetBranchAddress("jets_chHEF", &jets_chHEF, &b_jets_chHEF);
-   fChain->SetBranchAddress("jets_nEmEF", &jets_nEmEF, &b_jets_nEmEF);
-   fChain->SetBranchAddress("jets_nHEF", &jets_nHEF, &b_jets_nHEF);
+   fChain->SetBranchAddress("jets_chEmEF", &_jets_chEmEF, &b_jets_chEmEF);
+   fChain->SetBranchAddress("jets_chHEF", &_jets_chHEF, &b_jets_chHEF);
+   fChain->SetBranchAddress("jets_nEmEF", &_jets_nEmEF, &b_jets_nEmEF);
+   fChain->SetBranchAddress("jets_nHEF", &_jets_nHEF, &b_jets_nHEF);
    fChain->SetBranchAddress("jets_MUF", &jets_MUF, &b_jets_MUF);
-   fChain->SetBranchAddress("jets_neMult", &jets_neMult, &b_jets_neMult);
-   fChain->SetBranchAddress("jets_chMult", &jets_chMult, &b_jets_chMult);
+   fChain->SetBranchAddress("jets_neMult", &_jets_neMult, &b_jets_neMult);
+   fChain->SetBranchAddress("jets_chMult", &_jets_chMult, &b_jets_chMult);
    fChain->SetBranchAddress("jets_jecUnc", &jets_jecUnc, &b_jets_jecUnc);
+   //fChain->SetBranchAddress("PFJet_chargedMultiplicity", &CHM, &b_PFJet_chargedMultiplicity);
+   //fChain->SetBranchAddress("PFJet_neutralMultiplicity", &NumNeutralParticles, &b_PFJet_neutralMultiplicity);
+   //fChain->SetBranchAddress("PFJet_chargedEmEnergyFraction", &CEMF, &b_PFJet_chargedEmEnergyFraction);
+   //fChain->SetBranchAddress("PFJet_chargedHadronEnergyFraction", &CHF, &b_PFJet_chargedHadronEnergyFraction);
+   //fChain->SetBranchAddress("PFJet_neutralHadronEnergyFraction", &NHF, &b_PFJet_neutralHadronEnergyFraction);
+   //fChain->SetBranchAddress("PFJet_neutralEmEnergyFraction", &NEMF, &b_PFJet_neutralEmEnergyFraction);
    fChain->SetBranchAddress("bDiscriminator", &bDiscriminator, &b_bDiscriminator);
    fChain->SetBranchAddress("bCSVscore", &bCSVscore, &b_bCSVscore);
    fChain->SetBranchAddress("pfCombinedMVAV2BJetTags", &pfCombinedMVAV2BJetTags, &b_pfCombinedMVAV2BJetTags);

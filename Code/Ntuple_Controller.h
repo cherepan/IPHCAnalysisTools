@@ -210,10 +210,10 @@ TauSpinerInt.SetTauSignalCharge(signalcharge);
   enum TauQualityBitMask{Bit_byLoosePileupWeightedIsolation3Hits=0,
 			 Bit_byMediumPileupWeightedIsolation3Hits,
 			 Bit_byTightPileupWeightedIsolation3Hits,    
-			 Bit_byLooseCombinedIsolationDeltaBetaCorr3Hits,    
-			 Bit_byMediumCombinedIsolationDeltaBetaCorr3Hits,    
-			 Bit_byTightCombinedIsolationDeltaBetaCorr3Hits,     
-			 Bit_againstMuonLoose3,     
+			 Bit_byLooseCombinedIsolationDeltaBetaCorr3Hits,
+			 Bit_byMediumCombinedIsolationDeltaBetaCorr3Hits,
+			 Bit_byTightCombinedIsolationDeltaBetaCorr3Hits,
+			 Bit_againstMuonLoose3,
 			 Bit_againstMuonTight3,     
 			 Bit_againstElectronVLooseMVA6,    
 			 Bit_againstElectronLooseMVA6, 
@@ -812,13 +812,13 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  float jets_leptonPtRel(unsigned int i){return Ntp->jets_leptonPtRel->at(i);}
  float jets_leptonPt(unsigned int i){return Ntp->jets_leptonPt->at(i);}
  float jets_leptonDeltaR(unsigned int i){return Ntp->jets_leptonDeltaR->at(i);}
- float jets_chEmEF(unsigned int i){return Ntp->jets_chEmEF->at(i);}
- float jets_chHEF(unsigned int i){return Ntp->jets_chHEF->at(i);}
- float jets_nEmEF(unsigned int i){return Ntp->jets_nEmEF->at(i);}
- float jets_nHEF(unsigned int i){return Ntp->jets_nHEF->at(i);}
+ float jets_chEmEF(unsigned int i){return Ntp->_jets_chEmEF->at(i);}
+ float jets_chHEF(unsigned int i){return Ntp->_jets_chHEF->at(i);}
+ float jets_nEmEF(unsigned int i){return Ntp->_jets_nEmEF->at(i);}
+ float jets_nHEF(unsigned int i){return Ntp->_jets_nHEF->at(i);}
  float jets_MUF(unsigned int i){return Ntp->jets_MUF->at(i);}
- int   jets_neMult(unsigned int i){return Ntp->jets_neMult->at(i);}
- int   jets_chMult(unsigned int i){return Ntp->jets_chMult->at(i);}
+ int   jets_neMult(unsigned int i){return Ntp->_jets_neMult->at(i);}
+ int   jets_chMult(unsigned int i){return Ntp->_jets_chMult->at(i);}
  float jets_jecUnc(unsigned int i){return Ntp->jets_jecUnc->at(i);}
  float  bDiscriminator(unsigned int i){return Ntp->bDiscriminator->at(i);}
  float  bCSVscore(unsigned int i){return Ntp->bCSVscore->at(i);}
@@ -850,7 +850,7 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  // bool res = word & (1 << bitpos);
 
 
-
+ // CHECK_BIT(Ntp->triggerbit(), getBitOfGivenTrigger("HLT_IsoMu24"))
 
 
 
@@ -885,9 +885,9 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
   /* unsigned int   NMuons(){return Ntp->Muon_p4->size();} */
   /* TLorentzVector Muon_p4(unsigned int i, TString corr = "default"); */
   /* TVector3       Muon_Poca(unsigned int i){return TVector3(Ntp->Muon_Poca->at(i).at(0),Ntp->Muon_Poca->at(i).at(1),Ntp->Muon_Poca->at(i).at(2));} */
-  /* bool           Muon_isGlobalMuon(unsigned int i){return Ntp->Muon_isGlobalMuon->at(i);} */
+  // bool           Muon_isGlobalMuon(unsigned int i){return Ntp->Muon_isGlobalMuon->at(i);}
   /* bool           Muon_isStandAloneMuon(unsigned int i){return Ntp->Muon_isStandAloneMuon->at(i);} */
-  /* bool           Muon_isTrackerMuon(unsigned int i){return Ntp->Muon_isTrackerMuon->at(i);} */
+  // bool           Muon_isTrackerMuon(unsigned int i){return Ntp->Muon_isTrackerMuon->at(i);} 
   /* bool           Muon_isCaloMuon(unsigned int i){return Ntp->Muon_isCaloMuon->at(i);} */
   /* bool           Muon_isIsolationValid(unsigned int i){return Ntp->Muon_isIsolationValid->at(i);} */
   /* bool           Muon_isQualityValid(unsigned int i){return Ntp->Muon_isQualityValid->at(i);} */
@@ -919,7 +919,7 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
   /* int            Muon_Charge(unsigned int i){return Ntp->Muon_charge->at(i);} */
   /* int            Muon_trackCharge(unsigned int i){return Ntp->Muon_trackCharge->at(i);} */
 
-  /* bool           Muon_isPFMuon(unsigned int i){return Ntp->Muon_isPFMuon->at(i);}                                                      */
+  // bool           Muon_isPFMuon(unsigned int i){return Ntp->Muon_isPFMuon->at(i);}                                                      
   /* float          Muon_sumChargedHadronPt03(unsigned int i){return Ntp->Muon_sumChargedHadronPt03->at(i);}                             // sum-pt of charged Hadron					                                */
   /* float          Muon_sumChargedParticlePt03(unsigned int i){return Ntp->Muon_sumChargedParticlePt03->at(i);}			      // sum-pt of charged Particles(inludes e/mu)			     */
   /* float          Muon_sumNeutralHadronEt03(unsigned int i){return Ntp->Muon_sumNeutralHadronEt03->at(i);}			      // sum pt of neutral hadrons					     */
@@ -957,7 +957,6 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
   /* bool           isGoodMuon(unsigned int i); */
 
    bool           isElectron( int i); 
-   bool           electronBaselineSelection( int i); 
    bool           isMuon( int i); 
    bool           isLooseGoodMuon( int i); 
    bool           isSoftGoodMuon( int i); 
@@ -974,16 +973,20 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
 
    bool           tauBaselineSelection(int i, double cutPt, double cutEta, int aele, int amu);
    bool           muonBaselineSelection(int i, float ptMin, float etaMax, int muWP);
+   bool           electronBaselineSelection( int i, double cutPt, double cutEta); 
 
    bool           tauBaseline (int iDau, float ptMin, float etaMax, int againstEleWP, int againstMuWP, float isoRaw3Hits, TString whatApply, bool debug); 
    bool           muBaseline (int iDau, float ptMin, float etaMax, float relIso, int muIDWP, TString whatApply, bool debug);
    bool           eleBaseline (int iDau, float ptMin, float etaMax, float relIso, int MVAIDflag, TString whatApply, bool debug);
    int            getPairType (int type1, int type2);
 
-   bool           MuonVeto(int i);
-   bool           ElectronVeto(int i);
+   bool           MuonVeto(unsigned int i);
+   bool           ElectronVeto(unsigned int i);
+   bool           DiMuonVeto();
+   bool           DiEleVeto();
 
-   std::vector<int>  SortTauHTauHPair(std::vector<int>  PairIndices);
+   std::vector<int>  SortTauHTauHPair (std::vector<int>  PairIndices);
+   std::vector<int>  SortPair(std::vector<int>  PairIndices,  std::vector<int>  PairsIndex1, std::vector<int>  PairsIndex2);
 
    bool           pairPassBaseline (int iPair, TString whatApply, bool debug);
    float          DeltaRDau(int dau1idx, int dau2idx);
@@ -1057,7 +1060,9 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
   /*  float              PFJet_chargedHadronEnergy(unsigned int i){return Ntp->PFJet_chargedHadronEnergy->at(i);} */
   /*  int	              PFJet_chargedHadronMultiplicity(unsigned int i){return Ntp->PFJet_chargedHadronMultiplicity->at(i);} */
   /*  float              PFJet_chargedMuEnergy(unsigned int i){return Ntp->PFJet_chargedMuEnergy->at(i);} */
-  /*  int	              PFJet_chargedMultiplicity(unsigned int i){return Ntp->PFJet_chargedMultiplicity->at(i);} */
+  // float	              PFJet_chargedMultiplicity(unsigned int i){return Ntp->_jets_chMult->at(i);}
+  // float	              PFJet_neutralMultiplicity(unsigned int i){return Ntp->_jets_neMult->at(i);}
+    float                NumConst(unsigned int i){return (jets_chMult(i) +jets_neMult(i));} 
   /*  float              PFJet_electronEnergy(unsigned int i){return Ntp->PFJet_electronEnergy->at(i);} */
   /*  int	              PFJet_electronMultiplicity(unsigned int i){return Ntp->PFJet_electronMultiplicity->at(i);} */
   /*  float              PFJet_HFEMEnergy(unsigned int i){return Ntp->PFJet_HFEMEnergy->at(i);} */
@@ -1080,10 +1085,10 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
   /*  std::vector<int>   PFJet_Track_idx(unsigned int i){return Ntp->PFJet_Track_idx->at(i);} */
   /*  int                PFJet_MatchedHPS_idx(unsigned int i){return Ntp->PFJet_MatchedHPS_idx->at(i);} */
   /*  int                PFJet_numberOfDaughters(unsigned int i){return Ntp->PFJet_numberOfDaughters->at(i);} */
-  /*  float              PFJet_chargedEmEnergyFraction(unsigned int i){return Ntp->PFJet_chargedEmEnergyFraction->at(i);} */
-  /*  float              PFJet_chargedHadronEnergyFraction(unsigned int i){return Ntp->PFJet_chargedHadronEnergyFraction->at(i);} */
-  /*  float              PFJet_neutralHadronEnergyFraction(unsigned int i){return Ntp->PFJet_neutralHadronEnergyFraction->at(i);} */
-  /*  float              PFJet_neutralEmEnergyFraction(unsigned int i){return Ntp->PFJet_neutralEmEnergyFraction->at(i);} */
+  //  float              PFJet_chargedEmEnergyFraction(unsigned int i){return Ntp->_jets_chEmEF->at(i);} 
+  //  float              PFJet_chargedHadronEnergyFraction(unsigned int i){return Ntp->_jets_chHEF->at(i);} 
+  //  float              PFJet_neutralHadronEnergyFraction(unsigned int i){return Ntp->_jets_nHEF->at(i);}
+  //  float              PFJet_neutralEmEnergyFraction(unsigned int i){return Ntp->_jets_nEmEF->at(i);} 
   /*  bool               isGoodJet(unsigned int i); */
   /*  bool               isGoodJet_nooverlapremoval(unsigned int i); */
   /*  bool               isJetID(unsigned int i, TString corr = "default"); */

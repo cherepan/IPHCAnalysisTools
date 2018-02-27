@@ -30,7 +30,7 @@ Ntuple_Controller::Ntuple_Controller(std::vector<TString> RootFiles):
   for(unsigned int i=0; i<RootFiles.size(); i++){
     chain->Add(RootFiles[i]);
   }
-  TTree *tree = (TTree*)chain;  
+  TTree *tree = (TTree*)chain;
   if(chain==0){
 	Logger(Logger::Error) << "chain points to NULL" << std::endl;
   }
@@ -230,9 +230,9 @@ Long64_t  Ntuple_Controller::GetMCID(){
 	// if(DataMCTypeFromTupel==10230533 or DataMCTypeFromTupel==10130533 or DataMCTypeFromTupel==10330533 or DataMCTypeFromTupel==10430533) return 10230533;
 	// if(DataMCTypeFromTupel==10410433 ) return DataMCTypeFromTupel;
 	// move JAK Id information 3 digits to the left
-	Long64_t  jakid = DataMCTypeFromTupel - (DataMCTypeFromTupel%100);
-	jakid *= 1000;
-	DataMCTypeFromTupel = jakid + (DataMCTypeFromTupel%100);
+	//Long64_t  jakid = DataMCTypeFromTupel - (DataMCTypeFromTupel%100);
+	//jakid *= 1000;
+	//DataMCTypeFromTupel = jakid + (DataMCTypeFromTupel%100);
 	if (DataMCTypeFromTupel == DataMCType::DY_ll_Signal && HistoC.hasID(DataMCType::DY_ll_Signal)) {
 		for (unsigned int i = 0; i < NMCSignalParticles(); i++) {
 			if (abs(MCSignalParticle_pdgid(i)) == PDGInfo::Z0) {
@@ -249,25 +249,23 @@ Long64_t  Ntuple_Controller::GetMCID(){
 	// hack for Higgs mass splitting
 	// Higgs mass is added to the MCId, such that the structure is JJJJJJAAABB (with JJJJJJ = JakID, AAA = mass, BB = DataMCType)
 
-	if( (DataMCTypeFromTupel % 100) == DataMCType::H_tautau_ggF ||
-	    (DataMCTypeFromTupel % 100) == DataMCType::H_tautau_VBF ||
-	    (DataMCTypeFromTupel % 100) == DataMCType::H_tautau_WHZHTTH){
-	  int mass = getSampleHiggsMass();
-	  if (mass > 999)	Logger(Logger::Error) << "Read mass with more than 3 digits from sample: m = " << mass << std::endl;
-	  if (mass > 0)		DataMCTypeFromTupel += mass*100;
-	  // strip off JAK-Id from DataMCType
-	  if (HistoC.hasID(DataMCTypeFromTupel % 100000)) {
-	    dmcType = DataMCTypeFromTupel % 100000;
-	  }
-	}
-	else {
-	  // strip off JAK-Id from DataMCType
-	  if (HistoC.hasID(DataMCTypeFromTupel % 100)) {
-	    dmcType = DataMCTypeFromTupel % 100;
-	  }
-	}
-
-	return dmcType;
+	//if( (DataMCTypeFromTupel % 100) == DataMCType::H_tautau_ggF ||
+	//  (DataMCTypeFromTupel % 100) == DataMCType::H_tautau_VBF ||
+	//  (DataMCTypeFromTupel % 100) == DataMCType::H_tautau_WHZHTTH){
+	// int mass = getSampleHiggsMass();
+	//if (mass > 999)	Logger(Logger::Error) << "Read mass with more than 3 digits from sample: m = " << mass << std::endl;
+	//if (mass > 0)		DataMCTypeFromTupel += mass*100;
+	// // strip off JAK-Id from DataMCType
+	  //if (HistoC.hasID(DataMCTypeFromTupel % 100000)) {
+	  //  dmcType = DataMCTypeFromTupel % 100000;
+	  //}
+	//}
+	//else {
+	//// strip off JAK-Id from DataMCType
+	 if (HistoC.hasID(DataMCTypeFromTupel % 100)) {
+	dmcType = DataMCTypeFromTupel % 100;
+	 }
+	 return dmcType;
 }
 
 // return DataMCType without mass information
@@ -478,16 +476,16 @@ int Ntuple_Controller::getHiggsSampleMassFromGenInfo(){
    }
    return false;
  }
-  bool Ntuple_Controller::isTightGoodTau(int i){
-  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
-   int tauIDmaskMedium(0);
+  bool Ntuple_Controller::isTightGoodTau(int i){ 
+  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2
+   int tauIDmaskTight(0);
    if(particleType(i)==2){
-     tauIDmaskMedium|= (1<<Bit_againstMuonTight3);
-     tauIDmaskMedium|= (1<<Bit_againstElectronTightMVA6);
+     tauIDmaskTight|= (1<<Bit_againstMuonTight3);
+     tauIDmaskTight|= (1<<Bit_againstElectronTightMVA6);
     
 
      if(Daughters_decayModeFindingOldDMs(i)>0.5){
-       if((tauID(i) & tauIDmaskMedium) == tauIDmaskMedium){
+       if((tauID(i) & tauIDmaskTight) == tauIDmaskTight){
 	 return true;
        }
      }
@@ -532,7 +530,7 @@ TLorentzVector Ntuple_Controller::TauP4_Corrected(unsigned int i){
 
 
 bool Ntuple_Controller::tauBaselineSelection(int i, double cutPt, double cutEta, int aele, int amu){
-  bool agEleVal(false), agMuVal(false), kin(false), dm(false), vertexS(false);
+  bool agEleVal(false), agMuVal(false), kin(false), dm(false), vertexS(false), charge(false);
   // ag ele:
   if (aele== 0)      agEleVal = CHECK_BIT(tauID(i),Bit_againstElectronVLooseMVA6);
   else if ( aele== 1) agEleVal = CHECK_BIT(tauID(i),Bit_againstElectronLooseMVA6);
@@ -545,9 +543,11 @@ bool Ntuple_Controller::tauBaselineSelection(int i, double cutPt, double cutEta,
 
   kin     = (TauP4_Corrected(i).Pt() >cutPt && fabs(TauP4_Corrected(i).Eta())<cutEta );
   vertexS = (fabs(dz(i)) < 0.2); 
-  dm      =(particleType(i)==2 && Daughters_decayModeFindingOldDMs(i) > 0.5);
+  dm      = (particleType(i)==2 && Daughters_decayModeFindingOldDMs(i) > 0.5);
 
-  if(kin && agEleVal && agMuVal && dm && vertexS) return true;
+  charge  = fabs(Daughters_charge(i))==1 ;
+
+  if(kin && agEleVal && agMuVal && dm && vertexS && charge) return true;
   return false;
 } 
 
@@ -564,13 +564,21 @@ bool Ntuple_Controller::muonBaselineSelection (int i, float ptMin, float etaMax,
   vertexS = (fabs(dxy(i)) < 0.045 && fabs(dz(i)) < 0.2);
   idS = CHECK_BIT(Daughters_muonID(i), muWP);
   kin     = (Daughters_P4(i).Pt() >ptMin && fabs(Daughters_P4(i).Eta())<etaMax );
-  if(kin && vertexS && idS) return true;
+  if(kin && vertexS && idS && isMuon) return true;
   return false;
 }
 
 
-	   
-
+bool Ntuple_Controller::electronBaselineSelection(int i,double cutPt, double cutEta){
+  bool kin(false),vertex(false),id(false),isEle(false),conv_miss(false);
+  isEle=(particleType(i)==1);
+  kin=(Daughters_P4(i).Pt()>cutPt && fabs(Daughters_P4(i).Eta())<cutEta);
+  vertex=(fabs(dxy(i)) < 0.045 && fabs(dz(i)) < 0.2);
+  id=(Daughters_eleMVAnt(i)>0.8);
+  conv_miss=(Daughters_passConversionVeto(i) && Daughters_eleMissingHits(i) <=1);
+  if(kin && vertex && id && isEle)return true;
+  return false;
+}	   
 
 std::vector<int>  Ntuple_Controller::SortTauHTauHPair (std::vector<int>  PairIndices)
 {
@@ -610,6 +618,75 @@ std::vector<int>  Ntuple_Controller::SortTauHTauHPair (std::vector<int>  PairInd
        else { 	
         	pp.push_back(p4_2.Pt());	pp.push_back(iso2);	pp.push_back(indexDau2(ipair));
         	pp.push_back(p4_1.Pt());	pp.push_back(iso1);	pp.push_back(indexDau1(ipair));	pp.push_back(PairIndices.at(ipair));
+      //  	//pp = make_tuple(p4_2.Pt(), iso2, indexDau2(ipair), p4_1.Pt(), iso1, indexDau1(ipair), ipair);
+       }
+      vPairs.push_back(pp);
+    }
+  std::vector<int> sortp;
+  for(uint f = 0; f < vPairs.size(); ++f){
+    int index(0);
+    for(uint s = 0; s < vPairs.size(); ++s){
+      if(s==f) continue;
+      if(vPairs.at(f).at(1) >  vPairs.at(s).at(1)) {index = f;  continue;}
+      else if(vPairs.at(f).at(0) > vPairs.at(s).at(0)){index = f;  continue;}
+      else if(vPairs.at(f).at(4) > vPairs.at(s).at(4)){index = f;  continue;}
+      else if(vPairs.at(f).at(3) > vPairs.at(s).at(3)){index = f;  continue;}
+    }
+    sortp.push_back(vPairs.at(index).at(6));
+  }
+
+
+   
+  // now sort by iso, then pt criteria
+  stable_sort(vPairs.begin(), vPairs.end(), pairSort);
+  // PairIndices.clear();
+   for(uint ipair = 0; ipair < vPairs.size(); ++ipair)
+     {
+       //       PairIndices.push_back( get<6> (vPairs.at(ipair)));
+       Sorted.push_back(int(vPairs.at(ipair).at(6)));
+     }
+   return Sorted;
+   //  return sortp;
+}
+
+std::vector<int>  Ntuple_Controller::SortPair (std::vector<int>  PairIndices,  std::vector<int>  PairsIndex1, std::vector<int>  PairsIndex2)// Modified
+{
+
+  //  sorting according to https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2016#Baseline_tau_h_tau_h
+  //  First prefer the pair with the most isolated candidate 1 (muon for μτh and eμ, electron for eτh and either τh for τhτh).
+  //  If the isolation of candidate 1 is the same in both pairs, prefer the pair with the highest candidate 1 pt 
+  //  (for cases of genuinely the same isolation value but different possible candidate 1).
+  //  If the pt of candidate 1 in both pairs is the same (likely because it's the same object) then prefer the pair with the most isolated candidate 2 (tau for eτh, μτh, τhτh, electron for eμ).
+  //  If the isolation of candidate 2 is the same, prefer the pair with highest candidate 2 pt (for cases of genuinely the same isolation value but different possible candidate 2). 
+  //  std::vector<std::pair<double, double> >  vecpairs;
+
+  // prepare a tuple with all the needed sorting info
+  // pt1 - iso1 - idx1 - pt2 - iso2 - idx2 - idxoriginalPair
+
+
+  std::vector<int> Sorted;
+  vector<tauPair_t> vPairs;
+  for(unsigned int ipair=0; ipair<PairIndices.size(); ipair++ )
+    {
+      TLorentzVector p4_1 =  Daughters_P4(PairsIndex1.at(ipair));// Daughters_P4(indexDau1(ipair));
+      TLorentzVector p4_2 = Daughters_P4(PairsIndex2.at(ipair));//Daughters_P4(indexDau2(ipair));
+  
+      float iso1 = Daughters_byCombinedIsolationDeltaBetaCorrRaw3Hits(PairsIndex1.at(ipair));//indexDau1
+      float iso2 = Daughters_byCombinedIsolationDeltaBetaCorrRaw3Hits(PairsIndex2.at(ipair));//indexDau2
+      // Daughters_byIsolationMVArun2v1DBoldDMwLTraw   - this is negative!
+      // Daughters_byCombinedIsolationDeltaBetaCorrRaw3Hits  --  optional raw isolation
+     // first one is highest pt
+      tauPair_t pp;
+      if (p4_1.Pt() > p4_2.Pt()) 
+	{ 
+	  pp.push_back(p4_1.Pt());  	pp.push_back(iso1); 	pp.push_back(PairsIndex1.at/*indexDau1*/(ipair));
+	  pp.push_back(p4_2.Pt()); 	pp.push_back(iso2); 	pp.push_back(PairsIndex2.at/*indexDau2*/(ipair));	pp.push_back(PairIndices.at(ipair));
+	  
+	 //	pp = make_tuple(p4_1.Pt(), iso1, indexDau1(ipair), p4_2.Pt(), iso2,indexDau2(ipair) , ipair);
+	}
+       else { 	
+        	pp.push_back(p4_2.Pt());	pp.push_back(iso2);	pp.push_back(PairsIndex2.at/*indexDau2*/(ipair));
+        	pp.push_back(p4_1.Pt());	pp.push_back(iso1);	pp.push_back(PairsIndex1.at/*indexDau1*/(ipair));	pp.push_back(PairIndices.at(ipair));
       //  	//pp = make_tuple(p4_2.Pt(), iso2, indexDau2(ipair), p4_1.Pt(), iso1, indexDau1(ipair), ipair);
        }
       vPairs.push_back(pp);
@@ -724,6 +801,7 @@ bool Ntuple_Controller::tauBaseline (int iDau, float ptMin,
     bool byp_isoS = false;
     bool byp_ptS  = false;
     bool byp_etaS = false;
+    bool byp_chargeS = false;
 
     // whatApply: use "All", "Iso", "LepID", pTMin", "etaMax", "againstEle", 
     // "againstMu", "Vertex"; separate various arguments with a semicolon
@@ -768,18 +846,18 @@ bool Ntuple_Controller::tauBaseline (int iDau, float ptMin,
     else if (againstMuWP == 1) agMuVal = CHECK_BIT(tauID(iDau),Bit_againstMuonTight3);
 
     //bool dmfS = (tree->daughters_decayModeFindingOldDMs->at(iDau) == 1 || tree->daughters_decayModeFindingNewDMs->at(iDau) == 1) || byp_dmfS;
-    bool dmfS = (Daughters_decayModeFindingOldDMs(iDau) == 1) || byp_dmfS;
+    bool dmfS = (Daughters_decayModeFindingOldDMs(iDau) >0.5/* == 1*/) || byp_dmfS;
     // bool vertexS = (tree->dxy->at(iDau) < 0.045 && tree->dz->at(iDau) < 0.2) || byp_vertexS;
     bool vertexS = (fabs(dz(iDau)) < 0.2) || byp_vertexS;
-    bool agEleS = (agEleVal == 1) || byp_agEleS; 
-    bool agMuS  = (agMuVal == 1) || byp_agMuS; 
-    bool isoS = (Daughters_byCombinedIsolationDeltaBetaCorrRaw3Hits(iDau) < isoRaw3Hits) || byp_isoS;
-    if (whatApply.Contains ("InvertIzo")) isoS = !isoS ;
+    bool agEleS = (agEleVal > 0.5/*==1*/) || byp_agEleS; 
+    bool agMuS  = (agMuVal > 0.5/*==1*/) || byp_agMuS; 
+    //bool isoS = (Daughters_byTightIsolationMVArun2v1DBoldDMwLT(iDau)/*byCombinedIsolationDeltaBetaCorrRaw3Hits(iDau)*/ > isoRaw3Hits) || byp_isoS;
+    //if (whatApply.Contains ("InvertIzo")) isoS = !isoS ;
 
     bool ptS = (p4.Pt() > ptMin) || byp_ptS;
     bool etaS = (fabs(p4.Eta()) < etaMax) || byp_etaS;
-
-    bool totalS = (dmfS && vertexS && agEleS && agMuS && isoS && ptS && etaS);
+    bool chargeS = (fabs(Daughters_charge(iDau))==1 );
+    bool totalS = (dmfS && vertexS && agEleS && agMuS /*&& isoS*/ && ptS && etaS && chargeS);
     if (debug)
     {
       cout << "@ tau baseline" << endl;
@@ -787,9 +865,10 @@ bool Ntuple_Controller::tauBaseline (int iDau, float ptMin,
       cout << " vertexS "  << vertexS << " skipped? " << byp_vertexS << endl;
       cout << " agEleS  "  << agEleS  << " skipped? " << byp_agEleS << endl;
       cout << " agMuS   "  << agMuS   << " skipped? " << byp_agMuS << endl;
-      cout << " isoS    "  << isoS    << " skipped? " << byp_isoS << endl;
+      // cout << " isoS    "  << isoS    << " skipped? " << byp_isoS << endl;
       cout << " ptS     "  << ptS     << " skipped? " << byp_ptS << endl;
       cout << " etaS    "  << etaS    << " skipped? " << byp_etaS << endl;
+      cout << " chargeS "  << chargeS << " skipped? " << byp_chargeS << endl;
     }
     return totalS;    
 }
@@ -855,7 +934,7 @@ bool Ntuple_Controller::muBaseline (int iDau, float ptMin,
 
 
 bool 
-Ntuple_Controller::eleBaseline (int iDau, float ptMin, float etaMax, float relIso, int MVAIDflag, TString whatApply, bool debug)  //----------- to b e checked for a specific analysis
+Ntuple_Controller::eleBaseline (int iDau, float ptMin, float etaMax, float relIso, int MVAIDflag, TString whatApply, bool debug)  //----------- to be checked for a specific analysis
 { 
 
    
@@ -866,6 +945,7 @@ Ntuple_Controller::eleBaseline (int iDau, float ptMin, float etaMax, float relIs
     bool byp_isoS = false;
     bool byp_ptS  = false;
     bool byp_etaS = false;
+    bool  byp_conv_miss = false;
 
     // whatApply: use "All", "Iso", "LepID", pTMin", "etaMax", "againstEle", "againstMu", "Vertex", "SScharge"; separate various arguments with a semicolon
     if (!whatApply.Contains("All") && 
@@ -879,6 +959,7 @@ Ntuple_Controller::eleBaseline (int iDau, float ptMin, float etaMax, float relIs
       if (whatApply.Contains("LepID"))  byp_idS = false; 
       if (whatApply.Contains("pTMin"))  byp_ptS = false; 
       if (whatApply.Contains("etaMax")) byp_etaS = false;
+      if (whatApply.Contains("conv_miss")) byp_conv_miss = false;
     }
 
     bool vertexS = (fabs(dxy(iDau)) < 0.045 && fabs(dz(iDau)) < 0.2) || byp_vertexS;
@@ -887,13 +968,13 @@ Ntuple_Controller::eleBaseline (int iDau, float ptMin, float etaMax, float relIs
     //bool idS = CHECK_BIT (Daughters_iseleCUT(iDau), 3) || byp_idS; // 3 is TIGHT ele id CUT BASED
 
     // bool idS = EleMVAID (tree->discriminator->at (iDau), tree->daughters_SCeta->at (iDau), p4.Pt (), MVAIDflag) || byp_idS ; // 2015/07/09 PG
-
-    bool idS = Daughters_iseleBDT(iDau) || byp_idS; // use it in ntuples produced after 11 June 2015, contains tight WP bool  
+    bool idS=(Daughters_eleMVAnt(iDau)>0.8);
+    // bool idS = Daughters_iseleBDT(iDau) || byp_idS; // use it in ntuples produced after 11 June 2015, contains tight WP bool  
     //bool idS = tightEleMVAID (tree->discriminator->at(iDau), TMath::Abs(p4.Eta())) || byp_idS; // APPROX! Using lepton eta and not super cluster eta, discriminator contains ele BDT  
-    bool isoS = (combreliso(iDau) < relIso) || byp_isoS;
+    bool isoS = (combreliso03(iDau) < relIso) || byp_isoS;
     if (whatApply.Contains ("InvertIzo")) isoS = !isoS ;
-    
-    bool totalS = (vertexS && idS && isoS && ptS && etaS);
+    bool conv_miss=(Daughters_passConversionVeto(iDau) && Daughters_eleMissingHits(iDau) <=1);
+    bool totalS = (vertexS && idS/* && isoS */&& ptS && etaS && conv_miss);
 
     if (debug)
     {
@@ -1050,15 +1131,6 @@ float Ntuple_Controller::DeltaRDau(int dau1idx, int dau2idx)
  //   return false;
  // }
 
- bool Ntuple_Controller::electronBaselineSelection(int i){
-  // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
-   if(particleType(i)==1){
-     if(Daughters_P4(i).Pt()>17 && fabs(Daughters_P4(i).Eta())<2.4)
-     	 return true;
-   }
-   return false;
- }
-
 // electron
 bool Ntuple_Controller::isElectron(int i){
   //  int bit(0);
@@ -1069,7 +1141,7 @@ bool Ntuple_Controller::isElectron(int i){
   }
   return false;
 }
-bool Ntuple_Controller::ElectronVeto(int i){
+bool Ntuple_Controller::ElectronVeto(unsigned int i){
   // ele.pt()         > 10                            and
   // fabs(ele.eta())  < 2.5                           and
   // fabs(dxy)        < 0.045                         and
@@ -1096,7 +1168,32 @@ bool Ntuple_Controller::ElectronVeto(int i){
   return false;
 }
 
-bool Ntuple_Controller::MuonVeto(int i){
+bool Ntuple_Controller::DiEleVeto() {
+  bool kin=false, vertex=false, /*isele=false, */iso=false;
+  int elem, elep;
+  for(unsigned int iDaughter=0;   iDaughter  <  NDaughters() ;iDaughter++ ) {
+    {
+      for(unsigned int jDaughter=0;   jDaughter  <  NDaughters() ;jDaughter++ ) {
+	if(particleType(jDaughter)==1 && particleType(iDaughter)==1 &&  ((Daughters_charge(iDaughter)/abs(Daughters_charge(iDaughter))) != (Daughters_charge(jDaughter)/abs(Daughters_charge(jDaughter))))){
+	  elem=jDaughter;
+	  elep=iDaughter;
+	  {
+	    if(DeltaRDau(iDaughter,jDaughter)>0.15)
+	      {
+		kin = ((Daughters_P4(elem).Pt()>15) && (Daughters_P4(elep).Pt()>15) && fabs(Daughters_P4(elem).Eta()<2.5) && fabs(Daughters_P4(elep).Eta()<2.5));
+		vertex = ((fabs(dxy(elem))<0.045) && (fabs(dxy(elep))< 0.045) && (fabs(dz(elem)) < 0.2) && (fabs(dz(elep)) < 0.2));
+		
+		iso= (combreliso03(elem) < 0.3 && combreliso(elep)<0.3);
+		if((kin && vertex/* && isele*/ && iso)==0)return true;
+	      }
+	  }
+	}
+      }
+    }
+  }return false;
+}
+
+bool Ntuple_Controller::MuonVeto(unsigned int i){
   // muon.pt()        > 10                            and
   // fabs(muon.eta)   < 2.4                           and
   // fabs(dxy)        < 0.045                         and
@@ -1116,8 +1213,29 @@ bool Ntuple_Controller::MuonVeto(int i){
   }
   return false;
 }
-
-
+bool Ntuple_Controller::DiMuonVeto() {
+  bool kin=false, vertex=false, ismuon=false, iso=false;
+  int muonm, muonp;
+  for(unsigned int iDaughter=0;   iDaughter  <  NDaughters() ;iDaughter++ ) {
+    for(unsigned int jDaughter=0;   jDaughter  <  NDaughters() ;jDaughter++ ) {
+      if(particleType(jDaughter)==0 && particleType(iDaughter)==0 &&  ((Daughters_charge(iDaughter)/abs(Daughters_charge(iDaughter))) != (Daughters_charge(jDaughter)/abs(Daughters_charge(jDaughter))))){
+	muonm=jDaughter;
+	muonp=iDaughter;
+	{
+	  if(DeltaRDau(iDaughter,jDaughter)>0.15)
+	    {
+	      kin = ((Daughters_P4(muonm).Pt()>15) && (Daughters_P4(muonp).Pt()>15) && fabs(Daughters_P4(muonm).Eta()<2.4) && fabs(Daughters_P4(muonp).Eta()<2.4));
+	      vertex = ((fabs(dxy(muonm))<0.045) && (fabs(dxy(muonp))< 0.045) && (fabs(dz(muonm)) < 0.2) && (fabs(dz(muonp)) < 0.2));
+	      ismuon=((Daughters_typeOfMuon(muonm) & (1<< 0)) == (1<< 0))  &&  ((Daughters_typeOfMuon(muonm) & (1<< 1)) == (1<< 1)) &&((Daughters_typeOfMuon(muonm) & (1<< 2)) == (1<< 2)) && ((Daughters_typeOfMuon(muonp) & (1<< 0)) == (1<< 0)) && ((Daughters_typeOfMuon(muonp) & (1<< 1)) == (1<< 1))  &&  ((Daughters_typeOfMuon(muonp) & (1<< 2)) == (1<< 2));
+	      iso= (combreliso(muonm) < 0.3 && combreliso(muonp)<0.3);
+	      if((kin && vertex && ismuon && iso)==0)return true;
+	    }
+	}
+      }
+    }
+  }
+  return false;
+}
 // muon
  bool Ntuple_Controller::isMuon(int i){
   // https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonIdRun2  
@@ -2333,8 +2451,8 @@ std::vector<TLorentzVector> Ntuple_Controller::GetTruthPionsFromA1(){
 //   for(unsigned int i_trig = 0; i_trig < trigger.size(); i_trig++){
 //     for(int i=0;i<NHLTTrigger_objs();i++){
 //       if(HLTTrigger_objs_trigger(i).find(trigger.at(i_trig)) != string::npos){
-// 	for(int j=0;j<NHLTTrigger_objs(i);j++){
-// 	  if(HLTTrigger_objs_Id(i,j)==(int)id){
+// 	for(int j=0;j<NHLTTrigger_objs(i);j++) {
+// 	  if(HLTTrigger_objs_Id(i,j)==(int)id) {
 // 	    triggerObj.SetPtEtaPhiE(HLTTrigger_objs_Pt(i,j),
 // 				    HLTTrigger_objs_Eta(i,j),
 // 				    HLTTrigger_objs_Phi(i,j),

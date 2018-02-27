@@ -14,7 +14,7 @@ SHELL = /bin/sh
 ###                              ###
 ####################################
 
-SHAREDLIBFLAGS =-L./CommonUtils/lib -lTauNtuple -L./DataFormats/lib -lDataFormats
+SHAREDLIBFLAGS =-L./CommonUtils/lib -lTauNtuple -L./DataFormats/lib -lDataFormats  
 SHAREDCXXFLAGS =-I./CommonUtils -I./DataFormats
 SUBDIRS = CommonUtils/ 
 TAUSPINERFLAG = 
@@ -49,10 +49,10 @@ TARGETS       =	Ntuple_Controller \
 		ReferenceScaleFactors \
 		rochcor2012jan22 \
 		Objects \
+		DataMCCorrections \
 		PUReweight \
 		ScaleFactor \
 		tauTrigSFreader \
-		DataMCCorrections \
 		UncertaintyValue
 
 CINTTARGETS = 
@@ -96,8 +96,8 @@ ifdef USE_lebihan
 endif
 
 ifdef USE_gbourgat
-	TARGETS += 
-	DEFS += -DUSE_lebihan=1
+	TARGETS += ZMuTau ZTauTau ZMuMu
+	DEFS += -DUSE_gbourgat=1
 endif
 
 
@@ -128,6 +128,7 @@ ifdef USE_lebihan
 	vpath %.cxx lebihan
 	vpath %.h lebihan
 endif
+
 
 ifdef USE_gbourgat
 	vpath %.cxx gbourgat
