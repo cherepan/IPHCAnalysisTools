@@ -99,7 +99,7 @@ else
 	git clone https://github.com/cherepan/TauDataFormat.git TauDataFormat
 	
 	if [ $UseSVfit == 1 ]; then
-		git clone -b svFit_2015Apr03 https://github.com/veelken/SVfit_standalone.git TauAnalysis/SVfitStandalone
+		git clone -b HIG-16-006 https://github.com/veelken/SVfit_standalone.git TauAnalysis/SVfitStandalone
 	fi
 	
 	cd ../
