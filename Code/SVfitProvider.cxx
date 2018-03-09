@@ -145,13 +145,13 @@ void SVfitProvider::addMeasuredLepton(TString type, int index, double energyScal
 	svFitStandalone::MeasuredTauLepton lep;
 	type.ToLower();
 	if (type == "mu"){
-		lep = svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToMuDecay, energyScale * ntp_->Muon_p4(index).Pt(), ntp_->Muon_p4(index).Eta(), ntp_->Muon_p4(index).Phi(), energyScale * ntp_->Muon_p4(index).M());
+		lep = svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToMuDecay, energyScale * ntp_->Daughters_P4(index).Pt(), ntp_->Daughters_P4(index).Eta(), ntp_->Daughters_P4(index).Phi(), energyScale * ntp_->Daughters_P4(index).M());
 	}
 	else if (type == "ele"){
-		lep = svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToElecDecay, energyScale * ntp_->Electron_p4(index).Pt(), ntp_->Electron_p4(index).Eta(), ntp_->Electron_p4(index).Phi(), energyScale * ntp_->Electron_p4(index).M());
+		lep = svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToElecDecay, energyScale * ntp_->Daughters_P4(index).Pt(), ntp_->Daughters_P4(index).Eta(), ntp_->Daughters_P4(index).Phi(), energyScale * ntp_->Daughters_P4(index).M());
 	}
 	else if (type == "tau"){
-		lep = svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, energyScale * ntp_->PFTau_p4(index).Pt(), ntp_->PFTau_p4(index).Eta(), ntp_->PFTau_p4(index).Phi(), energyScale * ntp_->PFTau_p4(index).M());
+		lep = svFitStandalone::MeasuredTauLepton(svFitStandalone::kTauToHadDecay, energyScale * ntp_->TauP4_Corrected(index).Pt(), ntp_->TauP4_Corrected(index).Eta(), ntp_->TauP4_Corrected(index).Phi(), energyScale * ntp_->TauP4_Corrected(index).M());
 	}
 	else
 		Logger(Logger::Error) << "Object type " << type << " not implemented in SVfitProvider." << std::endl;

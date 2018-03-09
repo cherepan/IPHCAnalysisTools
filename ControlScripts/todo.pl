@@ -278,7 +278,7 @@ if( $ARGV[0] eq "--TauNtuple"){
    system(sprintf("echo \"cd -\" >> Install_TauNtuple_$time")); 
    system(sprintf("echo \"git clone https://github.com/veelken/SVfit_standalone TauAnalysis/SVfitStandalone\" >> Install_TauNtuple_$time")); 
    system(sprintf("echo \"cd TauAnalysis/SVfitStandalone\" >> Install_TauNtuple_$time")); 
-   system(sprintf("echo \"git checkout svFit_2015Apr03\" >> Install_TauNtuple_$time")); 
+   system(sprintf("echo \"git checkout HIG-16-006\" >> Install_TauNtuple_$time")); 
    system(sprintf("echo \"cd $CMSSW_BASE/src\" >> Install_TauNtuple_$time")); 
 
    system(sprintf("echo \"scram b -j 4\" >> Install_TauNtuple_$time")); 
