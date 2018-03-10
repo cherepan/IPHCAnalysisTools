@@ -27,7 +27,7 @@
 #include "SimpleFits/FitSoftware/interface/DiTauConstrainedFitter.h"
 #include "SimpleFits/FitSoftware/interface/GlobalEventFit.h"
 #include "Objects.h"
-
+#include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h"
 
 
 
@@ -631,9 +631,43 @@ void  ZTauTau::doEvent(){ //  Method called on every event
     // }
     // // std::cout<<"svfMass   "<<svfMass <<std::endl;
     // h_SVFitMass.at(t).Fill(svfMass,w);
-    svfitAlforithm.addLogM_fixed(true,4.0);
-    //svfitAlforithm.setHistogramAdapter(new classic_svFit::DiTauSystemHistrogamAdapter());
+    svfitAlforithm.addLogM_fixed(true,5.0);
+    //   svfitAlforithm.setHistogramAdapter(new classic_svFit::DiTauSystemHistrogamAdapter());
     svfitAlforithm.setDiTauMassConstraint(-1.0);
+
+
+    std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
+    classic_svFit::MeasuredTauLepton lep1(1, Tau1P4.Pt(), Tau1P4.Eta(),  Tau1P4.Phi(), Tau1P4.M());
+    classic_svFit::MeasuredTauLepton lep2(1, Tau2P4.Pt(), Tau2P4.Eta(),  Tau2P4.Phi(), Tau2P4.M());
+
+    measuredTauLeptons.push_back(lep1);
+    measuredTauLeptons.push_back(lep2);
+    TMatrixD metcov(2,2);
+    double metx = Ntp->MET()*cos(Ntp->METphi());
+    double mety = Ntp->MET()*sin(Ntp->METphi());
+
+ 
+ 
+    metcov[0][0] = Ntp->PFMETCov00();
+    metcov[1][0] = Ntp->PFMETCov01();
+    metcov[0][1] = Ntp->PFMETCov10();
+    metcov[1][1] = Ntp->PFMETCov11();
+
+
+    svfitAlforithm.integrate(measuredTauLeptons,metx,mety, metcov );
+
+
+     if(svfitAlforithm.isValidSolution()){
+       double higgsmass  = static_cast<classic_svFit::DiTauSystemHistogramAdapter*>(svfitAlforithm.getHistogramAdapter())->getMass();
+       std::cout<<" mas -------- "<< higgsmass <<std::endl;
+       h_SVFitMass.at(t).Fill(higgsmass,w);
+     }
+    //    lep1(5,1.,2.,3.,4.);
+    // measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(MeasuredTauLepton::kTauToElecDecay, 33.7393, 0.9409,  -0.541458, 0.51100e-3)); // tau -> electron decay (Pt, eta, phi, mass)
+    // measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(MeasuredTauLepton::kTauToHadDecay,  25.7322, 0.618228, 2.79362,  0.13957, 0)); // tau -> 1prong0pi0 hadronic decay (Pt, eta, phi, 
+    // mass)
+
+
     Tau1PT.at(t).Fill(Tau1P4.Pt(),w);
     Tau1E.at(t).Fill(Tau1P4.E(),w);
     Tau1Mass.at(t).Fill(Tau1P4.M(),w);
