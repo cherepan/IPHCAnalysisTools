@@ -14,7 +14,7 @@ SHELL = /bin/sh
 ###                              ###
 ####################################
 
-SHAREDLIBFLAGS =-L./CommonUtils/lib -lTauNtuple -L./DataFormats/lib -lDataFormats  
+SHAREDLIBFLAGS =-L./CommonUtils/lib -lTauNtuple -L./DataFormats/lib -lDataFormats  -L./CommonUtils/lib -lClassicSVfit
 SHAREDCXXFLAGS =-I./CommonUtils -I./DataFormats
 SUBDIRS = CommonUtils/ 
 TAUSPINERFLAG = 
@@ -47,7 +47,6 @@ TARGETS       =	Ntuple_Controller \
 		TauSpinExample \
 		TauSpinerInterface \
 		ReferenceScaleFactors \
-		rochcor2012jan22 \
 		Objects \
 		DataMCCorrections \
 		PUReweight \
@@ -73,10 +72,10 @@ ifdef USE_TauSpinner
 endif
 
 ifdef USE_SVfit
-	TARGETS += SVfitProvider DataStorage SVFitStorage
-	CINTTARGETS += SVFitObject
-	SHAREDLIBFLAGS += -L./CommonUtils/lib -lSVfit
-	DEFS += -DUSE_SVfit=1
+#	TARGETS += SVfitProvider DataStorage SVFitStorage
+#	CINTTARGETS += SVFitObject
+#	SHAREDLIBFLAGS += -L./CommonUtils/lib -lSVfit
+#	DEFS += -DUSE_SVfit=1
 endif
 
 ifdef USE_cherepanov
@@ -187,6 +186,7 @@ sharedlib:
 				echo $(USE_SVfit); \
 				if [ $(USE_SVfit) -eq 1 ]; then \
 					$(MAKE) -f Makefile.SVfitStandalone CXXFLAGS+='$(CXXFLAGS)' ; \
+					$(MAKE) -f Makefile.SVfitClassic CXXFLAGS+='$(CXXFLAGS)' ; \
 				fi \
 			fi \
 			&& cd ../ && pwd; \

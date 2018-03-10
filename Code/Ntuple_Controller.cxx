@@ -55,7 +55,7 @@ Ntuple_Controller::Ntuple_Controller(std::vector<TString> RootFiles):
 
   // Rochester muon momentum corrections
 
-  rmcor = new rochcor2012(); // For systematics use rmcor = new rochcor2012(seed!=1234);
+  //  rmcor = new rochcor2012(); // For systematics use rmcor = new rochcor2012(seed!=1234);
 
   // Set object correction flags to default values
   tauCorrection = "";
@@ -150,7 +150,7 @@ void Ntuple_Controller::Branch_Setup(TString B_Name, int type){
 Ntuple_Controller::~Ntuple_Controller() {
   Logger(Logger::Verbose) << "Cleaning up" << std::endl;
   delete Ntp;
-  delete rmcor;
+  //  delete rmcor;
   Logger(Logger::Verbose) << "Complete." << std::endl;
 }
 

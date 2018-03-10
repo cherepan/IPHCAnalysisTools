@@ -55,7 +55,7 @@
 #include "SimpleFits/FitSoftware/interface/TauA1NuConstrainedFitter.h"
 
 // Rochester muon momentum correction
-#include "CommonFiles/rochcor2012jan22.h"
+//#include "CommonFiles/rochcor2012jan22.h"
 
 // small struct needed to allow sorting indices by some value
 struct sortIdxByValue {
@@ -149,7 +149,7 @@ class Ntuple_Controller{
   bool                                isInit;
 
   // muon correction related objects
-  rochcor2012*   rmcor;
+  //  rochcor2012*   rmcor;
   std::vector<TLorentzVector> Muon_corrected_p4;
   void           CorrectMuonP4();
   bool           Muon_isCorrected;

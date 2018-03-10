@@ -20,12 +20,12 @@ ROOTLIBS      =  -L$(ROOTSYS)/lib -L/usr/lib/ -L/lib/i686/  -lCore -lCint -lHist
 
 LIBS          = $(ROOTLIBS) $(SHAREDLIBFLAGS)
 
-SRCS    = $(wildcard TauAnalysis/SVfitStandalone/src/*.cc)
+SRCS    = $(wildcard TauAnalysis/ClassicSVfit/src/*.cc)
 HDRS    = $(SF_SRCS:.cc=.h)
 
 OBJS          = $(SRCS:.cc=.o) 
 
-SHAREDLIB     = lib/libSVfit.so
+SHAREDLIB     = lib/libClassicSVfit.so
 
 $(SHAREDLIB): $(OBJS)
 	@echo "======================================================="
@@ -36,7 +36,7 @@ $(SHAREDLIB): $(OBJS)
 	@echo "======================================================="
 
 
-vpath %.cc TauAnalysis/SVfitStandalone/src/ 
+vpath %.cc TauAnalysis/ClassicSVfit/src/ 
 
 ##########################################################
 ###                                                    ###

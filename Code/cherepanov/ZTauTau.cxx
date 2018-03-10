@@ -4,7 +4,7 @@
 #include "HistoConfig.h"
 #include <iostream>
 #include "SVFitObject.h"
-#include "SVfitProvider.h"
+//#include "SVfitProvider.h"
 #include "SimpleFits/FitSoftware/interface/Logger.h"
  
 #include "TLorentzVector.h"
@@ -616,22 +616,24 @@ void  ZTauTau::doEvent(){ //  Method called on every event
     TLorentzVector Tau2P4 = Ntp->Daughters_P4(Tau2);
     std::vector<int> thirdLepton;
 
-    double visMass = (Tau1P4+Tau2P4).M();
-    SVFitObject *svfObj = Ntp->getSVFitResult_TauhTauh(svfitstorage, "Uncorr", Tau1, Tau2, 50000);
-    double svfMass(-999.);
-    if (!svfObj->isValid()) {
-      Logger(Logger::Warning) << "SVFit object is invalid. SVFit mass set to -999." << std::endl;
-      h_SVFitStatus.at(t).Fill(1);
-    } else if (svfObj->get_mass() < visMass) {
-      Logger(Logger::Warning) << "SVFit mass " << svfObj->get_mass() << " smaller than visible mass " << visMass << ". SVFit mass SVFit mass set to -999." << std::endl;
-      h_SVFitStatus.at(t).Fill(2);
-    } else {
-      svfMass = svfObj->get_mass();
-      h_SVFitStatus.at(t).Fill(0);
-    }
-    std::cout<<"svfMass   "<<svfMass <<std::endl;
-    h_SVFitMass.at(t).Fill(svfMass,w);
-
+    // double visMass = (Tau1P4+Tau2P4).M();
+    // SVFitObject *svfObj = Ntp->getSVFitResult_TauhTauh(svfitstorage, "Uncorr", Tau1, Tau2, 50000);
+    // double svfMass(-999.);
+    // if (!svfObj->isValid()) {
+    //   Logger(Logger::Warning) << "SVFit object is invalid. SVFit mass set to -999." << std::endl;
+    //   h_SVFitStatus.at(t).Fill(1);
+    // } else if (svfObj->get_mass() < visMass) {
+    //   Logger(Logger::Warning) << "SVFit mass " << svfObj->get_mass() << " smaller than visible mass " << visMass << ". SVFit mass SVFit mass set to -999." << std::endl;
+    //   h_SVFitStatus.at(t).Fill(2);
+    // } else {
+    //   svfMass = svfObj->get_mass();
+    //   h_SVFitStatus.at(t).Fill(0);
+    // }
+    // // std::cout<<"svfMass   "<<svfMass <<std::endl;
+    // h_SVFitMass.at(t).Fill(svfMass,w);
+    svfitAlforithm.addLogM_fixed(true,4.0);
+    //svfitAlforithm.setHistogramAdapter(new classic_svFit::DiTauSystemHistrogamAdapter());
+    svfitAlforithm.setDiTauMassConstraint(-1.0);
     Tau1PT.at(t).Fill(Tau1P4.Pt(),w);
     Tau1E.at(t).Fill(Tau1P4.E(),w);
     Tau1Mass.at(t).Fill(Tau1P4.M(),w);

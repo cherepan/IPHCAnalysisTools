@@ -23,6 +23,11 @@
 #include "PUReweight.h"
 #include "tauTrigSFreader.h"
 #include "DataMCCorrections.h"
+#include "TauAnalysis/ClassicSVfit/interface/ClassicSVfit.h"
+#include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h"
+#include "TauAnalysis/ClassicSVfit/interface/svFitHistogramAdapter.h"
+
+
 
 class ZTauTau : public Selection {
 
@@ -58,7 +63,8 @@ class ZTauTau : public Selection {
   tauTrigSFreader tauTrgSF;
  private:
   // Selection Variables and Histos
-  SVFitStorage svfitstorage;
+  ClassicSVfit svfitAlforithm;
+  //SVFitStorage svfitstorage;
   std::vector<TH1D> Tau1PT;
   std::vector<TH1D> Tau1E;
   std::vector<TH1D> Tau1Mass;
