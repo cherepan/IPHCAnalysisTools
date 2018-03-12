@@ -14,7 +14,7 @@ SHELL = /bin/sh
 ###                              ###
 ####################################
 
-SHAREDLIBFLAGS =-L./CommonUtils/lib -lTauNtuple -L./DataFormats/lib -lDataFormats  -L./CommonUtils/lib -lClassicSVfit
+SHAREDLIBFLAGS =-L./CommonUtils/lib -lTauNtuple -L./DataFormats/lib -lDataFormats  -L./CommonUtils/lib -lClassicSVfit  -L./CommonUtils/lib -lTDCILib 
 SHAREDCXXFLAGS =-I./CommonUtils -I./DataFormats
 SUBDIRS = CommonUtils/ 
 TAUSPINERFLAG = 
@@ -56,9 +56,11 @@ TARGETS       =	Ntuple_Controller \
 
 CINTTARGETS = 
 
+
+
 # now include conditional options set by flags in make.inc
 ifdef USE_TauSpinner
-	SUBDIRS += TauSpiner/
+	SUBDIRS += TauSpiner/ CommonUtils/TauPolSoftware/TauDecaysInterface/
 	SHAREDLIBFLAGS +=	-L./TauSpiner/lhapdf/lib -lLHAPDF \
 				-L./TauSpiner/tauola++/1.1.3/lib -lTauolaCxxInterface -lTauolaFortran -lTauolaTauSpinner \
 				-L./TauSpiner/hepmc/install/lib -lHepMC
@@ -79,7 +81,7 @@ ifdef USE_SVfit
 endif
 
 ifdef USE_cherepanov
-	TARGETS += MyTest ZTauHTauH SingleMuSkim ZTauMuTauH TTBar ZTauTau
+	TARGETS += MyTest ZTauHTauH SingleMuSkim ZTauMuTauH TTBar ZTauTau ZMuTau
 	DEFS += -DUSE_cherepanov=1
 endif
 
@@ -173,6 +175,7 @@ cleanall:
 all: sharedlib dataformats install
 
 sharedlib:
+	@cd CommonUtils/TauPolSoftware/TauDecaysInterface/; make; cp bin/libTDCILib.so ../../lib; cd ../../../;
 	@for subdir in $(SUBDIRS); do \
 		echo "Making all in $$subdir"; \
 		if [ $$subdir == "TauSpiner/" ]; then \
@@ -193,6 +196,5 @@ sharedlib:
 		fi \
 	done
 	$(install)
-
 
 
