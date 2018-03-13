@@ -218,6 +218,8 @@ void  ZMuTau::Configure(){
   h_SVFitMass = HConfig.GetTH1D(Name+"_SVFitMass","SVFitMass",100,0.,200.,"m_{SVfit}(#tau_{h},#mu)/GeV");
   h_SVFitStatus = HConfig.GetTH1D(Name+"_SVFitStatus", "SVFitStatus", 5, -0.5, 4.5, "Status of SVFit calculation");
 
+  svfTau1E = HConfig.GetTH1D(Name+"_svfTau1E","svFitTau1E",100,0.,100.,"E_{SVfit}(#tau_{h}1)/GeV");
+  svfTau2E = HConfig.GetTH1D(Name+"_svfTau2E","svFitTau2E",100,0.,100.,"E_{SVfit}(#tau_{h}2)/GeV");
 
 
   Selection::ConfigureHistograms();   //   do not remove
@@ -284,6 +286,8 @@ void  ZMuTau::Store_ExtraDist(){
   Extradist1d.push_back(&NbJets);
   Extradist1d.push_back(&h_SVFitMass);
   Extradist1d.push_back(&h_SVFitStatus);
+  Extradist1d.push_back(&svfTau1E);
+  Extradist1d.push_back(&svfTau2E);
 
 }
 
@@ -603,9 +607,9 @@ SVQualityVsSignificance.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQual
      }
 
 
-     svfitAlforithm.addLogM_fixed(true,4.0);
-     //   svfitAlforithm.setHistogramAdapter(new classic_svFit::DiTauSystemHistrogamAdapter());
-     svfitAlforithm.setDiTauMassConstraint(-1.0);
+     svfitAlgo.addLogM_fixed(true,4.0);
+     //   svfitAlgo.setHistogramAdapter(new classic_svFit::DiTauSystemHistrogamAdapter());
+     svfitAlgo.setDiTauMassConstraint(-1.0);
 
     std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
     classic_svFit::MeasuredTauLepton lep1(1, TauP4.Pt(), TauP4.Eta(),  TauP4.Phi(), TauP4.M());
@@ -624,66 +628,75 @@ SVQualityVsSignificance.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQual
     metcov[1][1] = Ntp->PFMETCov11();
 
 
-    svfitAlforithm.integrate(measuredTauLeptons,metx,mety, metcov );
+    svfitAlgo.integrate(measuredTauLeptons,metx,mety, metcov );
 
-
-     if(svfitAlforithm.isValidSolution()){
-       double higgsmass  = static_cast<classic_svFit::DiTauSystemHistogramAdapter*>(svfitAlforithm.getHistogramAdapter())->getMass();
+     if(svfitAlgo.isValidSolution()){
+       double higgsmass  = static_cast<classic_svFit::DiTauSystemHistogramAdapter*>(svfitAlgo.getHistogramAdapter())->getMass();
        h_SVFitMass.at(t).Fill(higgsmass,w);
      }
+    ClassicSVfit svfitAlgo2;
+    svfitAlgo2.setHistogramAdapter(new classic_svFit::TauTauHistogramAdapter());
+    svfitAlgo2.addLogM_fixed(true, 4.);
+    svfitAlgo2.integrate(measuredTauLeptons,metx,mety, metcov );
+
+    classic_svFit::LorentzVector tau1P4 = static_cast<classic_svFit::TauTauHistogramAdapter*>(svfitAlgo2.getHistogramAdapter())->GetFittedTau1LV();
+    classic_svFit::LorentzVector tau2P4 = static_cast<classic_svFit::TauTauHistogramAdapter*>(svfitAlgo2.getHistogramAdapter())->GetFittedTau2LV();
+
+    svfTau1E.at(t).Fill(tau1P4.E(),w);
+    svfTau2E.at(t).Fill(tau2P4.E(),w);
 
 
-  NPrimeVtx.at(t).Fill(pvx,w);
-  NPU.at(t).Fill(Ntp->npu(),w);
-  RHO.at(t).Fill(Ntp->rho(),w);
-  
-  std::vector<int> thirdLepton;
+    NPrimeVtx.at(t).Fill(pvx,w);
+    NPU.at(t).Fill(Ntp->npu(),w);
+    RHO.at(t).Fill(Ntp->rho(),w);
+    
+    std::vector<int> thirdLepton;
+    
+    TauPT.at(t).Fill(TauP4.Pt(),w);
+    TauE.at(t).Fill(TauP4.E(),w);
+    TauMass.at(t).Fill(TauP4.M(),w);
+    TauPhi.at(t).Fill(TauP4.Phi(),w);
+    TauEta.at(t).Fill(TauP4.Eta(),w);
+    Taudz.at(t).Fill(Ntp->dz(Tau),w);
+    
 
-  TauPT.at(t).Fill(TauP4.Pt(),w);
-  TauE.at(t).Fill(TauP4.E(),w);
-  TauMass.at(t).Fill(TauP4.M(),w);
-  TauPhi.at(t).Fill(TauP4.Phi(),w);
-  TauEta.at(t).Fill(TauP4.Eta(),w);
-  Taudz.at(t).Fill(Ntp->dz(Tau),w);
-  
-
-  MuonPT.at(t).Fill(MuonP4.Pt(),w);
-  MuonE.at(t).Fill(MuonP4.E(),w);
-  MuonMass.at(t).Fill(MuonP4.M(),w);
-  MuonPhi.at(t).Fill(MuonP4.Phi(),w);
-  MuonEta.at(t).Fill(MuonP4.Eta(),w);
-  Muondz.at(t).Fill(Ntp->dz(Muon),w);
-  Muondxy.at(t).Fill(Ntp->dxy(Muon),w);
-  MuonIsol.at(t).Fill(Ntp->combreliso(Muon),w);
-
-  
-  againstElectronVLooseMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronVLooseMVA6),w);
-  againstElectronLooseMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronLooseMVA6),w);
-  againstElectronMediumMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronMediumMVA6),w);
-  againstElectronTightMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronTightMVA6),w);
-  againstElectronVTightMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronVTightMVA6),w);
-  againstMuonLoose3.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstMuonLoose3),w);
-  againstMuonTight3.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstMuonTight3),w);
-  byCombinedIsolationDeltaBetaCorrRaw3Hits.at(t).Fill(Ntp->Daughters_byCombinedIsolationDeltaBetaCorrRaw3Hits(Tau),w);
-  
-  DiMuonVeto.at(t).Fill(Ntp->DiMuonVeto(),w);
-  for(unsigned int iDaughter=0;   iDaughter  <  Ntp->NDaughters() ;iDaughter++ ) {
-	if((iDaughter!=Tau)&&(iDaughter!=Muon)){
-	  if(Ntp->ElectronVeto(iDaughter) || Ntp->MuonVeto(iDaughter))thirdLepton.push_back(iDaughter);
-	}
+    MuonPT.at(t).Fill(MuonP4.Pt(),w);
+    MuonE.at(t).Fill(MuonP4.E(),w);
+    MuonMass.at(t).Fill(MuonP4.M(),w);
+    MuonPhi.at(t).Fill(MuonP4.Phi(),w);
+    MuonEta.at(t).Fill(MuonP4.Eta(),w);
+    Muondz.at(t).Fill(Ntp->dz(Muon),w);
+    Muondxy.at(t).Fill(Ntp->dxy(Muon),w);
+    MuonIsol.at(t).Fill(Ntp->combreliso(Muon),w);
+    
+    
+    againstElectronVLooseMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronVLooseMVA6),w);
+    againstElectronLooseMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronLooseMVA6),w);
+    againstElectronMediumMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronMediumMVA6),w);
+    againstElectronTightMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronTightMVA6),w);
+    againstElectronVTightMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronVTightMVA6),w);
+    againstMuonLoose3.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstMuonLoose3),w);
+    againstMuonTight3.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstMuonTight3),w);
+    byCombinedIsolationDeltaBetaCorrRaw3Hits.at(t).Fill(Ntp->Daughters_byCombinedIsolationDeltaBetaCorrRaw3Hits(Tau),w);
+    
+    DiMuonVeto.at(t).Fill(Ntp->DiMuonVeto(),w);
+    for(unsigned int iDaughter=0;   iDaughter  <  Ntp->NDaughters() ;iDaughter++ ) {
+      if((iDaughter!=Tau)&&(iDaughter!=Muon)){
+	if(Ntp->ElectronVeto(iDaughter) || Ntp->MuonVeto(iDaughter))thirdLepton.push_back(iDaughter);
       }
-  if(thirdLepton.size()>0)ExtraLeptonVeto.at(t).Fill(1.,w);
-  else ExtraLeptonVeto.at(t).Fill(0.,w);
-  TauHPSDecayMode.at(t).Fill(Ntp->decayMode(Tau),w);
-  
-  TauTauMass.at(t).Fill((MuonP4+TauP4).M(),w);
-  dRTauTau.at(t).Fill(MuonP4.DeltaR(TauP4),w);
-
-  MET.at(t).Fill(Ntp->MET(),w);
-  METphi.at(t).Fill(Ntp->METphi(),w);
-  PUPPImet.at(t).Fill(Ntp->PUPPImet(),w);
-  PUPPImetphi.at(t).Fill(Ntp->PUPPImetphi(),w);
-  TransverseMass.at(t).Fill(Ntp->transverseMass(MuonP4.Pt(), MuonP4.Phi(), Ntp->MET(), Ntp->METphi()),w);
+    }
+    if(thirdLepton.size()>0)ExtraLeptonVeto.at(t).Fill(1.,w);
+    else ExtraLeptonVeto.at(t).Fill(0.,w);
+    TauHPSDecayMode.at(t).Fill(Ntp->decayMode(Tau),w);
+    
+    TauTauMass.at(t).Fill((MuonP4+TauP4).M(),w);
+    dRTauTau.at(t).Fill(MuonP4.DeltaR(TauP4),w);
+    
+    MET.at(t).Fill(Ntp->MET(),w);
+    METphi.at(t).Fill(Ntp->METphi(),w);
+    PUPPImet.at(t).Fill(Ntp->PUPPImet(),w);
+    PUPPImetphi.at(t).Fill(Ntp->PUPPImetphi(),w);
+    TransverseMass.at(t).Fill(Ntp->transverseMass(MuonP4.Pt(), MuonP4.Phi(), Ntp->MET(), Ntp->METphi()),w);
   
   int jets_counter=0;
   for(int ijet=0; ijet< Ntp->JetsNumber(); ijet++) {

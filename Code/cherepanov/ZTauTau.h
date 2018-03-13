@@ -63,7 +63,8 @@ class ZTauTau : public Selection {
   tauTrigSFreader tauTrgSF;
  private:
   // Selection Variables and Histos
-  ClassicSVfit svfitAlforithm;
+  ClassicSVfit svfitAlgo1;
+  // ClassicSVfit svfitAlgo2;
   //SVFitStorage svfitstorage;
   std::vector<TH1D> Tau1PT;
   std::vector<TH1D> Tau1E;
@@ -125,6 +126,8 @@ class ZTauTau : public Selection {
   
   std::vector<TH1D> h_SVFitMass;
   std::vector<TH1D> h_SVFitStatus;
+  std::vector<TH1D> svfTau1E;
+  std::vector<TH1D> svfTau2E;
 
 
 };

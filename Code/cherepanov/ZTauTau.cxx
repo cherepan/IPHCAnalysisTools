@@ -207,6 +207,8 @@ void  ZTauTau::Configure(){
   h_SVFitMass = HConfig.GetTH1D(Name+"_SVFitMass","SVFitMass",100,0.,200.,"m_{SVfit}(#tau_{h},#tau_{h})/GeV");
   h_SVFitStatus = HConfig.GetTH1D(Name+"_SVFitStatus", "SVFitStatus", 5, -0.5, 4.5, "Status of SVFit calculation");
  
+  svfTau1E = HConfig.GetTH1D(Name+"_svfTau1E","svFitTau1E",100,0.,100.,"E_{SVfit}(#tau_{h}1)/GeV");
+  svfTau2E = HConfig.GetTH1D(Name+"_svfTau2E","svFitTau2E",100,0.,100.,"E_{SVfit}(#tau_{h}2)/GeV");
 
   Selection::ConfigureHistograms();   //   do not remove
   HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);  // do not remove
@@ -279,6 +281,8 @@ void  ZTauTau::Store_ExtraDist(){
 
   Extradist1d.push_back(&h_SVFitMass);
   Extradist1d.push_back(&h_SVFitStatus);
+  Extradist1d.push_back(&svfTau1E);
+  Extradist1d.push_back(&svfTau2E);
 
 
 }
@@ -616,26 +620,8 @@ void  ZTauTau::doEvent(){ //  Method called on every event
     TLorentzVector Tau2P4 = Ntp->Daughters_P4(Tau2);
     std::vector<int> thirdLepton;
 
-    // double visMass = (Tau1P4+Tau2P4).M();
-    // SVFitObject *svfObj = Ntp->getSVFitResult_TauhTauh(svfitstorage, "Uncorr", Tau1, Tau2, 50000);
-    // double svfMass(-999.);
-    // if (!svfObj->isValid()) {
-    //   Logger(Logger::Warning) << "SVFit object is invalid. SVFit mass set to -999." << std::endl;
-    //   h_SVFitStatus.at(t).Fill(1);
-    // } else if (svfObj->get_mass() < visMass) {
-    //   Logger(Logger::Warning) << "SVFit mass " << svfObj->get_mass() << " smaller than visible mass " << visMass << ". SVFit mass SVFit mass set to -999." << std::endl;
-    //   h_SVFitStatus.at(t).Fill(2);
-    // } else {
-    //   svfMass = svfObj->get_mass();
-    //   h_SVFitStatus.at(t).Fill(0);
-    // }
-    // // std::cout<<"svfMass   "<<svfMass <<std::endl;
-    // h_SVFitMass.at(t).Fill(svfMass,w);
-    svfitAlforithm.addLogM_fixed(true,5.0);
-    //   svfitAlforithm.setHistogramAdapter(new classic_svFit::DiTauSystemHistrogamAdapter());
-    svfitAlforithm.setDiTauMassConstraint(-1.0);
 
-
+    //---------  svfit ---------------------
     std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
     classic_svFit::MeasuredTauLepton lep1(1, Tau1P4.Pt(), Tau1P4.Eta(),  Tau1P4.Phi(), Tau1P4.M());
     classic_svFit::MeasuredTauLepton lep2(1, Tau2P4.Pt(), Tau2P4.Eta(),  Tau2P4.Phi(), Tau2P4.M());
@@ -645,27 +631,31 @@ void  ZTauTau::doEvent(){ //  Method called on every event
     TMatrixD metcov(2,2);
     double metx = Ntp->MET()*cos(Ntp->METphi());
     double mety = Ntp->MET()*sin(Ntp->METphi());
-
- 
  
     metcov[0][0] = Ntp->PFMETCov00();
     metcov[1][0] = Ntp->PFMETCov01();
     metcov[0][1] = Ntp->PFMETCov10();
     metcov[1][1] = Ntp->PFMETCov11();
 
+    svfitAlgo1.addLogM_fixed(true,5.0);
+    svfitAlgo1.setDiTauMassConstraint(-1.0);
+    svfitAlgo1.integrate(measuredTauLeptons,metx,mety, metcov );
 
-    svfitAlforithm.integrate(measuredTauLeptons,metx,mety, metcov );
+    if(svfitAlgo1.isValidSolution()){
+      double higgsmass  = static_cast<classic_svFit::DiTauSystemHistogramAdapter*>(svfitAlgo1.getHistogramAdapter())->getMass();
+      h_SVFitMass.at(t).Fill(higgsmass,w); 
+    }
+    
+    ClassicSVfit svfitAlgo2;
+    svfitAlgo2.setHistogramAdapter(new classic_svFit::TauTauHistogramAdapter());
+    svfitAlgo2.addLogM_fixed(true, 5.);
+    svfitAlgo2.integrate(measuredTauLeptons,metx,mety, metcov );
 
+    classic_svFit::LorentzVector tau1P4 = static_cast<classic_svFit::TauTauHistogramAdapter*>(svfitAlgo2.getHistogramAdapter())->GetFittedTau1LV();
+    classic_svFit::LorentzVector tau2P4 = static_cast<classic_svFit::TauTauHistogramAdapter*>(svfitAlgo2.getHistogramAdapter())->GetFittedTau2LV();
 
-     if(svfitAlforithm.isValidSolution()){
-       double higgsmass  = static_cast<classic_svFit::DiTauSystemHistogramAdapter*>(svfitAlforithm.getHistogramAdapter())->getMass();
-       std::cout<<" mas -------- "<< higgsmass <<std::endl;
-       h_SVFitMass.at(t).Fill(higgsmass,w);
-     }
-    //    lep1(5,1.,2.,3.,4.);
-    // measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(MeasuredTauLepton::kTauToElecDecay, 33.7393, 0.9409,  -0.541458, 0.51100e-3)); // tau -> electron decay (Pt, eta, phi, mass)
-    // measuredTauLeptons.push_back(classic_svFit::MeasuredTauLepton(MeasuredTauLepton::kTauToHadDecay,  25.7322, 0.618228, 2.79362,  0.13957, 0)); // tau -> 1prong0pi0 hadronic decay (Pt, eta, phi, 
-    // mass)
+    svfTau1E.at(t).Fill(tau1P4.E(),w);
+    svfTau2E.at(t).Fill(tau2P4.E(),w);
 
 
     Tau1PT.at(t).Fill(Tau1P4.Pt(),w);

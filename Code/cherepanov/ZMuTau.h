@@ -68,7 +68,7 @@ class ZMuTau : public Selection {
   DataMCCorrections DataMC_CorrLeptonIso;
 
  private:
-  ClassicSVfit svfitAlforithm;
+  ClassicSVfit svfitAlgo;
 
   // Selection Variables and Histos
 
@@ -127,6 +127,8 @@ class ZMuTau : public Selection {
   std::vector<TH1D> NbJets;
   std::vector<TH1D> h_SVFitMass;
   std::vector<TH1D> h_SVFitStatus;
+  std::vector<TH1D> svfTau1E;
+  std::vector<TH1D> svfTau2E;
 
 
 };
