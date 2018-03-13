@@ -207,8 +207,8 @@ void  ZTauTau::Configure(){
   h_SVFitMass = HConfig.GetTH1D(Name+"_SVFitMass","SVFitMass",100,0.,200.,"m_{SVfit}(#tau_{h},#tau_{h})/GeV");
   h_SVFitStatus = HConfig.GetTH1D(Name+"_SVFitStatus", "SVFitStatus", 5, -0.5, 4.5, "Status of SVFit calculation");
  
-  svfTau1E = HConfig.GetTH1D(Name+"_svfTau1E","svFitTau1E",100,0.,100.,"E_{SVfit}(#tau_{h}1)/GeV");
-  svfTau2E = HConfig.GetTH1D(Name+"_svfTau2E","svFitTau2E",100,0.,100.,"E_{SVfit}(#tau_{h}2)/GeV");
+  svfTau1E = HConfig.GetTH1D(Name+"_svfTau1E","svFitTau1E",40,20.,120.,"E_{SVfit}(#tau_{h}1)/GeV");
+  svfTau2E = HConfig.GetTH1D(Name+"_svfTau2E","svFitTau2E",40,20.,120.,"E_{SVfit}(#tau_{h}2)/GeV");
 
   Selection::ConfigureHistograms();   //   do not remove
   HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);  // do not remove
