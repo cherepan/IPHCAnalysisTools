@@ -23,6 +23,7 @@ else
     ## setup variables for make files
     export ROOTSYS=/libcern/root/5.34.18/sl6.3-x86_64
     source /libcern/gcc/4.9.3/sl6.5-x86_64/setup.sh
+    cernlib-use --version 5.34.18 root
 #    export ROOTSYS=/libcern/root/6.06.08/sl6.6-x86_64
 #    ROOT="$PWD/../root/"
     if [ "${1}"  == "--useRoot" ]; then

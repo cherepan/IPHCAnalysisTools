@@ -416,7 +416,7 @@ if( $ARGV[0] eq "--Local" ){
 			$s1_char='\${que}';
 			$s2_char='\${output}';
 			$s3_char='\${error}';
-			system(sprintf("echo \" #PBS -u gbourgat\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
+			system(sprintf("echo \" #PBS -u $UserID\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
 			system(sprintf("echo \" #! /bin/bash\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
 			system(sprintf("echo \" export HOME=\\\"$OutputDir/workdir$set/\\\"         \"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
 			system(sprintf("echo \" que=\\\"$QsubQue\\\"\" >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
@@ -677,7 +677,7 @@ if( $ARGV[0] eq "--Local" ){
 			$s1_char='\${que}';
 			$s2_char='\${output}';
 			$s3_char='\${error}';
-			system(sprintf("echo \" #PBS -u gbourgat\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
+			system(sprintf("echo \" #PBS -u $UserID\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
 			system(sprintf("echo \" #! /bin/bash\"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
 			system(sprintf("echo \" export HOME=\\\"$OutputDir/workdir$set/\\\"         \"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B")); 
 			system(sprintf("echo \" export X509_USER_PROXY=\\\"$Proxy\\\"    \"  >> $OutputDir/workdir$set/Set_$B/Qsub_Set_$B"));
@@ -741,7 +741,7 @@ if( $ARGV[0] eq "--Local" ){
     printf("\nTo submit jobs to the batch queue: source Submit ");
     printf("\nTo combine jobs submitted to the batch queue: source Combine \n");
 #    printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile  --useRoot $OutputDir/workdir$set/root/ $UserDir; cd $OutputDir/workdir$set/Set_1; source Set_1 | tee log; cd ..\n");
-    printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile   $UserDir; cd $OutputDir/workdir$set/Set_1; source Set_1 | tee log; cd ..\n");
+    printf("\nTo test a single job: cd  $OutputDir/workdir$set; source compile   $UserDir $tauspinner $svfit; cd $OutputDir/workdir$set/Set_1; source Set_1 | tee log; cd ..\n");
 } 
 
 if( $ARGV[0] eq "--GRID" ){
