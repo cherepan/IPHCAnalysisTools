@@ -23,6 +23,9 @@
 #include "PUReweight.h"
 #include "tauTrigSFreader.h"
 #include "DataMCCorrections.h"
+#include "TauAnalysis/ClassicSVfit/interface/ClassicSVfit.h"
+#include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h"
+#include "TauAnalysis/ClassicSVfit/interface/svFitHistogramAdapter.h"
 
 class ZTauTau : public Selection {
 
@@ -56,6 +59,12 @@ class ZTauTau : public Selection {
   PUReweight reweight;//(PUReweight::RUN2ANALYSIS);
   DataMCCorrections DataMC_Corr;
   tauTrigSFreader tauTrgSF;
+
+  ClassicSVfit svfitAlgo1;
+  ClassicSVfit svfitAlgo2;
+  SVFitStorage svfitstorage;
+
+
  private:
   // Selection Variables and Histos
 
@@ -117,7 +126,16 @@ class ZTauTau : public Selection {
   
   std::vector<TH1D> NbJets;
   
+  std::vector<TH1D> h_SVFitMass;
+  std::vector<TH1D> h_SVFitStatus;
+  std::vector<TH1D> svfTau1E;
+  std::vector<TH1D> svfTau2E;
 
+  std::vector<TH1D> Eta;
+  std::vector<TH1D> Phi;
+  std::vector<TH1D> Theta;
 
+  /*std::vector<TH1D> CTN;
+    std::vector<TH1D> CTT;*/
 };
 #endif
