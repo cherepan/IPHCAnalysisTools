@@ -5,7 +5,7 @@
 #include <iostream>
 #include "SVFitObject.h"
 #include "SimpleFits/FitSoftware/interface/Logger.h"
- 
+//#include "SVfitProvider.h"
 #include "TLorentzVector.h"
 #include <cstdlib>
 #include "HistoConfig.h"
@@ -26,7 +26,7 @@
 #include "SimpleFits/FitSoftware/interface/DiTauConstrainedFitter.h"
 #include "SimpleFits/FitSoftware/interface/GlobalEventFit.h"
 #include "Objects.h"
-
+#include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h"
 
 
 
@@ -201,7 +201,21 @@ void  ZTauTau::Configure(){
   RHO=HConfig.GetTH1D(Name+"_rho","rho",10,0,30,"rho","Events");
   
   NbJets=HConfig.GetTH1D(Name+"_NbJets","NbJets",12,0,12,"Number of jets","Events");
+
+  h_SVFitMass = HConfig.GetTH1D(Name+"_SVFitMass","SVFitMass",100,0.,200.,"m_{SVfit}(#tau_{h},#tau_{h})/GeV");
+  h_SVFitStatus = HConfig.GetTH1D(Name+"_SVFitStatus", "SVFitStatus", 5, -0.5, 4.5, "Status of SVFit calculation");
+
+  svfTau1E = HConfig.GetTH1D(Name+"_svfTau1E","svFitTau1E",40,20.,120.,"E_{SVfit}(#tau_{h}1)/GeV");
+  svfTau2E = HConfig.GetTH1D(Name+"_svfTau2E","svFitTau2E",40,20.,120.,"E_{SVfit}(#tau_{h}2)/GeV");
+
+  Eta = HConfig.GetTH1D(Name+"_Eta", "Eta", 30, -5, 5, "Eta between Tau+ and Tau- in the new xy plan");
+
+  Phi = HConfig.GetTH1D(Name+"_Phi","Phi",20,3.14,3.14,"Angle between Tau+ and an initial proton in the new xy plan");
+  Theta = HConfig.GetTH1D(Name+"_Theta","Theta",20,3.14.,3.14,"Original theta of Tau-");
   
+  /* CTN = HConfig.GetTH1D(Name+"_CTN","CTN",200,1.,-1.,"");
+     CTT = HConfig.GetTH1D(Name+"_CTT","CTT",200,0.,2.,"");*/
+
   Selection::ConfigureHistograms();   //   do not remove
   HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);  // do not remove
 }
@@ -269,6 +283,15 @@ void  ZTauTau::Store_ExtraDist(){
 
 
   Extradist1d.push_back(&NbJets);
+
+Extradist1d.push_back(&h_SVFitMass);
+ Extradist1d.push_back(&h_SVFitStatus);
+ Extradist1d.push_back(&svfTau1E);
+ Extradist1d.push_back(&svfTau2E);
+
+  Extradist1d.push_back(&Eta);
+  Extradist1d.push_back(&Phi);
+  Extradist1d.push_back(&Theta);
 }
 
 void  ZTauTau::doEvent(){ //  Method called on every event
@@ -404,12 +427,12 @@ void  ZTauTau::doEvent(){ //  Method called on every event
     w *= reweight.PUweightHTT(Ntp->npu());
         //std::cout<<" pu weigh HTT  "<< reweight.PUweightHTT(Ntp->npu())<<std::endl;
      if(!Ntp->isData() && pass.at(NPairsFound) ){
-      double w1 = tauTrgSF.getSF(Ntp->Daughters_P4(Tau1).Pt(),  Ntp->decayMode(Tau1)) ;  //from Luca
-      double w2 = tauTrgSF.getSF(Ntp->Daughters_P4(Tau2).Pt(),  Ntp->decayMode(Tau2)) ;
+      double w1 = tauTrgSF.getSF(Ntp->TauP4_Corrected(Tau1).Pt(),  Ntp->decayMode(Tau1)) ;  //from Luca
+      double w2 = tauTrgSF.getSF(Ntp->TauP4_Corrected(Tau2).Pt(),  Ntp->decayMode(Tau2)) ;
       w*=w1;
       w*=w2;
        }
-      if(!Ntp->isData() && pass.at(NPairsFound)){
+      if(!Ntp->isData() && pass.at(NPairsFound) && id==33){
 	w *= 0.95*0.95;
       }
   }
@@ -497,10 +520,10 @@ void  ZTauTau::doEvent(){ //  Method called on every event
       }
     }
   }
-  w*=wAgainstMuon1;cout<<"againstmu1: "<<w<<endl;
-  w*=wAgainstElectron1;cout<<"againstele1: "<<w<<endl;
-  w*=wAgainstMuon2;cout<<"againstmu2: "<<w<<endl;
-  w*=wAgainstElectron2;cout<<"againstele2: "<<w<<endl;
+  w*=wAgainstMuon1;//cout<<"againstmu1: "<<w<<endl;
+  w*=wAgainstElectron1;//cout<<"againstele1: "<<w<<endl;
+  w*=wAgainstMuon2;//cout<<"againstmu2: "<<w<<endl;
+  w*=wAgainstElectron2;//cout<<"againstele2: "<<w<<endl;
   //w*=Ntp->MC_weight();cout<<"MC"<<w<<endl; //generator weight
 
   // QCD ABCD BG Method
@@ -600,10 +623,47 @@ void  ZTauTau::doEvent(){ //  Method called on every event
     NPU.at(t).Fill(Ntp->npu(),w);
     RHO.at(t).Fill(Ntp->rho(),w);
   
-    TLorentzVector Tau1P4 = Ntp->Daughters_P4(Tau1);
-    TLorentzVector Tau2P4 = Ntp->Daughters_P4(Tau2);
+    TLorentzVector Tau1P4 = Ntp->TauP4_Corrected(Tau1);
+    TLorentzVector Tau2P4 = Ntp->TauP4_Corrected(Tau2);
     std::vector<int> thirdLepton;
 
+
+    //---------  svfit ---------------------
+    std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
+    classic_svFit::MeasuredTauLepton lep1(1, Tau1P4.Pt(), Tau1P4.Eta(),  Tau1P4.Phi(), Tau1P4.M());
+    classic_svFit::MeasuredTauLepton lep2(1, Tau2P4.Pt(), Tau2P4.Eta(),  Tau2P4.Phi(), Tau2P4.M());
+
+    measuredTauLeptons.push_back(lep1);
+    measuredTauLeptons.push_back(lep2);
+    TMatrixD metcov(2,2);
+    double metx = Ntp->MET()*cos(Ntp->METphi());
+    double mety = Ntp->MET()*sin(Ntp->METphi());
+
+    metcov[0][0] = Ntp->PFMETCov00();
+    metcov[1][0] = Ntp->PFMETCov01();
+    metcov[0][1] = Ntp->PFMETCov10();
+    metcov[1][1] = Ntp->PFMETCov11();
+
+    svfitAlgo1.addLogM_fixed(true,5.0);
+    svfitAlgo1.setDiTauMassConstraint(-1.0);
+    svfitAlgo1.integrate(measuredTauLeptons,metx,mety, metcov );
+
+    if(svfitAlgo1.isValidSolution()){
+      double higgsmass  = static_cast<classic_svFit::DiTauSystemHistogramAdapter*>(svfitAlgo1.getHistogramAdapter())->getMass();
+      h_SVFitMass.at(t).Fill(higgsmass,w); 
+    }
+   
+    ClassicSVfit svfitAlgo2;
+    svfitAlgo2.setHistogramAdapter(new classic_svFit::TauTauHistogramAdapter());
+    svfitAlgo2.addLogM_fixed(true, 5.);
+    svfitAlgo2.integrate(measuredTauLeptons,metx,mety, metcov );
+
+    classic_svFit::LorentzVector tau1P4 = static_cast<classic_svFit::TauTauHistogramAdapter*>(svfitAlgo2.getHistogramAdapter())->GetFittedTau1LV();
+    classic_svFit::LorentzVector tau2P4 = static_cast<classic_svFit::TauTauHistogramAdapter*>(svfitAlgo2.getHistogramAdapter())->GetFittedTau2LV();
+
+    svfTau1E.at(t).Fill(tau1P4.E(),w);
+    svfTau2E.at(t).Fill(tau2P4.E(),w);
+    
     Tau1PT.at(t).Fill(Tau1P4.Pt(),w);
     Tau1E.at(t).Fill(Tau1P4.E(),w);
     Tau1Mass.at(t).Fill(Tau1P4.M(),w);
@@ -668,7 +728,33 @@ void  ZTauTau::doEvent(){ //  Method called on every event
     }
 
     NbJets.at(t).Fill(jets_counter,w);
+
+    classic_svFit::LorentzVector Tauplus;
+    classic_svFit::LorentzVector Tauminus;
+    if(Ntp->Daughters_charge(Tau1)>0)
+      {
+	Tauplus=tau1P4;
+	Tauminus=tau2P4;
       }
+    else
+      {
+	Tauplus=tau2P4;
+	Tauminus=tau1P4;
+      }
+    
+    TVector3 Z(Tauminus);
+    TVector3 Y=Tauminus.Cross(Tauplus);
+    TVector3 X=Y.Cross(Tauminus);
+    TVector3 tauplus=(Tauplus*X,Tauplus*Y,Tauplus*Z);
+    TVector3 tauminus=(Tauminus*X,Tauminus*Y,Tauminus*Z);
+    TVector3 proton=(0,0,1);
+    TVector3 xyproton=(proton*X,proton*Y,0);
+    TVector3 xytauplus=(tauplus*X,tauplus*Y,0);
+    
+    Eta.at(t).Fill(TMath::ATanH((tauplus.Z())/(sqrt((tauplus.Z())*(tauplus.Z())+(tauplus.Y())*(tauplus.Y())+(tauplus.X())*(tauplus.X())))),w);
+    Phi.at(t).Fill(xytauplus.Angle(xyproton),w);
+    Theta.at(t).Fill(Tauminus.Theta(),w);
+  }
 }
 //  This is a function if you want to do something after the event loop
 void  ZTauTau::Finish() {
