@@ -106,7 +106,7 @@ else
 	if [ $UseSVfit == 1 ]; then
 	#	git clone -b svFit_2015Apr03  https://github.com/veelken/SVfit_standalone.git TauAnalysis/SVfitStandaloney
 	    git clone -b svFit_2015Apr03  https://github.com/veelken/SVfit_standalone.git TauAnalysis/SVfitStandalone
-	    git clone   https://github.com/SVfit/ClassicSVfit.git TauAnalysis/ClassicSVfit # this is classic svfit
+	    git clone -b release_2018Mar20  https://github.com/SVfit/ClassicSVfit.git TauAnalysis/ClassicSVfit # this is classic svfit
 	fi
 	
 	cd ../
