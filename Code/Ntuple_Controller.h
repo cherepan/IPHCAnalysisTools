@@ -763,9 +763,10 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  void						  printMCDecayChainOfEvent(bool printStatus = false, bool printPt = false, bool printEtaPhi = false, bool printQCD = false); // full event decay chain
  std::string				  MCParticleToString(unsigned int par, bool printStatus = false, bool printPt = false, bool printEtaPhi = false);
  bool CheckDecayID( unsigned int jak1,unsigned  int jak2);
- TLorentzVector GetTruthTauLV(unsigned int jak);
- TLorentzVector GetTruthTauProductLV(unsigned int jak, int pdgID);
- std::vector<TLorentzVector> GetTruthPionsFromA1();
+ TLorentzVector GetTruthTauLV(unsigned int jak, unsigned  int number);
+ TLorentzVector GetTruthTauProductLV(unsigned int jak, int pdgID, unsigned  int number);
+ std::vector<TLorentzVector> GetTruthPionsFromA1(unsigned int number=0);
+ std::vector<TLorentzVector> GetTruthPionsFromRho(unsigned int number=0);
  
 
 
@@ -1376,8 +1377,8 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
 
    void deb(int i){std::cout<<"  deb   "<<i<<std::endl;}
 
-
-
+   double DeltaPhi(double angle1,double angle2);
+     
 
 
 };

@@ -386,7 +386,7 @@ void  ZMuTau::doEvent(){ //  Method called on every event
   } 
   pass.at(MTM) = (value.at(MTM) <= cut.at(MTM));
   pass.at(MuonIsolation) = (value.at(MuonIsolation) < cut.at(MuonIsolation));
-  pass.at(againstEleMu)=(value.at(againstEleMu)==cut.at(againstEleMu));
+  //pass.at(againstEleMu)=(value.at(againstEleMu)==cut.at(againstEleMu));
   pass.at(TauIsolation) = (value.at(TauIsolation) == cut.at(TauIsolation));
   pass.at(DiMuon_Veto) = ( value.at(DiMuon_Veto) ==  cut.at(DiMuon_Veto));
   pass.at(LeptonVeto) = ( value.at(LeptonVeto) ==  cut.at(LeptonVeto));
@@ -404,7 +404,7 @@ void  ZMuTau::doEvent(){ //  Method called on every event
     w *= reweight.PUweightHTT(Ntp->npu());
       //std::cout<<" pu weigh HTT  "<< reweight.PUweightHTT(Ntp->npu())<<std::endl;
     
-    if(!Ntp->isData() && pass.at(NPairsFound)){
+    if(!Ntp->isData() && pass.at(NPairsFound) && id==33){
       w *= 0.95;  // Tau ID  correction
        MuonSF = DataMC_Corr.get_ScaleFactor(Ntp->Daughters_P4(Muon).Pt(),Ntp->Daughters_P4(Muon).Eta());
        MuonIso =  DataMC_CorrLeptonIso.get_ScaleFactor(Ntp->Daughters_P4(Muon).Pt(),Ntp->Daughters_P4(Muon).Eta());
