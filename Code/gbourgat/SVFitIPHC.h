@@ -1,10 +1,9 @@
-#ifndef ZTauTau_h
-#define ZTauTau_h
+#ifndef SVFitIPHC_h
+#define SVFitIPHC_h
 
 #include "Selection.h"
 #include <vector>
 #include "TString.h"
-//#include "SVFitStorage.h"
 #include "SimpleFits/FitSoftware/interface/PDGInfo.h"
 #include "TVector3.h"
 #include "TLorentzVector.h"
@@ -27,11 +26,11 @@
 #include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h"
 #include "TauAnalysis/ClassicSVfit/interface/svFitHistogramAdapter.h"
 
-class ZTauTau : public Selection {
+class SVFitIPHC : public Selection {
 
  public:
-  ZTauTau(TString Name_, TString id_);
-  virtual ~ZTauTau();
+  SVFitIPHC(TString Name_, TString id_);
+  virtual ~SVFitIPHC();
 
   virtual void  Configure();
   virtual void  Finish();
@@ -44,7 +43,6 @@ class ZTauTau : public Selection {
 	     LeptonVeto,
 	     PairCharge,
 	     PairMass,
-	     //MTM,
 	     NCuts};
 
  protected:
@@ -61,8 +59,6 @@ class ZTauTau : public Selection {
   tauTrigSFreader tauTrgSF;
 
   ClassicSVfit svfitAlgo1;
-  //ClassicSVfit svfitAlgo2;
-  //  SVFitStorage svfitstorage;
 
 
  private:
@@ -82,68 +78,15 @@ class ZTauTau : public Selection {
   std::vector<TH1D> Tau2Eta;
   std::vector<TH1D> Tau2dz;
 
-  std::vector<TH1D> Tau1isolation;
-  std::vector<TH1D> Tau2isolation;
-
-  std::vector<TH1D> againstElectronVLooseMVA6_Tau1;
-  std::vector<TH1D> againstElectronLooseMVA6_Tau1;
-  std::vector<TH1D> againstElectronMediumMVA6_Tau1;
-  std::vector<TH1D> againstElectronTightMVA6_Tau1;
-  std::vector<TH1D> againstElectronVTightMVA6_Tau1;
-  std::vector<TH1D> againstMuonLoose3_Tau1;
-  std::vector<TH1D> againstMuonTight3_Tau1;
-  std::vector<TH1D> byCombinedIsolationDeltaBetaCorrRaw3Hits_Tau1;
-
-  std::vector<TH1D> againstElectronVLooseMVA6_Tau2;
-  std::vector<TH1D> againstElectronLooseMVA6_Tau2;
-  std::vector<TH1D> againstElectronMediumMVA6_Tau2;
-  std::vector<TH1D> againstElectronTightMVA6_Tau2;
-  std::vector<TH1D> againstElectronVTightMVA6_Tau2;
-  std::vector<TH1D> againstMuonLoose3_Tau2;
-  std::vector<TH1D> againstMuonTight3_Tau2;
-  std::vector<TH1D> byCombinedIsolationDeltaBetaCorrRaw3Hits_Tau2;
-
-  std::vector<TH1D> ExtraLeptonVeto;
   std::vector<TH1D> Tau2HPSDecayMode;
   std::vector<TH1D> Tau1HPSDecayMode;
 
-  std::vector<TH1D> TauTauVisMass;
-  std::vector<TH1D> TauTauTruthMass;
-  std::vector<TH1D> TauTauFullMass;
- 
-  std::vector<TH1D> dRTauTau;
-  std::vector<TH1D> QCDShape;
-
-  std::vector<TH1D> NQCD;
-
-  std::vector<TH1D> MET;
-  std::vector<TH1D> METphi;
-  std::vector<TH1D> PUPPImet;
-  std::vector<TH1D> PUPPImetphi;
-  std::vector<TH1D> TransverseMass;
-  
-  std::vector<TH1D> NPrimeVtx;
-  std::vector<TH1D> NPU;
-  std::vector<TH1D> RHO;
-  
-  std::vector<TH1D> NbJets;
   
   std::vector<TH1D> h_SVFitMass;
   std::vector<TH1D> h_SVFitStatus;
   std::vector<TH1D> svfTau1E;
   std::vector<TH1D> svfTau2E;
 
-  std::vector<TH1D> Etasvfit;
-  std::vector<TH1D> Phisvfit;
-  std::vector<TH1D> Thetasvfit;
-  
-  std::vector<TH1D> Etavis;
-  std::vector<TH1D> Phivis;
-  std::vector<TH1D> Thetavis;
-  
-  std::vector<TH1D> Etatruth;
-  std::vector<TH1D> Phitruth;
-  std::vector<TH1D> Thetatruth;
   
   std::vector<TH1D> TauTauFullPtRes;
   std::vector<TH1D> TauTauFullEtaRes;
@@ -193,15 +136,8 @@ class ZTauTau : public Selection {
   std::vector<TH1D> TauminusVisEtaResPull;
   std::vector<TH1D> TauminusVisPhiResPull;
 
-  //std::vector<TH1D> DRTruth;
-  //std::vector<TH1D> DRFull;
-  // std::vector<TH1D> DRFullTruth;
-  //std::vector<TH1D> DRVisTruth;
-  
   std::vector<TH1D> Pi0EnergyRes;
   std::vector<TH1D> Pi0EnergyResPull;
 
-  /*std::vector<TH1D> CTN;
-    std::vector<TH1D> CTT;*/
 };
 #endif

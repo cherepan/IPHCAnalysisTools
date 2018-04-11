@@ -97,7 +97,7 @@ ifdef USE_lebihan
 endif
 
 ifdef USE_gbourgat
-	TARGETS += ZMuTau ZTauTau ZMuMu
+	TARGETS += ZMuTau ZTauTau ZMuMu SVFitIPHC
 	DEFS += -DUSE_gbourgat=1
 endif
 
@@ -132,7 +132,7 @@ endif
 
 
 ifdef USE_gbourgat
-	vpath %.cxx gbourgat
+	vpath %.cxx gbourgat 
 	vpath %.h gbourgat
 endif
 
