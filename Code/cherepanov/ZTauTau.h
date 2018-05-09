@@ -4,7 +4,7 @@
 #include "Selection.h"
 #include <vector>
 #include "TString.h"
-#include "SVFitStorage.h"
+//#include "SVFitStorage.h"
 #include "SimpleFits/FitSoftware/interface/PDGInfo.h"
 #include "TVector3.h"
 #include "TLorentzVector.h"
@@ -26,8 +26,6 @@
 #include "TauAnalysis/ClassicSVfit/interface/ClassicSVfit.h"
 #include "TauAnalysis/ClassicSVfit/interface/MeasuredTauLepton.h"
 #include "TauAnalysis/ClassicSVfit/interface/svFitHistogramAdapter.h"
-
-
 
 class ZTauTau : public Selection {
 
@@ -61,11 +59,15 @@ class ZTauTau : public Selection {
   PUReweight reweight;//(PUReweight::RUN2ANALYSIS);
   DataMCCorrections DataMC_Corr;
   tauTrigSFreader tauTrgSF;
+
+  ClassicSVfit svfitAlgo1;
+  //ClassicSVfit svfitAlgo2;
+  //  SVFitStorage svfitstorage;
+
+
  private:
   // Selection Variables and Histos
-  ClassicSVfit svfitAlgo1;
-  // ClassicSVfit svfitAlgo2;
-  //SVFitStorage svfitstorage;
+
   std::vector<TH1D> Tau1PT;
   std::vector<TH1D> Tau1E;
   std::vector<TH1D> Tau1Mass;
@@ -105,9 +107,11 @@ class ZTauTau : public Selection {
   std::vector<TH1D> Tau2HPSDecayMode;
   std::vector<TH1D> Tau1HPSDecayMode;
 
-  std::vector<TH1D> TauTauMass;
-
-    std::vector<TH1D> dRTauTau;
+  std::vector<TH1D> TauTauVisMass;
+  std::vector<TH1D> TauTauTruthMass;
+  std::vector<TH1D> TauTauFullMass;
+ 
+  std::vector<TH1D> dRTauTau;
   std::vector<TH1D> QCDShape;
 
   std::vector<TH1D> NQCD;
@@ -129,6 +133,75 @@ class ZTauTau : public Selection {
   std::vector<TH1D> svfTau1E;
   std::vector<TH1D> svfTau2E;
 
+  std::vector<TH1D> Etasvfit;
+  std::vector<TH1D> Phisvfit;
+  std::vector<TH1D> Thetasvfit;
+  
+  std::vector<TH1D> Etavis;
+  std::vector<TH1D> Phivis;
+  std::vector<TH1D> Thetavis;
+  
+  std::vector<TH1D> Etatruth;
+  std::vector<TH1D> Phitruth;
+  std::vector<TH1D> Thetatruth;
+  
+  std::vector<TH1D> TauTauFullPtRes;
+  std::vector<TH1D> TauTauFullEtaRes;
+  std::vector<TH1D> TauTauFullPhiRes;
 
+  std::vector<TH1D> TauplusFullPtRes;
+  std::vector<TH1D> TauplusFullEtaRes;
+  std::vector<TH1D> TauplusFullPhiRes;
+
+  std::vector<TH1D> TauminusFullPtRes;
+  std::vector<TH1D> TauminusFullEtaRes;
+  std::vector<TH1D> TauminusFullPhiRes;
+
+  std::vector<TH1D> TauTauVisPtRes;
+  std::vector<TH1D> TauTauVisEtaRes;
+  std::vector<TH1D> TauTauVisPhiRes;
+
+  std::vector<TH1D> TauplusVisPtRes;
+  std::vector<TH1D> TauplusVisEtaRes;
+  std::vector<TH1D> TauplusVisPhiRes;
+    
+  std::vector<TH1D> TauminusVisPtRes;
+  std::vector<TH1D> TauminusVisEtaRes;
+  std::vector<TH1D> TauminusVisPhiRes;
+
+  std::vector<TH1D> TauTauFullPtResPull;
+  std::vector<TH1D> TauTauFullEtaResPull;
+  std::vector<TH1D> TauTauFullPhiResPull;
+
+  std::vector<TH1D> TauplusFullPtResPull;
+  std::vector<TH1D> TauplusFullEtaResPull;
+  std::vector<TH1D> TauplusFullPhiResPull;
+
+  std::vector<TH1D> TauminusFullPtResPull;
+  std::vector<TH1D> TauminusFullEtaResPull;
+  std::vector<TH1D> TauminusFullPhiResPull;
+
+  std::vector<TH1D> TauTauVisPtResPull;
+  std::vector<TH1D> TauTauVisEtaResPull;
+  std::vector<TH1D> TauTauVisPhiResPull;
+
+  std::vector<TH1D> TauplusVisPtResPull;
+  std::vector<TH1D> TauplusVisEtaResPull;
+  std::vector<TH1D> TauplusVisPhiResPull;
+    
+  std::vector<TH1D> TauminusVisPtResPull;
+  std::vector<TH1D> TauminusVisEtaResPull;
+  std::vector<TH1D> TauminusVisPhiResPull;
+
+  //std::vector<TH1D> DRTruth;
+  //std::vector<TH1D> DRFull;
+  // std::vector<TH1D> DRFullTruth;
+  //std::vector<TH1D> DRVisTruth;
+  
+  std::vector<TH1D> Pi0EnergyRes;
+  std::vector<TH1D> Pi0EnergyResPull;
+
+  /*std::vector<TH1D> CTN;
+    std::vector<TH1D> CTT;*/
 };
 #endif

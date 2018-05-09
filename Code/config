@@ -145,13 +145,13 @@ else
 	tauola=$(ls TauSpiner/* | grep tauola++ | wc -l )
 	if [ $tauola == 0 ]; then 
 	    cd TauSpiner
-	    wget http://service-spi.web.cern.ch/service-spi/external/MCGenerators/distribution/tauola++/tauola++-1.1.3-src.tgz
-	    tar -xzvf tauola++-1.1.3-src.tgz
+	    wget http://service-spi.web.cern.ch/service-spi/external/MCGenerators/distribution/tauola++/tauola++-1.1.5-src.tgz
+	    tar -xzvf tauola++-1.1.5-src.tgz
 	    cd ..
 	fi
     fi
     
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/TauSpiner/tauola++/1.1.3/lib
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/TauSpiner/tauola++/1.1.5/lib
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/TauSpiner/pythia8/176/lib/
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/TauSpiner/lhapdf/lib/
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/TauSpiner/hepmc/install/lib/
