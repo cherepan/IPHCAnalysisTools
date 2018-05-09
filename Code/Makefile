@@ -81,7 +81,7 @@ ifdef USE_SVfit
 endif
 
 ifdef USE_cherepanov
-	TARGETS += MyTest ZTauHTauH SingleMuSkim ZTauMuTauH TTBar ZTauTau ZMuTau
+	TARGETS += MyTest ZTauHTauH SingleMuSkim ZTauMuTauH TTBar ZTauTau ZMuTau HTauTau
 	DEFS += -DUSE_cherepanov=1
 endif
 
