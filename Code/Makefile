@@ -101,6 +101,13 @@ ifdef USE_gbourgat
 	DEFS += -DUSE_gbourgat=1
 endif
 
+ifdef USE_cgrimault
+	TARGETS += 
+	DEFS += -DUSE_cgrimault=1
+endif
+
+
+
 
 
 HDRS          = $(TARGETS:=.h) 		
@@ -135,6 +142,12 @@ ifdef USE_gbourgat
 	vpath %.cxx gbourgat 
 	vpath %.h gbourgat
 endif
+
+ifdef USE_cgrimault
+	vpath %.cxx cgrimault 
+	vpath %.h cgrimault
+endif
+
 
 vpath %.cxx CommonFiles
 vpath %.h CommonFiles

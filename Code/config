@@ -10,6 +10,7 @@ if [ "${1}"  == "--help" ]; then
     echo "--goe                     Configures the make file to compile files in the directory goe"
     echo "--lebihan                 Configures the make file to compile files in the directory lebihan"
     echo "--gbourgat                Configures the make file to compile files in the directory gbourgat"
+    echo "--cgrimault               Configures the make file to compile files in the directory cgrimault"
 
 
 
@@ -84,6 +85,10 @@ else
 	    if [ "${var}" == "--gbourgat" ]; then
 		echo "Configuring Code to use directory gbourgat"
 		echo "USE_gbourgat=1" >> make.inc
+	    fi
+	    if [ "${var}" == "--cgrimault" ]; then
+		echo "Configuring Code to use directory cgrimault"
+		echo "USE_cgrimault=1" >> make.inc
 	    fi
 
 	done
