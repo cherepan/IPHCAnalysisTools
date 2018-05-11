@@ -1,4 +1,4 @@
-#include "ZMuTau.h"
+#include "TemplateStudyMT.h"
 #include "TLorentzVector.h"
 #include <cstdlib>
 #include "HistoConfig.h"
@@ -30,7 +30,7 @@
 
 
 
-ZMuTau::ZMuTau(TString Name_, TString id_):
+TemplateStudyMT::TemplateStudyMT(TString Name_, TString id_):
   Selection(Name_,id_),
   cMu_pt(20),
   cMu_eta(2.1),
@@ -48,7 +48,7 @@ ZMuTau::ZMuTau(TString Name_, TString id_):
   selMuon_IsoDummy = 999.;
 }
 
-ZMuTau::~ZMuTau(){
+TemplateStudyMT::~TemplateStudyMT(){
   for(unsigned int j=0; j<Npassed.size(); j++){
 	 Logger(Logger::Info) << "Selection Summary before: "
 	 << Npassed.at(j).GetBinContent(1)     << " +/- " << Npassed.at(j).GetBinError(1)     << " after: "
@@ -57,7 +57,7 @@ ZMuTau::~ZMuTau(){
   Logger(Logger::Info) << "complete." << std::endl;
 }
 
-void  ZMuTau::Configure(){
+void  TemplateStudyMT::Configure(){
   // Setup Cut Values
   for(int i=0; i<NCuts;i++){
     cut.push_back(0);
@@ -219,7 +219,7 @@ void  ZMuTau::Configure(){
   HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);  // do not remove
 }
 
-void  ZMuTau::Store_ExtraDist(){
+void  TemplateStudyMT::Store_ExtraDist(){
 
   //every new histo should be addedd to Extradist1d vector, just push it back;
   Extradist1d.push_back(&TauPT);
@@ -280,7 +280,7 @@ void  ZMuTau::Store_ExtraDist(){
 
 }
 
-void  ZMuTau::doEvent(){ //  Method called on every event
+void  TemplateStudyMT::doEvent(){ //  Method called on every event
   unsigned int t;                // sample type, you may manage in your further analysis, if needed
   int id(Ntp->GetMCID());  //read event ID of a sample
   if(!HConfig.GetHisto(Ntp->isData(),id,t)){ Logger(Logger::Error) << "failed to find id" <<std::endl; return;}  //  gives a warining if list of samples in Histo.txt  and SkimSummary.log do not coincide 
@@ -667,140 +667,140 @@ SVQualityVsSignificance.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQual
 
 
 //  This is a function if you want to do something after the event loop
-void  ZMuTau::Finish(){
-  if(mode == RECONSTRUCT){
-    std::cout<<" Starting Finish!  " <<std::endl;
+void  TemplateStudyMT::Finish(){
+  // if(mode == RECONSTRUCT){
+  //   std::cout<<" Starting Finish!  " <<std::endl;
     
-    std::cout<<"A  Data  "<< NQCD.at(0).GetBinContent(1) << std::endl;
-    std::cout<<"B  Data  "<< NQCD.at(0).GetBinContent(2) << std::endl;
-    std::cout<<"C  Data  "<< NQCD.at(0).GetBinContent(3) << std::endl;
-    std::cout<<"D  Data  "<< NQCD.at(0).GetBinContent(4) << std::endl;
-    SkimConfig SC;
-    SC.ApplySkimEfficiency(types,Npassed, Npassed_noweight);
+  //   std::cout<<"A  Data  "<< NQCD.at(0).GetBinContent(1) << std::endl;
+  //   std::cout<<"B  Data  "<< NQCD.at(0).GetBinContent(2) << std::endl;
+  //   std::cout<<"C  Data  "<< NQCD.at(0).GetBinContent(3) << std::endl;
+  //   std::cout<<"D  Data  "<< NQCD.at(0).GetBinContent(4) << std::endl;
+  //   SkimConfig SC;
+  //   SC.ApplySkimEfficiency(types,Npassed, Npassed_noweight);
     
-    double W_ALow=0;
-    std::vector<double> ALow;
-    double QCD_ALow=0;
+  //   double W_ALow=0;
+  //   std::vector<double> ALow;
+  //   double QCD_ALow=0;
     
-    std::vector<double> QCD_Integral_B;
-    double QCD_IntegralMC_B=0;
-    double QCD_Integral_B_Data = 0;
-    std::vector<double> BLow;
-    double MC_BLow=0;
-    double BLow_Data = 0;
-    double W_BLow=0;
-    double QCD_BLow=0;
+  //   std::vector<double> QCD_Integral_B;
+  //   double QCD_IntegralMC_B=0;
+  //   double QCD_Integral_B_Data = 0;
+  //   std::vector<double> BLow;
+  //   double MC_BLow=0;
+  //   double BLow_Data = 0;
+  //   double W_BLow=0;
+  //   double QCD_BLow=0;
     
-    std::vector<double> QCD_Integral_C;
-    double QCD_IntegralMC_C=0;
-    double QCD_Integral_C_Data = 0;
-    std::vector<double> AHigh;
-    double MC_AHigh=0;
-    double AHigh_Data = 0;
+  //   std::vector<double> QCD_Integral_C;
+  //   double QCD_IntegralMC_C=0;
+  //   double QCD_Integral_C_Data = 0;
+  //   std::vector<double> AHigh;
+  //   double MC_AHigh=0;
+  //   double AHigh_Data = 0;
     
-    std::vector<double> QCD_Integral_D;
-    double QCD_IntegralMC_D=0;
-    double QCD_Integral_D_Data = 0;
-    std::vector<double> BHigh;
-    double MC_BHigh=0;
-    double BHigh_Data = 0;
+  //   std::vector<double> QCD_Integral_D;
+  //   double QCD_IntegralMC_D=0;
+  //   double QCD_Integral_D_Data = 0;
+  //   std::vector<double> BHigh;
+  //   double MC_BHigh=0;
+  //   double BHigh_Data = 0;
     
-    double W_MC_ALow=0;
-    double W_MC_BLow=0;
-    double W_MC_AHigh=0;
-    double W_MC_BHigh=0;
-    double fBLW=0;
-    double fALW=0;
-    double W_Factor_HighLow=0;
-    double QCD_Integral_C_W;
-    double QCD_Integral_D_W;
-    //Get Yields in ABCD for QCD Scalefactor
-    for(unsigned i=0;i<CrossSectionandAcceptance.size();i++){
-      QCD_Integral_B.push_back(NQCD.at(i).GetBinContent(2));
-      QCD_Integral_C.push_back(NQCD.at(i).GetBinContent(3));
-      QCD_Integral_D.push_back(NQCD.at(i).GetBinContent(4));
-      BLow.push_back(NWJets.at(i).GetBinContent(2));
-      AHigh.push_back(NWJets.at(i).GetBinContent(3));
-      BHigh.push_back(NWJets.at(i).GetBinContent(4));
-      if(CrossSectionandAcceptance.at(i)>0 ){
-	QCD_Integral_B.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
-	QCD_Integral_C.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
-	QCD_Integral_D.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
-	BLow.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
-	AHigh.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
-	BHigh.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
-      }
-      if(HConfig.GetID(i) == DataMCType::W_lnu)
-	{
-	  QCD_Integral_C_W=QCD_Integral_C.at(i);
-	  QCD_Integral_D_W=QCD_Integral_D.at(i);
-	  W_MC_ALow+=NWJets.at(i).GetBinContent(1);
-	  W_MC_BLow+=BLow.at(i);
-	  W_MC_AHigh+=AHigh.at(i);
-	  W_MC_BHigh+=BHigh.at(i);
-	  W_Factor_HighLow+=(NWJetsRelaxed.at(i).GetBinContent(1))/(NWJetsRelaxed.at(i).GetBinContent(2));
-	  fBLW+=W_MC_BLow/W_MC_BHigh;
-	  fALW+=W_MC_ALow/W_MC_AHigh;
-	}
-    }
-    for(unsigned i=0;i<CrossSectionandAcceptance.size();i++) {
-      if(HConfig.GetID(i) == DataMCType::Data){
-	QCD_Integral_B_Data += QCD_Integral_B.at(i);
-	QCD_Integral_C_Data += QCD_Integral_C.at(i);
-	QCD_Integral_D_Data += QCD_Integral_D.at(i);
-	BLow_Data += BLow.at(i);
-	AHigh_Data += AHigh.at(i);
-	BHigh_Data += BHigh.at(i);
-      }
-      if(CrossSectionandAcceptance.at(i)>0){
-	QCD_IntegralMC_B  += QCD_Integral_B.at(i);
-	QCD_IntegralMC_C  += QCD_Integral_C.at(i);
-	QCD_IntegralMC_D  += QCD_Integral_D.at(i);
-	MC_BLow  += BLow.at(i);
-	MC_AHigh  += AHigh.at(i);
-	MC_BHigh  += BHigh.at(i);
-      }
-    }
-    //W_ALow=(AHigh_Data-MC_AHigh)*fALW;
-    W_BLow=W_MC_BLow;//(BHigh_Data-MC_BHigh)*fBLW;
-    double OS2SS=(QCD_Integral_C_Data - QCD_IntegralMC_C-QCD_Integral_C_W )/(QCD_Integral_D_Data - QCD_IntegralMC_D-QCD_Integral_D_W);
-    double QCD_AHigh=OS2SS*(BHigh_Data-MC_BHigh);
-    double W_AHigh=AHigh_Data-MC_AHigh-QCD_AHigh;
-    double W_ScaleFactor=W_AHigh/W_MC_AHigh;
-    W_ALow=W_Factor_HighLow*W_AHigh;
-    QCD_BLow=BLow_Data-MC_BLow-W_BLow*W_ScaleFactor;
-    QCD_ALow=QCD_BLow*OS2SS;
-    //double QCD_A=(QCD_Integral_B_Data-W_IntegralMC_B+W_MC_B-W_ScaleFactor*W_MC_B)*OS2SS;
+  //   double W_MC_ALow=0;
+  //   double W_MC_BLow=0;
+  //   double W_MC_AHigh=0;
+  //   double W_MC_BHigh=0;
+  //   double fBLW=0;
+  //   double fALW=0;
+  //   double W_Factor_HighLow=0;
+  //   double QCD_Integral_C_W;
+  //   double QCD_Integral_D_W;
+  //   //Get Yields in ABCD for QCD Scalefactor
+  //   for(unsigned i=0;i<CrossSectionandAcceptance.size();i++){
+  //     QCD_Integral_B.push_back(NQCD.at(i).GetBinContent(2));
+  //     QCD_Integral_C.push_back(NQCD.at(i).GetBinContent(3));
+  //     QCD_Integral_D.push_back(NQCD.at(i).GetBinContent(4));
+  //     BLow.push_back(NWJets.at(i).GetBinContent(2));
+  //     AHigh.push_back(NWJets.at(i).GetBinContent(3));
+  //     BHigh.push_back(NWJets.at(i).GetBinContent(4));
+  //     if(CrossSectionandAcceptance.at(i)>0 ){
+  // 	QCD_Integral_B.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
+  // 	QCD_Integral_C.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
+  // 	QCD_Integral_D.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
+  // 	BLow.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
+  // 	AHigh.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
+  // 	BHigh.at(i) *= CrossSectionandAcceptance.at(i)*Lumi/Npassed.at(i).GetBinContent(0);
+  //     }
+  //     if(HConfig.GetID(i) == DataMCType::W_lnu)
+  // 	{
+  // 	  QCD_Integral_C_W=QCD_Integral_C.at(i);
+  // 	  QCD_Integral_D_W=QCD_Integral_D.at(i);
+  // 	  W_MC_ALow+=NWJets.at(i).GetBinContent(1);
+  // 	  W_MC_BLow+=BLow.at(i);
+  // 	  W_MC_AHigh+=AHigh.at(i);
+  // 	  W_MC_BHigh+=BHigh.at(i);
+  // 	  W_Factor_HighLow+=(NWJetsRelaxed.at(i).GetBinContent(1))/(NWJetsRelaxed.at(i).GetBinContent(2));
+  // 	  fBLW+=W_MC_BLow/W_MC_BHigh;
+  // 	  fALW+=W_MC_ALow/W_MC_AHigh;
+  // 	}
+  //   }
+  //   for(unsigned i=0;i<CrossSectionandAcceptance.size();i++) {
+  //     if(HConfig.GetID(i) == DataMCType::Data){
+  // 	QCD_Integral_B_Data += QCD_Integral_B.at(i);
+  // 	QCD_Integral_C_Data += QCD_Integral_C.at(i);
+  // 	QCD_Integral_D_Data += QCD_Integral_D.at(i);
+  // 	BLow_Data += BLow.at(i);
+  // 	AHigh_Data += AHigh.at(i);
+  // 	BHigh_Data += BHigh.at(i);
+  //     }
+  //     if(CrossSectionandAcceptance.at(i)>0){
+  // 	QCD_IntegralMC_B  += QCD_Integral_B.at(i);
+  // 	QCD_IntegralMC_C  += QCD_Integral_C.at(i);
+  // 	QCD_IntegralMC_D  += QCD_Integral_D.at(i);
+  // 	MC_BLow  += BLow.at(i);
+  // 	MC_AHigh  += AHigh.at(i);
+  // 	MC_BHigh  += BHigh.at(i);
+  //     }
+  //   }
+  //   //W_ALow=(AHigh_Data-MC_AHigh)*fALW;
+  //   W_BLow=W_MC_BLow;//(BHigh_Data-MC_BHigh)*fBLW;
+  //   double OS2SS=(QCD_Integral_C_Data - QCD_IntegralMC_C-QCD_Integral_C_W )/(QCD_Integral_D_Data - QCD_IntegralMC_D-QCD_Integral_D_W);
+  //   double QCD_AHigh=OS2SS*(BHigh_Data-MC_BHigh);
+  //   double W_AHigh=AHigh_Data-MC_AHigh-QCD_AHigh;
+  //   double W_ScaleFactor=W_AHigh/W_MC_AHigh;
+  //   W_ALow=W_Factor_HighLow*W_AHigh;
+  //   QCD_BLow=BLow_Data-MC_BLow-W_BLow*W_ScaleFactor;
+  //   QCD_ALow=QCD_BLow*OS2SS;
+  //   //double QCD_A=(QCD_Integral_B_Data-W_IntegralMC_B+W_MC_B-W_ScaleFactor*W_MC_B)*OS2SS;
 
-    std::cout << "QCD_Integral_B_Data is: " << QCD_Integral_B_Data << std::endl;
-    std::cout << "QCD_Integral_C_Data is: " << QCD_Integral_C_Data << std::endl;
-    std::cout << "QCD_Integral_D_Data is: " << QCD_Integral_D_Data << std::endl;
-    std::cout << "QCD_IntegralMC_B is: " << QCD_IntegralMC_B << std::endl;
-    std::cout << "QCD_IntegralMC_C is: " << QCD_IntegralMC_C << std::endl;
-    std::cout << "QCD_IntegralMC_D is: " << QCD_IntegralMC_D << std::endl;
-    std::cout << "QCD_AHigh: " << QCD_AHigh << std::endl;
-    std::cout << "QCD_ALow: " << QCD_ALow << std::endl;
-    std::cout << "QCD_BLow: " << QCD_BLow << std::endl;
-    std::cout << "OS/SS QCD Sample: " << OS2SS << std::endl;
-    std::cout << "BLow_Data: " <<BLow_Data << std::endl;
-    std::cout << "AHigh_Data: " << AHigh_Data << std::endl;
-    std::cout << "BHigh_Data: " << BHigh_Data << std::endl;
-    std::cout << "MC_BLow: " << MC_BLow << std::endl;
-    std::cout << "MC_AHigh: " << MC_AHigh << std::endl;
-    std::cout << "MC_BHigh: " << MC_BHigh << std::endl;
-    std::cout << "W_ALow: " << W_ALow << std::endl;
-    std::cout << "W_BLow: " << W_BLow << std::endl;
-    std::cout << "W_AHigh: " << W_AHigh << std::endl;
-    std::cout << "W_MC_ALow: " <<W_MC_ALow << std::endl;
-    std::cout << "W_MC_AHigh: " <<W_MC_AHigh << std::endl;
-    std::cout << "W_MC_BLow: " <<W_MC_BLow << std::endl;
-    std::cout << "W_MC_BHigh: " <<W_MC_BHigh << std::endl;
-    std::cout << "W_ScaleFactor: " << W_ScaleFactor << std::endl;
+  //   std::cout << "QCD_Integral_B_Data is: " << QCD_Integral_B_Data << std::endl;
+  //   std::cout << "QCD_Integral_C_Data is: " << QCD_Integral_C_Data << std::endl;
+  //   std::cout << "QCD_Integral_D_Data is: " << QCD_Integral_D_Data << std::endl;
+  //   std::cout << "QCD_IntegralMC_B is: " << QCD_IntegralMC_B << std::endl;
+  //   std::cout << "QCD_IntegralMC_C is: " << QCD_IntegralMC_C << std::endl;
+  //   std::cout << "QCD_IntegralMC_D is: " << QCD_IntegralMC_D << std::endl;
+  //   std::cout << "QCD_AHigh: " << QCD_AHigh << std::endl;
+  //   std::cout << "QCD_ALow: " << QCD_ALow << std::endl;
+  //   std::cout << "QCD_BLow: " << QCD_BLow << std::endl;
+  //   std::cout << "OS/SS QCD Sample: " << OS2SS << std::endl;
+  //   std::cout << "BLow_Data: " <<BLow_Data << std::endl;
+  //   std::cout << "AHigh_Data: " << AHigh_Data << std::endl;
+  //   std::cout << "BHigh_Data: " << BHigh_Data << std::endl;
+  //   std::cout << "MC_BLow: " << MC_BLow << std::endl;
+  //   std::cout << "MC_AHigh: " << MC_AHigh << std::endl;
+  //   std::cout << "MC_BHigh: " << MC_BHigh << std::endl;
+  //   std::cout << "W_ALow: " << W_ALow << std::endl;
+  //   std::cout << "W_BLow: " << W_BLow << std::endl;
+  //   std::cout << "W_AHigh: " << W_AHigh << std::endl;
+  //   std::cout << "W_MC_ALow: " <<W_MC_ALow << std::endl;
+  //   std::cout << "W_MC_AHigh: " <<W_MC_AHigh << std::endl;
+  //   std::cout << "W_MC_BLow: " <<W_MC_BLow << std::endl;
+  //   std::cout << "W_MC_BHigh: " <<W_MC_BHigh << std::endl;
+  //   std::cout << "W_ScaleFactor: " << W_ScaleFactor << std::endl;
     
     
-    ScaleAllHistOfType(HConfig.GetType(DataMCType::QCD),QCD_ALow/Nminus0.at(0).at(HConfig.GetType(DataMCType::QCD)).Integral());
-    ScaleAllHistOfType(HConfig.GetType(DataMCType::W_lnu),W_ALow/Nminus0.at(0).at(HConfig.GetType(DataMCType::W_lnu)).Integral());
-  }
+  //   ScaleAllHistOfType(HConfig.GetType(DataMCType::QCD),QCD_ALow/Nminus0.at(0).at(HConfig.GetType(DataMCType::QCD)).Integral());
+  //   ScaleAllHistOfType(HConfig.GetType(DataMCType::W_lnu),W_ALow/Nminus0.at(0).at(HConfig.GetType(DataMCType::W_lnu)).Integral());
+  // }
 
   Selection::Finish();
 }

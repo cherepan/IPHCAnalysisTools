@@ -16,7 +16,7 @@
 #include "cherepanov/SingleMuSkim.h"
 #include "cherepanov/ZTauMuTauH.h"
 #include "cherepanov/TTBar.h"
-
+#include "cherepanov/TemplateStudyMT.h"
 #endif
 
 #ifdef USE_goe
@@ -64,6 +64,7 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   else if(Analysis.Contains("singlemuskim"))s=new SingleMuSkim(Analysis,UncertType);
   else if(Analysis.Contains("ztaumutauh"))s=new ZTauMuTauH(Analysis,UncertType);
   else if(Analysis.Contains("ttbar"))s=new TTBar(Analysis,UncertType);
+  else if(Analysis.Contains("templatestudymt"))s=new TemplateStudyMT(Analysis,UncertType);
 
 
 

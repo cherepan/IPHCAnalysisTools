@@ -1,5 +1,5 @@
-#ifndef ZMuTau_h
-#define ZMuTau_h
+#ifndef TemplateStudyMT_h
+#define TemplateStudyMT_h
 
 #include "Selection.h"
 #include <vector>
@@ -25,11 +25,11 @@
 #include "DataMCCorrections.h"
 
 
-class ZMuTau : public Selection {
+class TemplateStudyMT : public Selection {
 
  public:
-  ZMuTau(TString Name_, TString id_);
-  virtual ~ZMuTau();
+  TemplateStudyMT(TString Name_, TString id_);
+  virtual ~TemplateStudyMT();
 
   virtual void  Configure();
   virtual void  Finish();
