@@ -3,7 +3,7 @@ Skim: False
 HistoFile: InputData/Histotautau.txt
 Analysis: ZTauTau
 UncertType: default
-SkimInfo: InputData/SkimSummaryTauFull13TeV.log
+SkimInfo: InputData/SkimSummaryDoubleTauFullData.log
 Lumi: 35825.829
 PlotStyle: style2
 
