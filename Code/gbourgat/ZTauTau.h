@@ -67,7 +67,7 @@ class ZTauTau : public Selection {
 
  private:
   // Selection Variables and Histos
-
+  
   std::vector<TH1D> Tau1PT;
   std::vector<TH1D> Tau1E;
   std::vector<TH1D> Tau1Mass;
@@ -81,10 +81,10 @@ class ZTauTau : public Selection {
   std::vector<TH1D> Tau2Phi;
   std::vector<TH1D> Tau2Eta;
   std::vector<TH1D> Tau2dz;
-
+  /*
   std::vector<TH1D> Tau1isolation;
   std::vector<TH1D> Tau2isolation;
-
+  
   std::vector<TH1D> againstElectronVLooseMVA6_Tau1;
   std::vector<TH1D> againstElectronLooseMVA6_Tau1;
   std::vector<TH1D> againstElectronMediumMVA6_Tau1;
@@ -102,7 +102,7 @@ class ZTauTau : public Selection {
   std::vector<TH1D> againstMuonLoose3_Tau2;
   std::vector<TH1D> againstMuonTight3_Tau2;
   std::vector<TH1D> byCombinedIsolationDeltaBetaCorrRaw3Hits_Tau2;
-
+  */
   std::vector<TH1D> ExtraLeptonVeto;
   std::vector<TH1D> Tau2HPSDecayMode;
   std::vector<TH1D> Tau1HPSDecayMode;
@@ -115,7 +115,7 @@ class ZTauTau : public Selection {
   std::vector<TH1D> QCDShape;
 
   std::vector<TH1D> NQCD;
-
+  
   std::vector<TH1D> MET;
   std::vector<TH1D> METphi;
   std::vector<TH1D> PUPPImet;
@@ -132,19 +132,80 @@ class ZTauTau : public Selection {
   std::vector<TH1D> h_SVFitStatus;
   std::vector<TH1D> svfTau1E;
   std::vector<TH1D> svfTau2E;
-
+  
+  std::vector<TH1D> PhiDatasvfitpipi;
+  std::vector<TH1D> PhiDatasvfitpirho;
+  std::vector<TH1D> PhiDatasvfitpia1;
+  std::vector<TH1D> PhiDatasvfitrhorho;
+  std::vector<TH1D> PhiDatasvfitrhoa1;
+  std::vector<TH1D> PhiDatasvfita1a1;
+  /*
+  std::vector<TH1D> PhiDatavispipi;
+  std::vector<TH1D> PhiDatavispirho;
+  std::vector<TH1D> PhiDatavispia1;
+  std::vector<TH1D> PhiDatavisrhorho;
+  std::vector<TH1D> PhiDatavisrhoa1;
+  std::vector<TH1D> PhiDatavisa1a1;
+  */
+  
   std::vector<TH1D> Etasvfit;
-  std::vector<TH1D> Phisvfit;
+  std::vector<TH1D> Phisvfitpipi;
+  std::vector<TH1D> Phisvfitpirho;
+  //std::vector<TH1D> Phisvfitlpi;
+  //std::vector<TH1D> Phisvfitlrho;
+  std::vector<TH1D> Phisvfitpia1;
+  std::vector<TH1D> Phisvfitrhorho;
+  std::vector<TH1D> Phisvfitrhoa1;
+  // std::vector<TH1D> Phisvfitla1;
+  std::vector<TH1D> Phisvfita1a1;
   std::vector<TH1D> Thetasvfit;
   
   std::vector<TH1D> Etavis;
-  std::vector<TH1D> Phivis;
+  std::vector<TH1D> Phivispipi;
+  std::vector<TH1D> Phivispirho;
+  // std::vector<TH1D> Phivislpi;
+  // std::vector<TH1D> Phivislrho;
+  std::vector<TH1D> Phivispia1;
+  std::vector<TH1D> Phivisrhorho;
+  std::vector<TH1D> Phivisrhoa1;
+  //std::vector<TH1D> Phivisla1;
+  std::vector<TH1D> Phivisa1a1;
   std::vector<TH1D> Thetavis;
   
   std::vector<TH1D> Etatruth;
-  std::vector<TH1D> Phitruth;
+  std::vector<TH1D> Phitruthpipi;
+  std::vector<TH1D> Phitruthpirho;
+  // std::vector<TH1D> Phitruthlpi;
+  // std::vector<TH1D> Phitruthlrho;
+  std::vector<TH1D> Phitruthpia1;
+  std::vector<TH1D> Phitruthrhorho;
+  std::vector<TH1D> Phitruthrhoa1;
+  // std::vector<TH1D> Phitruthla1;
+  std::vector<TH1D> Phitrutha1a1;
   std::vector<TH1D> Thetatruth;
+  /*
+  std::vector<TH1D> PhiSvFitRespipi;
+  std::vector<TH1D> PhiSvFitRespirho;
+  std::vector<TH1D> PhiSvFitReslpi;
+  std::vector<TH1D> PhiSvFitReslrho;
+  std::vector<TH1D> PhiSvFitRespia1;
+   std::vector<TH1D> PhiSvFitResrhorho;
+  std::vector<TH1D> PhiSvFitResrhoa1;
+  std::vector<TH1D> PhiSvFitResla1;
+  std::vector<TH1D> PhiSvFitResa1a1;
   
+  std::vector<TH1D> PhiVisRespipi;
+  std::vector<TH1D> PhiVisRespirho;
+  std::vector<TH1D> PhiVisReslpi;
+  std::vector<TH1D> PhiVisReslrho;
+  std::vector<TH1D> PhiVisRespia1;
+  std::vector<TH1D> PhiVisResrhorho;
+  std::vector<TH1D> PhiVisResrhoa1;
+  std::vector<TH1D> PhiVisResla1;
+  std::vector<TH1D> PhiVisResa1a1;  
+  */
+
+  /*
   std::vector<TH1D> TauTauFullPtRes;
   std::vector<TH1D> TauTauFullEtaRes;
   std::vector<TH1D> TauTauFullPhiRes;
@@ -156,7 +217,7 @@ class ZTauTau : public Selection {
   std::vector<TH1D> TauminusFullPtRes;
   std::vector<TH1D> TauminusFullEtaRes;
   std::vector<TH1D> TauminusFullPhiRes;
-
+  
   std::vector<TH1D> TauTauVisPtRes;
   std::vector<TH1D> TauTauVisEtaRes;
   std::vector<TH1D> TauTauVisPhiRes;
@@ -192,7 +253,7 @@ class ZTauTau : public Selection {
   std::vector<TH1D> TauminusVisPtResPull;
   std::vector<TH1D> TauminusVisEtaResPull;
   std::vector<TH1D> TauminusVisPhiResPull;
-
+*/
   //std::vector<TH1D> DRTruth;
   //std::vector<TH1D> DRFull;
   // std::vector<TH1D> DRFullTruth;
