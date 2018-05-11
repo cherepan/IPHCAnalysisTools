@@ -161,7 +161,7 @@ void  ZMuTau::Configure(){
 
   TauPT=HConfig.GetTH1D(Name+"_TauPT","Transverse momentum of selected #tau candidate",25,0,80," P_{T}(#tau), GeV","Events");
   TauE=HConfig.GetTH1D(Name+"_TauE","Energy of selected #tau candidate",20,15,150," E(#tau), GeV","Events");
-  TauMass=HConfig.GetTH1D(Name+"_TauMass","Mass of selected #tau candidate",10,0,2.," M(#tau), GeV","Events");
+  TauMass=HConfig.GetTH1D(Name+"_TauMass","Mass of selected #tau candidate",20,0,2.," M(#tau), GeV","Events");
   TauPhi=HConfig.GetTH1D(Name+"_TauPhi","Phi of selected #tau candidate",10,-3.14,3.14," #phi(#tau)","Events");
   TauEta=HConfig.GetTH1D(Name+"_TauEta","Pseudorapidity tau",20,-2.7,2.7," #eta(#tau)","Events");
   Taudz=HConfig.GetTH1D(Name+"_Taudz","Taudz",10,-0.12,0.12,"Taudz","Events");
@@ -175,7 +175,7 @@ void  ZMuTau::Configure(){
   Muondxy=HConfig.GetTH1D(Name+"_Muondxy","Muondxy",10,-0.04,0.04,"Muondxy","Events");
   MuonIsol=HConfig.GetTH1D(Name+"_MuonIsol","MuonIsol",20,0,0.15,"iso(#mu)","Events");
   
-
+  /*
   againstElectronVLooseMVA6=HConfig.GetTH1D(Name+"_againstElectronVLooseMVA6","againstElectronVLooseMVA6",2,-0.5,1.5,"againstElectronVLooseMVA6","Events");
   againstElectronLooseMVA6=HConfig.GetTH1D(Name+"_againstElectronLooseMVA6","againstElectronLooseMVA6",2,-0.5,1.5,"againstElectronLooseMVA6","Events");
   againstElectronMediumMVA6=HConfig.GetTH1D(Name+"_againstElectronMediumMVA6","againstElectronMediumMVA6",2,-0.5,1.5,"againstElectronMediumMVA6","Events");
@@ -188,12 +188,13 @@ void  ZMuTau::Configure(){
 
   DiMuonVeto=HConfig.GetTH1D(Name+"_DiMuonVeto","DiMuonVeto",2,-0.5,1.5,"DiMuonVeto","Events");
   ExtraLeptonVeto=HConfig.GetTH1D(Name+"_ExtraLeptonVeto","ExtraLeptonVeto",2,-0.5,1.5,"ExtraLeptonVeto","Events");
-  
+  */
   TauHPSDecayMode=HConfig.GetTH1D(Name+"_TauHPSDecayMode","Decay mode of the selected #tau candidate",11,-0.5,10.5," HPS Mode ","Events");
   QCDShape=HConfig.GetTH1D(Name+"_QCDShape","QCDShape",2,-0.5,1.5,"QCD Shape","");
 
-  TauTauMass=HConfig.GetTH1D(Name+"_TauTauMass","Visible invariant mass of a tau pair",10,18,90," M(#tau#tau), GeV","Events");
-  
+  TauTauVisMass=HConfig.GetTH1D(Name+"_TauTauVisMass","Visible invariant mass of a tau pair",40,0,150," M(#tau#tau), GeV","Events");
+  TauTauTruthMass=HConfig.GetTH1D(Name+"_TauTauTruthMass","Truth invariant mass of a tau pair",40,0,150," M(#tau#tau)_{truth}, GeV","Events");
+
   SVChi2=HConfig.GetTH1D(Name+"_SVChi2","SV  #chi^{2}",10,0,18,"#chi^{2}","Events");
   SVQuality=HConfig.GetTH1D(Name+"_SVQuality","Track mathicn #DeltaR",10,0,2,"#Sigma#Delta R","Events");
   SVQualityVsSignificance=HConfig.GetTH2D(Name+"_SVQualityVsSignificance","Track mathicn #DeltaR vs significance",25,0,3,31,-0.5,5.5,"","Events");
@@ -214,6 +215,53 @@ void  ZMuTau::Configure(){
   RHO=HConfig.GetTH1D(Name+"_rho","rho",10,0,35,"rho","Events");
   
   NbJets=HConfig.GetTH1D(Name+"_NbJets","NbJets",17,0,17,"Number of jets","Events");
+  
+
+  Etavis = HConfig.GetTH1D(Name+"_Etavis", "Etavis", 30, -10, 10, "Eta between Tau+ and Tau- in the new xy plan with visible particles");
+
+  //Phivispipi = HConfig.GetTH1D(Name+"_Phivispipi","Phivis #pi#pi",30,-TMath::Pi(),TMath::Pi(),"Visible angle between Tau+ and an initial proton in the new xy plan for #pi#pi channel");
+  //Phivispirho = HConfig.GetTH1D(Name+"_Phivispirho","Phivis #pi#rho",30,-TMath::Pi(),TMath::Pi(),"Visible angle between Tau+ and an initial proton in the new xy plan for #pi#rho channel");
+   Phivislpi = HConfig.GetTH1D(Name+"_Phivislpi","Phivis l#pi",30,-TMath::Pi(),TMath::Pi(),"Visible angle between Tau+ and an initial proton in the new xy plan for #pi channel");
+   Phivislrho = HConfig.GetTH1D(Name+"_Phivislrho","Phivis l#rho",30,-TMath::Pi(),TMath::Pi(),"Visible angle between Tau+ and an initial proton in the new xy plan for l#rho channel");
+   //Phivispia1 = HConfig.GetTH1D(Name+"_Phivispia1","Phivis a1#pi",30,-TMath::Pi(),TMath::Pi(),"Visible angle between Tau+ and an initial proton in the new xy plan for a1#pi channel");
+   //Phivisrhorho = HConfig.GetTH1D(Name+"_Phivisrhorho","Phivis #rho#rho",30,-TMath::Pi(),TMath::Pi(),"Visible angle between Tau+ and an initial proton in the new xy plan for #rho#rho channel");
+   //Phivisrhoa1 = HConfig.GetTH1D(Name+"_Phivisrhoa1","Phivis a1#rho",30,-TMath::Pi(),TMath::Pi(),"Visible angle between Tau+ and an initial proton in the new xy plan for a1#rho channel");
+   Phivisla1 = HConfig.GetTH1D(Name+"_Phivisla1","Phivis la1",30,-TMath::Pi(),TMath::Pi(),"Visible angle between Tau+ and an initial proton in the new xy plan for la1 channel");
+   //Phivisa1a1 = HConfig.GetTH1D(Name+"_Phivisa1a1","Phivis a1a1",30,-TMath::Pi(),TMath::Pi(),"Visible angle between Tau+ and an initial proton in the new xy plan for a1a1 channel");
+
+  Thetavis = HConfig.GetTH1D(Name+"_Thetavis","Thetavis",30,0.,TMath::Pi(),"Original theta of Tau- with visible particles");
+  
+  
+  Etatruth = HConfig.GetTH1D(Name+"_Etatruth", "Etatruth", 30, -10, 10, "Real Eta between Tau+ and Tau- in the new xy plan");
+
+  //Phitruthpipi = HConfig.GetTH1D(Name+"_Phitruthpipi","Phitruth #pi#pi",30,-TMath::Pi(),TMath::Pi(),"Real angle between Tau+ and an initial proton in the new xy plan for #pi#pi channel");
+  //Phitruthpirho = HConfig.GetTH1D(Name+"_Phitruthpirho","Phitruth #pi#rho",30,-TMath::Pi(),TMath::Pi(),"Real angle between Tau+ and an initial proton in the new xy plan for #pi#rho channel");
+  Phitruthlpi = HConfig.GetTH1D(Name+"_Phitruthlpi","Phitruth l#pi",30,-TMath::Pi(),TMath::Pi(),"Real angle between Tau+ and an initial proton in the new xy plan for #pi channel");
+  Phitruthlrho = HConfig.GetTH1D(Name+"_Phitruthlrho","Phitruth l#rho",30,-TMath::Pi(),TMath::Pi(),"Real angle between Tau+ and an initial proton in the new xy plan for l#rho channel");
+  //Phitruthpia1 = HConfig.GetTH1D(Name+"_Phitruthpia1","Phitruth a1#pi",30,-TMath::Pi(),TMath::Pi(),"Real angle between Tau+ and an initial proton in the new xy plan for a1#pi channel");
+  //Phitruthrhorho = HConfig.GetTH1D(Name+"_Phitruthrhorho","Phitruth #rho#rho",30,-TMath::Pi(),TMath::Pi(),"Real angle between Tau+ and an initial proton in the new xy plan for #rho#rho channel");
+  //Phitruthrhoa1 = HConfig.GetTH1D(Name+"_Phitruthrhoa1","Phitruth a1#rho",30,-TMath::Pi(),TMath::Pi(),"Real angle between Tau+ and an initial proton in the new xy plan for a1#rho channel");
+   Phitruthla1 = HConfig.GetTH1D(Name+"_Phitruthla1","Phitruth la1",30,-TMath::Pi(),TMath::Pi(),"Real angle between Tau+ and an initial proton in the new xy plan for la1 channel");
+   //Phitrutha1a1 = HConfig.GetTH1D(Name+"_Phitrutha1a1","Phitruth a1a1",30,-TMath::Pi(),TMath::Pi(),"Real angle between Tau+ and an initial proton in the new xy plan for a1a1 channel");
+
+  Thetatruth = HConfig.GetTH1D(Name+"_Thetatruth","Thetatruth",30,0.,TMath::Pi(),"Real original theta of Tau-");
+
+  Pi0EnergyRes=HConfig.GetTH1D(Name+"_Pi0EnergyRes","Energy resolution of Pi0",100,-50.,50.,"Energy resolution of Pi0, GeV","Events");
+  Pi0EnergyResPull=HConfig.GetTH1D(Name+"_Pi0EnergyResPull","Energy Pull Plot of Pi0",100,-50.,50.,"Energy Pull Plot of Pi0, GeV","Events");
+
+  
+   NewPhivsDeltaPhi=HConfig.GetTH2D(Name+"_NewPhivsDeltaPhi","New #phi VS old #Delta#phi",30,-TMath::Pi(),TMath::Pi(),30,-TMath::Pi(),TMath::Pi(),"","Events");
+  NewPhivsDeltaEta=HConfig.GetTH2D(Name+"_NewPhivsDeltaEta","New #phi VS old #Delta#eta",30,-TMath::Pi(),TMath::Pi(),20,-2.7,2.7,"","Events");
+  NewPhivsPhiproton=HConfig.GetTH2D(Name+"_NewPhivsPhiproton","New #phi VS old #phi of the proton",30,-TMath::Pi(),TMath::Pi(),30,-TMath::Pi(),TMath::Pi(),"","Events");
+  NewPhivsPhiTauplus=HConfig.GetTH2D(Name+"_NewPhivsPhiTauplus","New #phi VS old #phi of the Tau-",30,-TMath::Pi(),TMath::Pi(),30,-TMath::Pi(),TMath::Pi(),"","Events");
+  NewPhivsEtaproton=HConfig.GetTH2D(Name+"_NewPhivsEtaproton","New #phi VS old #eta of the proton",30,-TMath::Pi(),TMath::Pi(),20,-2.7,2.7,"","Events");
+  NewPhivsEtaTauplus=HConfig.GetTH2D(Name+"_NewPhivsEtaTauplus","New #phi VS old #eta of the Tau-",30,-TMath::Pi(),TMath::Pi(),20,-2.7,2.7,"","Events");
+  NewPhivsZPt=HConfig.GetTH2D(Name+"_NewPhivsZPt","New #phi VS Pt_{Z}",30,-TMath::Pi(),TMath::Pi(),40,0,100,"","Events");
+
+  NewPhiSignal=HConfig.GetTH1D(Name+"_NewPhiSignal","New Phi for all Signal",30,-TMath::Pi(),TMath::Pi(),"","Events");
+  NewPhiQCD=HConfig.GetTH1D(Name+"_NewPhiQCD","New Phi for QCD",30,-TMath::Pi(),TMath::Pi(),"","Events");
+																			      
+  ZPtVis=HConfig.GetTH1D(Name+"_ZPtVis","Visible Pt_{Z}",40,0,100,"","Events");
 
   Selection::ConfigureHistograms();   //   do not remove
   HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);  // do not remove
@@ -237,7 +285,7 @@ void  ZMuTau::Store_ExtraDist(){
   Extradist1d.push_back(&Muondz);
   Extradist1d.push_back(&Muondxy);
   Extradist1d.push_back(&MuonIsol);
-
+  /*
   Extradist1d.push_back(&againstElectronVLooseMVA6);
   Extradist1d.push_back(&againstElectronLooseMVA6);
   Extradist1d.push_back(&againstElectronMediumMVA6);
@@ -248,14 +296,17 @@ void  ZMuTau::Store_ExtraDist(){
   Extradist1d.push_back(&byCombinedIsolationDeltaBetaCorrRaw3Hits);
   //Extradist1d.push_back(&byIsolationMVA3oldDMwLTraw);
   //Extradist1d.push_back(&byIsolationMVA3newDMwLTraw);
-
+  
   Extradist1d.push_back(&DiMuonVeto);
   Extradist1d.push_back(&ExtraLeptonVeto);
-
+  */
   Extradist1d.push_back(&TauHPSDecayMode);
 
   Extradist1d.push_back(&dRTauTau);
-  Extradist1d.push_back(&TauTauMass);
+
+  Extradist1d.push_back(&TauTauVisMass);
+  Extradist1d.push_back(&TauTauTruthMass);
+
   Extradist1d.push_back(&SVChi2);
   Extradist1d.push_back(&SVQuality);
   Extradist2d.push_back(&SVQualityVsSignificance);
@@ -278,6 +329,45 @@ void  ZMuTau::Store_ExtraDist(){
 
   Extradist1d.push_back(&NbJets);
 
+  
+  Extradist1d.push_back(&Etavis);
+  // Extradist1d.push_back(&Phivispipi);
+  // Extradist1d.push_back(&Phivispirho);
+  Extradist1d.push_back(&Phivislpi);
+   Extradist1d.push_back(&Phivislrho);
+   //Extradist1d.push_back(&Phivispia1);
+   //Extradist1d.push_back(&Phivisrhorho);
+   // Extradist1d.push_back(&Phivisrhoa1);
+  Extradist1d.push_back(&Phivisla1);
+  //Extradist1d.push_back(&Phivisa1a1);
+  Extradist1d.push_back(&Thetavis);
+  
+  Extradist1d.push_back(&Etatruth);
+  //Extradist1d.push_back(&Phitruthpipi);
+  //Extradist1d.push_back(&Phitruthpirho);
+  Extradist1d.push_back(&Phitruthlpi);
+   Extradist1d.push_back(&Phitruthlrho);
+   //Extradist1d.push_back(&Phitruthpia1);
+   //Extradist1d.push_back(&Phitruthrhorho);
+   //Extradist1d.push_back(&Phitruthrhoa1);
+  Extradist1d.push_back(&Phitruthla1);
+  //Extradist1d.push_back(&Phitrutha1a1);
+  Extradist1d.push_back(&Thetatruth);
+  
+  Extradist1d.push_back(&Pi0EnergyRes);
+  Extradist1d.push_back(&Pi0EnergyResPull);
+
+  Extradist1d.push_back(&ZPtVis);
+
+  Extradist2d.push_back(&NewPhivsDeltaPhi);
+  Extradist2d.push_back(&NewPhivsDeltaEta);
+  Extradist2d.push_back(&NewPhivsPhiproton);
+  Extradist2d.push_back(&NewPhivsPhiTauplus);
+  Extradist2d.push_back(&NewPhivsEtaproton);
+  Extradist2d.push_back(&NewPhivsEtaTauplus);
+  Extradist2d.push_back(&NewPhivsZPt);
+  Extradist1d.push_back(&NewPhiSignal);
+  Extradist1d.push_back(&NewPhiQCD);
 }
 
 void  ZMuTau::doEvent(){ //  Method called on every event
@@ -362,7 +452,7 @@ void  ZMuTau::doEvent(){ //  Method called on every event
     Muon=PairsIndexMuon.at(Sorted.back());
     Tau=PairsIndexTau.at(Sorted.back());
     MuonP4 = Ntp->Daughters_P4(Muon);
-    TauP4 = Ntp->Daughters_P4(Tau);
+    TauP4 = Ntp->TauP4_Corrected(Tau);
     value.at(TauIsolation) = Ntp->isIsolatedTau(Tau,"Tight");
     value.at(MuonIsolation) = Ntp->combreliso(Muon);
     value.at(DiMuon_Veto)=(Ntp->DiMuonVeto());
@@ -404,7 +494,7 @@ void  ZMuTau::doEvent(){ //  Method called on every event
     w *= reweight.PUweightHTT(Ntp->npu());
       //std::cout<<" pu weigh HTT  "<< reweight.PUweightHTT(Ntp->npu())<<std::endl;
     
-    if(!Ntp->isData() && pass.at(NPairsFound) && id==33){
+    if(!Ntp->isData() && pass.at(NPairsFound) && (id==33|| id == 10110333 || id == 10110433|| id == 10130533|| id ==10210333|| id == 10210433|| id == 10230533|| id ==10310333 || id ==10330533 || id ==10410433 || id == 10410333|| id == 10430533|| id == 30530533)){
       w *= 0.95;  // Tau ID  correction
        MuonSF = DataMC_Corr.get_ScaleFactor(Ntp->Daughters_P4(Muon).Pt(),Ntp->Daughters_P4(Muon).Eta());
        MuonIso =  DataMC_CorrLeptonIso.get_ScaleFactor(Ntp->Daughters_P4(Muon).Pt(),Ntp->Daughters_P4(Muon).Eta());
@@ -416,7 +506,7 @@ void  ZMuTau::doEvent(){ //  Method called on every event
     // std::cout<<"weight "<< MuonSF*MuonIso*0.95 <<std::endl;
 
   TLorentzVector genMomentum(0,0,0,0);
-  if( id == 33){
+  if( id == 33|| id == 10110333 || id == 10110433|| id == 10130533|| id ==10210333|| id == 10210433|| id == 10230533|| id ==10310333 || id ==10330533 || id ==10410433 || id == 10410333|| id == 10430533|| id == 30530533){
     for(unsigned int imc=0; imc < Ntp->NGenParts(); imc++){
       // if((fabs(Ntp->Genpart_pdg(imc)) ==11 || fabs(Ntp->Genpart_pdg(imc)) ==13)   &&  Ntp->CHECK_BIT(Ntp->Genpart_flags(imc),5)  && Ntp->Genpart_status(imc) ==2){
       //   if(Ntp->Genpart_P4(imc).Pt() > 8){
@@ -446,7 +536,7 @@ void  ZMuTau::doEvent(){ //  Method called on every event
   }
   w*=zptw;
 
-  w*=Ntp->MC_weight(); //generator weight
+  if(!Ntp->isData() && id!=DataMCType::QCD)w*=Ntp->MC_weight(); //generator weight
 
   //  std::cout<<"zpt "<< zptw<<std::endl;
 
@@ -497,7 +587,7 @@ void  ZMuTau::doEvent(){ //  Method called on every event
   // std::cout<<" before  " << pass.at(TriggerOk) << "    " <<   pass.at(PrimeVtx) << "    " <<  pass.at(nGoodPairs)<< "    " <<   pass.at(FirstTauIsolation) << "    " <<  pass.at(SecondTauIsolation) << "    " <<  pass.at(nGoodMuons) << "    " <<  pass.at(PairCharge) << "  passAllBut  " << passAllBut(exclude_cuts) <<std::endl;
   if(passAllBut(relaxed_cuts)){
     MuonP4 = Ntp->Daughters_P4(Muon);
-    TauP4 = Ntp->Daughters_P4(Tau);
+    TauP4 = Ntp->TauP4_Corrected(Tau);
     if(Ntp->combreliso(Muon)<0.3 && Ntp->isMediumGoodTau(Tau) && Ntp->transverseMass(MuonP4.Pt(), MuonP4.Phi(), Ntp->MET(), Ntp->METphi())<40.){
       NWJetsRelaxed.at(t).Fill(1.,w);
     }
@@ -507,7 +597,7 @@ void  ZMuTau::doEvent(){ //  Method called on every event
   } 
   if(passAllBut(WJetsexclude_cuts)) {
     MuonP4 = Ntp->Daughters_P4(Muon);
-    TauP4 = Ntp->Daughters_P4(Tau);
+    TauP4 = Ntp->TauP4_Corrected(Tau);
     if(pass.at(PairCharge)) {
       if(Ntp->transverseMass(MuonP4.Pt(), MuonP4.Phi(), Ntp->MET(), Ntp->METphi())<40.) {
 	NWJets.at(t).Fill(1.,w); //A Low
@@ -583,9 +673,12 @@ void  ZMuTau::doEvent(){ //  Method called on every event
     Muon=PairsIndexMuon.at(Sorted.back());
     Tau=PairsIndexTau.at(Sorted.back());
     MuonP4 = Ntp->Daughters_P4(Muon);
-    TauP4 = Ntp->Daughters_P4(Tau);
+    TauP4 = Ntp->TauP4_Corrected(Tau);
     double pvx(0);
     pvx =  Ntp->npv();
+
+
+
     // if(id == DataMCType::Data) pvx =  Ntp->npv();
      if(id !=DataMCType::Data && id !=DataMCType::QCD && id !=DataMCType::W_lnu)	  pvx = Ntp->PUNumInteractions();
      if(Ntp->PFTau_hassecondaryVertex(Tau) && Ntp->isPVCovAvailable()){
@@ -617,7 +710,7 @@ SVQualityVsSignificance.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQual
   Muondxy.at(t).Fill(Ntp->dxy(Muon),w);
   MuonIsol.at(t).Fill(Ntp->combreliso(Muon),w);
 
-  
+  /*
   againstElectronVLooseMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronVLooseMVA6),w);
   againstElectronLooseMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronLooseMVA6),w);
   againstElectronMediumMVA6.at(t).Fill(Ntp->CHECK_BIT(Ntp->tauID(Tau),Ntp->Bit_againstElectronMediumMVA6),w);
@@ -633,11 +726,11 @@ SVQualityVsSignificance.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQual
 	  if(Ntp->ElectronVeto(iDaughter) || Ntp->MuonVeto(iDaughter))thirdLepton.push_back(iDaughter);
 	}
       }
-  if(thirdLepton.size()>0)ExtraLeptonVeto.at(t).Fill(1.,w);
-  else ExtraLeptonVeto.at(t).Fill(0.,w);
+      if(thirdLepton.size()>0)ExtraLeptonVeto.at(t).Fill(1.,w);
+  else ExtraLeptonVeto.at(t).Fill(0.,w);*/
   TauHPSDecayMode.at(t).Fill(Ntp->decayMode(Tau),w);
   
-  TauTauMass.at(t).Fill((MuonP4+TauP4).M(),w);
+  TauTauVisMass.at(t).Fill((MuonP4+TauP4).M(),w);
   dRTauTau.at(t).Fill(MuonP4.DeltaR(TauP4),w);
 
   MET.at(t).Fill(Ntp->MET(),w);
@@ -657,13 +750,365 @@ SVQualityVsSignificance.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQual
       }
     }
   }
-
   NbJets.at(t).Fill(jets_counter,w);
+
+  TLorentzVector Tauplusvis;
+  TLorentzVector Tauminusvis;
+  TLorentzVector Pi0RECO;
+  TLorentzVector Tauplustruth;
+  TLorentzVector Tauminustruth;
+
+  if(Ntp->Daughters_charge(Tau)>0)
+    {
+      Tauplusvis=TauP4;
+      Tauminusvis=MuonP4;
+    }
+  else
+    {
+      Tauplusvis=MuonP4;
+      Tauminusvis=TauP4;
+    }
+  TVector3 Tauplus3Dvis(Tauplusvis.X(),Tauplusvis.Y(),Tauplusvis.Z());
+  TVector3 Tauminus3Dvis(Tauminusvis.X(),Tauminusvis.Y(),Tauminusvis.Z());
+  TVector3 Zvis=(Tauminus3Dvis).Unit();
+  TVector3 Yvis=(Tauminus3Dvis.Cross(Tauplus3Dvis)).Unit();
+  TVector3 Xvis=(Yvis.Cross(Tauminus3Dvis)).Unit();
+  TVector3 protonvis(0,0,1);
+  TVector3 xyprotonvis(protonvis.Dot(Xvis),protonvis.Dot(Yvis),0);
+  TVector3 xytauplusvis(Tauplus3Dvis.Dot(Xvis),Tauplus3Dvis.Dot(Yvis),0);
+
+  Etavis.at(t).Fill(TMath::ATanH((Tauplus3Dvis*Zvis)/(sqrt((Tauplus3Dvis*Zvis)*(Tauplus3Dvis*Zvis)+(Tauplus3Dvis*Yvis)*(Tauplus3Dvis*Yvis)+(Tauplus3Dvis*Xvis)*(Tauplus3Dvis*Xvis)))),w);
+
+  // if(id==10310333){	    Phivispipi.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);}
+  // if(id==10410333){	    Phivispirho.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);}
+  // if(id==10410433){	    Phivisrhorho.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);}
+  // if(id==10330533){	    Phivispia1.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);}
+  // if(id==10430533){	    Phivisrhoa1.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);}
+  // if(id==30530533){	    Phivisa1a1.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);}
+  if(id==10110333 || id==10210333){	    Phivislpi.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);}
+  if(id==10110433 || id==10210433){	    Phivislrho.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);}
+  if(id==10130533 || id==10230533){	    Phivisla1.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);}
   
+  Thetavis.at(t).Fill(Tauminusvis.Theta(),w);
+  
+  
+  ZPtVis.at(t).Fill((TauP4+MuonP4).Pt(),w);
+
+  if(id==33 || id == 10110333 || id == 10110433|| id == 10130533|| id ==10210333|| id == 10210433|| id == 10230533|| id ==10310333 || id ==10330533 || id ==10410433 || id == 10410333 || id == 10430533 || id == 30530533){
+    NewPhivsDeltaPhi.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),Ntp->DeltaPhi(protonvis.Phi(),Tauplus3Dvis.Phi()),w);
+    NewPhivsDeltaEta.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),protonvis.Eta()-Tauplus3Dvis.Eta(),w);
+    NewPhivsPhiproton.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),protonvis.Phi(),w);
+    NewPhivsPhiTauplus.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),Tauplus3Dvis.Phi(),w);
+    NewPhivsEtaproton.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),protonvis.Eta(),w);
+    NewPhivsEtaTauplus.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),Tauplus3Dvis.Eta(),w);
+
+    NewPhiSignal.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);
+  }
+  if(id==DataMCType::QCD || id==DataMCType::Data)NewPhiQCD.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);							
+  if(id == 10110333 || id == 10110433|| id == 10130533|| id ==10210333|| id == 10210433|| id == 10230533|| id ==10310333 || id ==10330533 || id ==10410433 || id == 10410333|| id == 10430533|| id == 30530533)
+    {
+      TLorentzVector Tau1Truth; 
+      TLorentzVector Tau2Truth;
+      TLorentzVector TruthDecayFromTau1;
+      TLorentzVector TruthDecayFromTau2; 
+      std::vector<TLorentzVector> Pions1;
+      std::vector<TLorentzVector> Pions2;
+      bool decay=0;
+      if(Ntp->CheckDecayID(1,3)){
+	Tau1Truth=Ntp->GetTruthTauLV(1,0);
+	Tau2Truth=Ntp->GetTruthTauLV(3,1);
+	TruthDecayFromTau1=Ntp->GetTruthTauProductLV(1,11,0);
+	TruthDecayFromTau2=Ntp->GetTruthTauProductLV(3,211,1);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2)cout<<"1 3"<<endl;
+      }
+      if(Ntp->CheckDecayID(1,4)){
+	Tau1Truth=Ntp->GetTruthTauLV(1,0);
+	Tau2Truth=Ntp->GetTruthTauLV(4,1);
+	TruthDecayFromTau1=Ntp->GetTruthTauProductLV(1,11,0);
+	Pions2=Ntp->GetTruthPionsFromRho(1);
+	TruthDecayFromTau2=Pions2.at(0)+Pions2.at(1);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2)cout<<"1 4"<<endl;	  
+	if((sqrt((TauP4.Eta()-Tau1Truth.Eta())*(TauP4.Eta()-Tau1Truth.Eta())+(TauP4.Phi()-Tau1Truth.Phi())*(TauP4.Phi()-Tau1Truth.Phi())))<0.5 && (sqrt((MuonP4.Eta()-Tau2Truth.Eta())*(MuonP4.Eta()-Tau2Truth.Eta())+(MuonP4.Phi()-Tau2Truth.Phi())*(MuonP4.Phi()-Tau2Truth.Phi())))<0.5)
+	  {
+	    Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Muon).E()-Pions2.at(1).E(),w);
+	    Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Muon).E()-Pions2.at(1).E())/Pions2.at(1).E(),w);
+	  }
+	else{ Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Tau).E()-Pions2.at(1).E(),w);Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Tau).E()-Pions2.at(1).E())/Pions2.at(1).E(),w);}
+      }
+      if(Ntp->CheckDecayID(1,5)){
+	Tau1Truth=Ntp->GetTruthTauLV(1,0);
+	Tau2Truth=Ntp->GetTruthTauLV(5,1);
+	TruthDecayFromTau1=Ntp->GetTruthTauProductLV(1,11,0);
+	Pions2=Ntp->GetTruthPionsFromA1(1);
+	TruthDecayFromTau2=Pions2.at(0)+Pions2.at(1)+Pions2.at(2);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2)cout<<"1 5"<<endl;
+
+      }
+
+
+      if(Ntp->CheckDecayID(2,3)){
+	Tau1Truth=Ntp->GetTruthTauLV(2,0);
+	Tau2Truth=Ntp->GetTruthTauLV(3,1);
+	TruthDecayFromTau1=Ntp->GetTruthTauProductLV(2,13,0);
+	TruthDecayFromTau2=Ntp->GetTruthTauProductLV(3,211,1);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2)cout<<"2 3"<<endl;
+
+      }
+      if(Ntp->CheckDecayID(2,4)){
+	Tau1Truth=Ntp->GetTruthTauLV(2,0);
+	Tau2Truth=Ntp->GetTruthTauLV(4,1);
+	TruthDecayFromTau1=Ntp->GetTruthTauProductLV(2,13,0);
+	Pions2=Ntp->GetTruthPionsFromRho(1);
+	TruthDecayFromTau2=Pions2.at(0)+Pions2.at(1);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2)cout<<"2 4"<<endl;
+	if((sqrt((TauP4.Eta()-Tau1Truth.Eta())*(TauP4.Eta()-Tau1Truth.Eta())+(TauP4.Phi()-Tau1Truth.Phi())*(TauP4.Phi()-Tau1Truth.Phi())))<0.5 && (sqrt((MuonP4.Eta()-Tau2Truth.Eta())*(MuonP4.Eta()-Tau2Truth.Eta())+(MuonP4.Phi()-Tau2Truth.Phi())*(MuonP4.Phi()-Tau2Truth.Phi())))<0.5)
+	  {
+	    Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Muon).E()-Pions2.at(1).E(),w);
+	    Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Muon).E()-Pions2.at(1).E())/Pions2.at(1).E(),w);
+	  }
+	else{Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Tau).E()-Pions2.at(1).E(),w);
+	  Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Tau).E()-Pions2.at(1).E())/Pions2.at(1).E(),w);}
+	       }
+      if(Ntp->CheckDecayID(2,5)){
+	Tau1Truth=Ntp->GetTruthTauLV(2,0);
+	Tau2Truth=Ntp->GetTruthTauLV(5,1);
+	TruthDecayFromTau1=Ntp->GetTruthTauProductLV(2,13,0);
+	Pions2=Ntp->GetTruthPionsFromA1(1);
+	TruthDecayFromTau2=Pions2.at(0)+Pions2.at(1)+Pions2.at(2);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2)cout<<"2 5"<<endl;
+
+      }
+
+
+      if(Ntp->CheckDecayID(3,3)){
+	Tau1Truth=Ntp->GetTruthTauLV(3,0);
+	Tau2Truth=Ntp->GetTruthTauLV(3,1);
+	TruthDecayFromTau1=Ntp->GetTruthTauProductLV(3,211,0);
+	TruthDecayFromTau2=Ntp->GetTruthTauProductLV(3,211,1);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2)cout<<"3 3"<<endl;
+
+      }
+      if(Ntp->CheckDecayID(3,5)){
+	Tau1Truth=Ntp->GetTruthTauLV(3,0);
+	Tau2Truth=Ntp->GetTruthTauLV(5,1);
+	TruthDecayFromTau1=Ntp->GetTruthTauProductLV(3,211,0);
+	Pions2=Ntp->GetTruthPionsFromA1(1);
+	TruthDecayFromTau2=Pions2.at(0)+Pions2.at(1)+Pions2.at(2);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2)cout<<"3 5"<<endl;
+
+      }
+
+
+      if(Ntp->CheckDecayID(4,4)){
+	Tau1Truth=Ntp->GetTruthTauLV(4,0);
+	Tau2Truth=Ntp->GetTruthTauLV(4,1);
+	Pions1=Ntp->GetTruthPionsFromRho(0);
+	TruthDecayFromTau1=Pions1.at(0)+Pions1.at(1);
+	Pions2=Ntp->GetTruthPionsFromRho(1);
+	TruthDecayFromTau2=Pions2.at(0)+Pions2.at(1);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2)cout<<"4 4"<<endl;
+	if((sqrt((TauP4.Eta()-Pions1.at(1).Eta())*(TauP4.Eta()-Pions1.at(1).Eta())+(TauP4.Phi()-Pions1.at(1).Phi())*(TauP4.Phi()-Pions1.at(1).Phi())))<0.5 && (sqrt((MuonP4.Eta()-Pions2.at(1).Eta())*(MuonP4.Eta()-Pions2.at(1).Eta())+(MuonP4.Phi()-Pions2.at(1).Phi())*(MuonP4.Phi()-Pions2.at(1).Phi())))<0.5)
+	  {
+	    Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Tau).E()-Pions1.at(1).E(),w);
+	    Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Muon).E()-Pions2.at(1).E(),w);
+	    Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Tau).E()-Pions1.at(1).E())/Pions1.at(1).E(),w);
+	    Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Muon).E()-Pions2.at(1).E())/Pions2.at(1).E(),w);
+	  }
+	else
+	  {
+	    Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Tau).E()-Pions2.at(1).E(),w);
+	    Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Muon).E()-Pions1.at(1).E(),w);
+	    Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Tau).E()-Pions2.at(1).E())/Pions2.at(1).E(),w);
+	    Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Muon).E()-Pions1.at(1).E())/Pions1.at(1).E(),w);
+	  }
+	//TLorentzVector pi0reco_tau1 =  Ntp->NeutralDaughters_P4(Tau1);
+	//TLorentzVector pi0reco_tau2 =  Ntp->NeutralDaughters_P4(Tau2);
+
+
+	// std::cout<<" pi0reco_tau1   "<< pi0reco_tau1.Phi() << " pi0reco_tau2    " << pi0reco_tau2.Phi() <<std::endl;
+	// std::cout<<" pi0mc_tau1   "<< Pions1.at(1).Phi() << " pi0mc_tau2    " << Pions2.at(1).Phi() <<std::endl;
+
+      }
+      if(Ntp->CheckDecayID(4,3)){
+	Tau1Truth=Ntp->GetTruthTauLV(4,0);
+	Tau2Truth=Ntp->GetTruthTauLV(3,1);
+	Pions1=Ntp->GetTruthPionsFromRho(0);
+	TruthDecayFromTau1=Pions1.at(0)+Pions1.at(1);
+	TruthDecayFromTau2=Ntp->GetTruthTauProductLV(3,211,1);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2)cout<<"4 3"<<endl;
+	if((sqrt((TauP4.Eta()-Tau1Truth.Eta())*(TauP4.Eta()-Tau1Truth.Eta())+(TauP4.Phi()-Tau1Truth.Phi())*(TauP4.Phi()-Tau1Truth.Phi())))<0.5 && (sqrt((MuonP4.Eta()-Tau2Truth.Eta())*(MuonP4.Eta()-Tau2Truth.Eta())+(MuonP4.Phi()-Tau2Truth.Phi())*(MuonP4.Phi()-Tau2Truth.Phi())))<0.5)
+	  {
+	    Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Tau).E()-Pions1.at(1).E(),w);
+	    Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Tau).E()-Pions1.at(1).E())/Pions1.at(1).E(),w);
+	  }
+	else{ Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Muon).E()-Pions1.at(1).E(),w);Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Muon).E()-Pions1.at(1).E())/Pions1.at(1).E(),w);}
+      }
+      if(Ntp->CheckDecayID(4,5)){
+	Tau1Truth=Ntp->GetTruthTauLV(4,0);
+	Tau2Truth=Ntp->GetTruthTauLV(5,1);
+	Pions1=Ntp->GetTruthPionsFromRho(0);
+	TruthDecayFromTau1=Pions1.at(0)+Pions1.at(1);
+	Pions2=Ntp->GetTruthPionsFromA1(1);
+	TruthDecayFromTau2=Pions2.at(0)+Pions2.at(1)+Pions2.at(2);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2){cout<<"4 5"<<endl;TruthDecayFromTau1.Print();TruthDecayFromTau2.Print();}
+	if((sqrt((TauP4.Eta()-Tau1Truth.Eta())*(TauP4.Eta()-Tau1Truth.Eta())+(TauP4.Phi()-Tau1Truth.Phi())*(TauP4.Phi()-Tau1Truth.Phi())))<0.5 && (sqrt((MuonP4.Eta()-Tau2Truth.Eta())*(MuonP4.Eta()-Tau2Truth.Eta())+(MuonP4.Phi()-Tau2Truth.Phi())*(MuonP4.Phi()-Tau2Truth.Phi())))<0.5)
+	  {
+	    Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Tau).E()-Pions1.at(1).E(),w);
+	    Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Tau).E()-Pions1.at(1).E())/Pions1.at(1).E(),w);
+	  }
+	else{ Pi0EnergyRes.at(t).Fill(Ntp->NeutralDaughters_P4(Muon).E()-Pions1.at(1).E(),w);Pi0EnergyResPull.at(t).Fill((Ntp->NeutralDaughters_P4(Muon).E()-Pions1.at(1).E())/Pions1.at(1).E(),w);}
+      }
+
+
+      if(Ntp->CheckDecayID(5,5)){
+	Tau1Truth=Ntp->GetTruthTauLV(5,0);
+	Tau2Truth=Ntp->GetTruthTauLV(5,1);
+	Pions1=Ntp->GetTruthPionsFromA1(0);
+	TruthDecayFromTau1=Pions1.at(0)+Pions1.at(1)+Pions1.at(2);
+	Pions2=Ntp->GetTruthPionsFromA1(1);
+	TruthDecayFromTau2=Pions2.at(0)+Pions2.at(1)+Pions2.at(2);decay=1;if(TruthDecayFromTau1==TruthDecayFromTau2){cout<<"5 5"<<endl;TruthDecayFromTau1.Print();TruthDecayFromTau2.Print();}
+      }
+      if (decay==1)
+	{
+	  if(Tau1Truth==Tau2Truth)cout<<"Same Taus"<<endl;
+
+	  TLorentzVector TruthZ    = Tau1Truth+Tau2Truth;
+	  // TLorentzVector TruthrhoFromTau2 = (Ntp->GetTruthTauProductLV(3,211) + Ntp->GetTruthTauProductLV(3,111));
+	  if(TruthDecayFromTau1==TruthDecayFromTau2)cout<<"Same decay particle"<<endl;
+
+	  //double visiblePtTruth = (TruthDecayFromTau1 + TruthDecayFromTau2).Pt();
+
+	  TLorentzVector VisDecayfromTauplus;
+	  TLorentzVector VisDecayfromTauminus;
+	  
+	  TauTauTruthMass.at(t).Fill((Tau1Truth+Tau2Truth).M(),w);
+	  
+	  if((sqrt((Tauplusvis.Eta()-Tau1Truth.Eta())*(Tauplusvis.Eta()-Tau1Truth.Eta())+(Tauplusvis.Phi()-Tau1Truth.Phi())*(Tauplusvis.Phi()-Tau1Truth.Phi())))<0.5 && (sqrt((Tauminusvis.Eta()-Tau2Truth.Eta())*(Tauminusvis.Eta()-Tau2Truth.Eta())+(Tauminusvis.Phi()-Tau2Truth.Phi())*(Tauminusvis.Phi()-Tau2Truth.Phi())))<0.5)
+	    {
+	      Tauplustruth=Tau1Truth;
+	      Tauminustruth=Tau2Truth;
+	      VisDecayfromTauplus=TruthDecayFromTau1;
+	      VisDecayfromTauminus=TruthDecayFromTau2;
+	    }
+	  else
+	    {
+	      Tauplustruth=Tau2Truth;
+	      Tauminustruth=Tau1Truth;
+	      VisDecayfromTauplus=TruthDecayFromTau2;
+	      VisDecayfromTauminus=TruthDecayFromTau1;
+	    }
+	  TVector3 Tauplus3Dtruth(Tauplustruth.X(),Tauplustruth.Y(),Tauplustruth.Z());
+	  TVector3 Tauminus3Dtruth(Tauminustruth.X(),Tauminustruth.Y(),Tauminustruth.Z());
+	  TVector3 Ztruth=(Tauminus3Dtruth).Unit();//(Tauminus3Dtruth);//cout<<"Z: "<<Ztruth.X()<<" "<<Ztruth.Y()<<" "<<Ztruth.Z()<<" "<<endl;
+	  //   Ztruth=Ntp->Rotate(TVector3(0,0,1),Tauminus3Dtruth);
+	  //  cout<<"Z: "<<Ztruth.X()<<" "<<Ztruth.Y()<<" "<<Ztruth.Z()<<" "<<endl;
+	  //   Ztruth=Ntp->Rotate(Tauminus3Dtruth,TVector3(0,0,1));
+	  //   cout<<"Z: "<<Ztruth.X()<<" "<<Ztruth.Y()<<" "<<Ztruth.Z()<<" "<<endl;
+	  TVector3 Ytruth=(Tauminus3Dtruth.Cross(Tauplus3Dtruth)).Unit();//Ntp->Rotate(TVector3(0,1,0),Ztruth.Cross(Tauplus3Dtruth));
+	  TVector3 Xtruth=(Ytruth.Cross(Tauminus3Dtruth)).Unit();//Ntp->Rotate(TVector3(1,0,0),Ytruth.Cross(Ztruth));
+	  //TVector3 newtauminustruth=; //=Ntp->Rotate1(Tauminus3Dtruth,Tauminus3Dtruth,Tauplus3Dtruth);cout<<"newtauminustruth: "<<newtauminustruth.X()<<" "<<newtauminustruth.Y()<<" "<<newtauminustruth.Z()<<endl;//(Tauminus3Dtruth*Xtruth,Tauminus3Dtruth*Ytruth,Tauminus3Dtruth*Ztruth);
+	  // newtauminustruth =Ntp->Rotate2(newtauminustruth,Tauplus3Dtruth);cout<<"newtauminustruth: "<<newtauminustruth.X()<<" "<<newtauminustruth.Y()<<" "<<newtauminustruth.Z()<<endl;
+	  //TVector3 newtauplustruth=;//=Ntp->Rotate11(Tauplus3Dtruth,Tauminus3Dtruth);cout<<"newtauplustruth: "<<newtauplustruth.X()<<" "<<newtauplustruth.Y()<<" "<<newtauplustruth.Z()<<endl;//((Tauplus3Dtruth).Dot(Xtruth),(Tauplus3Dtruth).Dot(Ytruth),(Tauplus3Dtruth).Dot(Ztruth));cout<<"finish"<<endl;
+	  // newtauplustruth=Ntp->Rotate2(newtauplustruth,Tauplus3Dtruth);cout<<"newtauplustruth: "<<newtauplustruth.X()<<" "<<newtauplustruth.Y()<<" "<<newtauplustruth.Z()<<endl;
+	  TVector3 protontruth(0,0,1);
+	  TVector3 xyprotontruth(protontruth.Dot(Xtruth),protontruth.Dot(Ytruth),0);
+	  TVector3 xytauplustruth(Tauplus3Dtruth.Dot(Xtruth),Tauplus3Dtruth.Dot(Ytruth),0);
+	  Etatruth.at(t).Fill(TMath::ATanH((Tauplus3Dtruth*Ztruth)/(sqrt((Tauplus3Dtruth*Ztruth)*(Tauplus3Dtruth*Ztruth)+(Tauplus3Dtruth*Ytruth)*(Tauplus3Dtruth*Ytruth)+(Tauplus3Dtruth*Xtruth)*(Tauplus3Dtruth*Xtruth)))),w);
+	  if(id==10310333) {	   
+	    //Phitruthpipi.at(t).Fill(Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    //PhiSvFitRespipi.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    //PhiVisRespipi.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	  }
+	  if(id==10410333) {	  
+	    //Phitruthpirho.at(t).Fill(Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    // PhiSvFitRespirho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    //PhiVisRespirho.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	  }
+	  if(id==10410433) {	  
+	    // Phitruthrhorho.at(t).Fill(Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    //PhiSvFitResrhorho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    // PhiVisResrhorho.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	  }
+	  if(id==10330533) {	  
+	    //Phitruthpia1.at(t).Fill(Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    // PhiSvFitRespia1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    // PhiVisRespia1.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	  }
+	  if(id==10430533) {	  
+	    // Phitruthrhoa1.at(t).Fill(Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    // PhiSvFitResrhoa1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    // PhiVisResrhoa1.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	  }
+	  if(id==30530533) {	  
+	    // Phitrutha1a1.at(t).Fill(Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    // PhiSvFitResa1a1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    // PhiVisResa1a1.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	  }
+	  if(id==10110333 || id==10210333) {	    
+	    Phitruthlpi.at(t).Fill(Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    //  PhiSvFitReslpi.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    // PhiVisReslpi.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	  }
+	  if(id==10110433 || id==10210433) {	   
+	    Phitruthlrho.at(t).Fill(Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    //  PhiSvFitReslrho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    //  PhiVisReslrho.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	  }
+	  if(id==10130533 || id==10230533) {	   
+	    Phitruthla1.at(t).Fill(Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    //  PhiSvFitResla1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	    // PhiVisResla1.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi())-Ntp->DeltaPhi(xyprotontruth.Phi(),xytauplustruth.Phi()),w);
+	  }
+	  Thetatruth.at(t).Fill(Tauminustruth.Theta(),w);
+	    
+	  //DRTruth.at(t).Fill(Tauplustruth.DeltaR(Tauminustruth));
+	  //DRFull.at(t).Fill(Tauplustruth.DeltaR(Tauminustruth));
+	  // DRFullTruth.at(t).Fill(Tauplussvfit.DeltaR(Tauplustruth));
+	  //DRVisTruth.at(t).Fill(Tauplusvis.DeltaR(VisDecayfromTauplus));
+	      
+	  // TauTauFullPtRes.at(t).Fill((Tauplussvfit+Tauminussvfit).Pt()-(Tauplustruth+Tauminustruth).Pt(),w);   
+	  // TauTauFullEtaRes.at(t).Fill((Tauplussvfit+Tauminussvfit).Eta()-(Tauplustruth+Tauminustruth).Eta(),w);
+	  // TauTauFullPhiRes.at(t).Fill(Ntp->DeltaPhi((Tauplussvfit+Tauminussvfit).Phi(),(Tauplustruth+Tauminustruth).Phi()),w);
+
+	  // TauTauVisPtRes.at(t).Fill((Tauplusvis+Tauminusvis).Pt()-(TruthDecayFromTau1 + TruthDecayFromTau2).Pt(),w);   
+	  //  TauTauVisEtaRes.at(t).Fill((Tauplusvis+Tauminusvis).Eta()-(TruthDecayFromTau1 + TruthDecayFromTau2).Eta(),w);
+	  //  TauTauVisPhiRes.at(t).Fill(Ntp->DeltaPhi((Tauplusvis+Tauminusvis).Phi(),(TruthDecayFromTau1 + TruthDecayFromTau2).Phi()),w);
+
+	  //TauTauFullPtResPull.at(t).Fill(((Tauplussvfit+Tauminussvfit).Pt()-(Tauplustruth+Tauminustruth).Pt())/(Tauplustruth+Tauminustruth).Pt(),w);   
+	  //TauTauFullEtaResPull.at(t).Fill(((Tauplussvfit+Tauminussvfit).Eta()-(Tauplustruth+Tauminustruth).Eta())/(Tauplustruth+Tauminustruth).Eta(),w);
+	  //TauTauFullPhiResPull.at(t).Fill(Ntp->DeltaPhi((Tauplussvfit+Tauminussvfit).Phi(),(Tauplustruth+Tauminustruth).Phi())/(Tauplustruth+Tauminustruth).Phi(),w);
+	    
+	  // TauTauVisPtResPull.at(t).Fill(((Tauplusvis+Tauminusvis).Pt()-(TruthDecayFromTau1+TruthDecayFromTau2).Pt())/(TruthDecayFromTau1+TruthDecayFromTau2).Pt(),w);   
+	  //  TauTauVisEtaResPull.at(t).Fill(((Tauplusvis+Tauminusvis).Eta()-(TruthDecayFromTau1+TruthDecayFromTau2).Eta())/(TruthDecayFromTau1+TruthDecayFromTau2).Eta(),w);
+	  //  TauTauVisPhiResPull.at(t).Fill(Ntp->DeltaPhi((Tauplusvis+Tauminusvis).Phi(),(TruthDecayFromTau1+TruthDecayFromTau2).Phi())/(TruthDecayFromTau1+TruthDecayFromTau2).Phi(),w);
+
+
+	  //TauplusFullPtRes.at(t).Fill(Tauplussvfit.Pt()-Tauplustruth.Pt(),w);
+	  // TauplusFullEtaRes.at(t).Fill(Tauplussvfit.Eta()-Tauplustruth.Eta(),w);
+	  // TauplusFullPhiRes.at(t).Fill(Ntp->DeltaPhi(Tauplussvfit.Phi(),Tauplustruth.Phi()),w);
+	    
+	  // TauminusFullPtRes.at(t).Fill(Tauminussvfit.Pt()-Tauminustruth.Pt(),w);
+	  // TauminusFullEtaRes.at(t).Fill(Tauminussvfit.Eta()-Tauminustruth.Eta(),w);
+	  // TauminusFullPhiRes.at(t).Fill(Ntp->DeltaPhi(Tauminussvfit.Phi(),Tauminustruth.Phi()),w);
+	    
+	  //TauplusFullPtResPull.at(t).Fill((Tauplussvfit.Pt()-Tauplustruth.Pt())/Tauplustruth.Pt(),w);
+	  // TauplusFullEtaResPull.at(t).Fill((Tauplussvfit.Eta()-Tauplustruth.Eta())/Tauplustruth.Eta(),w);
+	  //  TauplusFullPhiResPull.at(t).Fill(Ntp->DeltaPhi(Tauplussvfit.Phi(),Tauplustruth.Phi())/Tauplustruth.Phi(),w);
+
+	  //TauminusFullPtResPull.at(t).Fill((Tauminussvfit.Pt()-Tauminustruth.Pt())/Tauminustruth.Pt(),w);
+	  //TauminusFullEtaResPull.at(t).Fill((Tauminussvfit.Eta()-Tauminustruth.Eta())/Tauminustruth.Eta(),w);
+	  //TauminusFullPhiResPull.at(t).Fill(Ntp->DeltaPhi(Tauminussvfit.Phi(),Tauminustruth.Phi())/Tauminustruth.Phi(),w);
+	   
+
+	  // TauplusVisPtRes.at(t).Fill(Tauplusvis.Pt()-VisDecayfromTauplus.Pt(),w);
+	  // TauplusVisEtaRes.at(t).Fill(Tauplusvis.Eta()-VisDecayfromTauplus.Eta(),w);
+	  //TauplusVisPhiRes.at(t).Fill(Ntp->DeltaPhi(Tauplusvis.Phi(),VisDecayfromTauplus.Phi()),w);
+
+	  //TauminusVisPtRes.at(t).Fill(Tauminusvis.Pt()-VisDecayfromTauminus.Pt(),w);
+	  // TauminusVisEtaRes.at(t).Fill(Tauminusvis.Eta()-VisDecayfromTauminus.Eta(),w);
+	  // TauminusVisPhiRes.at(t).Fill(Ntp->DeltaPhi(Tauminusvis.Phi(),VisDecayfromTauminus.Phi()),w);
+
+	  //TauplusVisPtResPull.at(t).Fill((Tauplusvis.Pt()-VisDecayfromTauplus.Pt())/VisDecayfromTauplus.Pt(),w);
+	  //TauplusVisEtaResPull.at(t).Fill((Tauplusvis.Eta()-VisDecayfromTauplus.Eta())/VisDecayfromTauplus.Eta(),w);
+	  //TauplusVisPhiResPull.at(t).Fill(Ntp->DeltaPhi(Tauplusvis.Phi(),VisDecayfromTauplus.Phi())/VisDecayfromTauplus.Phi(),w);
+
+	  //TauminusVisPtResPull.at(t).Fill((Tauminusvis.Pt()-VisDecayfromTauminus.Pt())/VisDecayfromTauminus.Pt(),w);
+	  //TauminusVisEtaResPull.at(t).Fill((Tauminusvis.Eta()-VisDecayfromTauminus.Eta())/VisDecayfromTauminus.Eta(),w);
+	  // TauminusVisPhiResPull.at(t).Fill(Ntp->DeltaPhi(Tauminusvis.Phi(),VisDecayfromTauminus.Phi())/VisDecayfromTauminus.Phi(),w);
+
+	}
+    }
   }
 }
-
-
 
 
 //  This is a function if you want to do something after the event loop

@@ -80,7 +80,7 @@ class ZMuTau : public Selection {
   std::vector<TH1D> Muondz;
   std::vector<TH1D> Muondxy;
   std::vector<TH1D> MuonIsol;
-
+  /*
   std::vector<TH1D> againstElectronVLooseMVA6;
   std::vector<TH1D> againstElectronLooseMVA6;
   std::vector<TH1D> againstElectronMediumMVA6;
@@ -92,9 +92,10 @@ class ZMuTau : public Selection {
 
   std::vector<TH1D> DiMuonVeto;
   std::vector<TH1D> ExtraLeptonVeto;
-  
+  */
   std::vector<TH1D> TauHPSDecayMode;
-  std::vector<TH1D> TauTauMass;
+  std::vector<TH1D> TauTauVisMass;
+  std::vector<TH1D> TauTauTruthMass;
 
   std::vector<TH1D> dRTauTau;
   std::vector<TH1D> QCDShape;
@@ -119,6 +120,109 @@ class ZMuTau : public Selection {
   std::vector<TH1D> PVSVSignificance;
   std::vector<TH1D> NbJets;
 
+ 
+  std::vector<TH1D> Etavis;
+  // std::vector<TH1D> Phivispipi;
+  //std::vector<TH1D> Phivispirho;
+  std::vector<TH1D> Phivislpi;
+  std::vector<TH1D> Phivislrho;
+  //std::vector<TH1D> Phivispia1;
+  //std::vector<TH1D> Phivisrhorho;
+  //std::vector<TH1D> Phivisrhoa1;
+  std::vector<TH1D> Phivisla1;
+  // std::vector<TH1D> Phivisa1a1;
+  std::vector<TH1D> Thetavis;
+  
+  std::vector<TH1D> Etatruth;
+  //std::vector<TH1D> Phitruthpipi;
+  // std::vector<TH1D> Phitruthpirho;
+   std::vector<TH1D> Phitruthlpi;
+   std::vector<TH1D> Phitruthlrho;
+   // std::vector<TH1D> Phitruthpia1;
+   //std::vector<TH1D> Phitruthrhorho;
+   //std::vector<TH1D> Phitruthrhoa1;
+  std::vector<TH1D> Phitruthla1;
+  //std::vector<TH1D> Phitrutha1a1;
+  std::vector<TH1D> Thetatruth;
+  /* 
+  std::vector<TH1D> PhiVisRespipi;
+  std::vector<TH1D> PhiVisRespirho;
+  std::vector<TH1D> PhiVisReslpi;
+  std::vector<TH1D> PhiVisReslrho;
+  std::vector<TH1D> PhiVisRespia1;
+  std::vector<TH1D> PhiVisResrhorho;
+  std::vector<TH1D> PhiVisResrhoa1;
+  std::vector<TH1D> PhiVisResla1;
+  std::vector<TH1D> PhiVisResa1a1;  
+  */
 
+  /*
+  std::vector<TH1D> TauTauFullPtRes;
+  std::vector<TH1D> TauTauFullEtaRes;
+  std::vector<TH1D> TauTauFullPhiRes;
+
+  std::vector<TH1D> TauplusFullPtRes;
+  std::vector<TH1D> TauplusFullEtaRes;
+  std::vector<TH1D> TauplusFullPhiRes;
+
+  std::vector<TH1D> TauminusFullPtRes;
+  std::vector<TH1D> TauminusFullEtaRes;
+  std::vector<TH1D> TauminusFullPhiRes;
+  
+  std::vector<TH1D> TauTauVisPtRes;
+  std::vector<TH1D> TauTauVisEtaRes;
+  std::vector<TH1D> TauTauVisPhiRes;
+
+  std::vector<TH1D> TauplusVisPtRes;
+  std::vector<TH1D> TauplusVisEtaRes;
+  std::vector<TH1D> TauplusVisPhiRes;
+    
+  std::vector<TH1D> TauminusVisPtRes;
+  std::vector<TH1D> TauminusVisEtaRes;
+  std::vector<TH1D> TauminusVisPhiRes;
+
+  std::vector<TH1D> TauTauFullPtResPull;
+  std::vector<TH1D> TauTauFullEtaResPull;
+  std::vector<TH1D> TauTauFullPhiResPull;
+
+  std::vector<TH1D> TauplusFullPtResPull;
+  std::vector<TH1D> TauplusFullEtaResPull;
+  std::vector<TH1D> TauplusFullPhiResPull;
+
+  std::vector<TH1D> TauminusFullPtResPull;
+  std::vector<TH1D> TauminusFullEtaResPull;
+  std::vector<TH1D> TauminusFullPhiResPull;
+
+  std::vector<TH1D> TauTauVisPtResPull;
+  std::vector<TH1D> TauTauVisEtaResPull;
+  std::vector<TH1D> TauTauVisPhiResPull;
+
+  std::vector<TH1D> TauplusVisPtResPull;
+  std::vector<TH1D> TauplusVisEtaResPull;
+  std::vector<TH1D> TauplusVisPhiResPull;
+    
+  std::vector<TH1D> TauminusVisPtResPull;
+  std::vector<TH1D> TauminusVisEtaResPull;
+  std::vector<TH1D> TauminusVisPhiResPull;
+*/
+  //std::vector<TH1D> DRTruth;
+  //std::vector<TH1D> DRFull;
+  // std::vector<TH1D> DRFullTruth;
+  //std::vector<TH1D> DRVisTruth;
+  
+  std::vector<TH1D> Pi0EnergyRes;
+  std::vector<TH1D> Pi0EnergyResPull;
+
+  std::vector<TH1D> ZPtVis;
+
+  std::vector<TH2D> NewPhivsDeltaPhi;
+  std::vector<TH2D> NewPhivsDeltaEta;
+  std::vector<TH2D> NewPhivsPhiproton;
+  std::vector<TH2D> NewPhivsPhiTauplus;
+  std::vector<TH2D> NewPhivsEtaproton;
+  std::vector<TH2D> NewPhivsEtaTauplus;
+  std::vector<TH2D> NewPhivsZPt;
+  std::vector<TH1D> NewPhiSignal;
+  std::vector<TH1D> NewPhiQCD;
 };
 #endif
