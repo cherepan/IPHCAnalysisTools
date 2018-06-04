@@ -24,7 +24,7 @@ void TauSpinerInterface::Initialize(){
   Tauolapp::Tauola::initialize();
   string name="MSTW2008nnlo90cl.LHgrid";
   LHAPDF::initPDFSetByName(name);
-  double CMSENE = 8000.0; // center of mass system energy.
+  double CMSENE = 13000.0; // center of mass system energy.
                           // used in PDF calculation. For pp collisions only
   bool Ipp = true;  // for pp collisions 
   // Initialize TauSpinner
