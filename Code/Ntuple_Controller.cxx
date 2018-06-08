@@ -233,7 +233,7 @@ Long64_t  Ntuple_Controller::GetMCID(){
 	//if(DataMCTypeFromTupel==10210233 ) return DataMCTypeFromTupel;
 	
 	//if(DataMCTypeFromTupel==10110233 ) return DataMCTypeFromTupel;
-	if(DataMCTypeFromTupel==10110333 ) return DataMCTypeFromTupel;
+	/*	if(DataMCTypeFromTupel==10110333 ) return DataMCTypeFromTupel;
 	if(DataMCTypeFromTupel==10110433 ) return DataMCTypeFromTupel;
 	if(DataMCTypeFromTupel==10130533 ) return DataMCTypeFromTupel;
 
@@ -251,7 +251,7 @@ Long64_t  Ntuple_Controller::GetMCID(){
 	if(DataMCTypeFromTupel==10430533 ) return DataMCTypeFromTupel;
 
 	
-	if(DataMCTypeFromTupel==30530533 ) return DataMCTypeFromTupel;
+	if(DataMCTypeFromTupel==30530533 ) return DataMCTypeFromTupel;*/
 
 
 	
@@ -2309,6 +2309,7 @@ std::string Ntuple_Controller::MCParticleToString(unsigned int par, bool printSt
 	return out.str();
 }
 bool Ntuple_Controller::CheckDecayID(unsigned  int jak1, unsigned int jak2){
+  if(isData()) return false;
   // jak  = 2 - muon
   // jak  = 3 - pion
   // jak  = 4 - rho
