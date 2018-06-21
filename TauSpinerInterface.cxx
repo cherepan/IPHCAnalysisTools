@@ -80,8 +80,8 @@ double TauSpinerInterface::Get(int type, SimpleParticle X, SimpleParticle tau, s
 
 
 
-    int eventNumber = 391486;
-    std::cout << "\nevent = " << eventNumber << std::endl;
+    int eventNumber = EventNumber;
+    std::cout << "\nevent = " << EventNumber << std::endl;
     
     TauSpinner::SimpleParticle boson(9.057124, 4.738310, 362.649353, 373.200989, 23);
     
@@ -137,7 +137,7 @@ double TauSpinerInterface::CustomSeed()
 {
   double random;
   random = static_cast<double>(rand()) / static_cast<double>(RAND_MAX);
-  std::cout<<" random "<< random <<std::endl;
+  std::cout<<" random  seed: "<< random <<std::endl;
   return random;
 }
 
