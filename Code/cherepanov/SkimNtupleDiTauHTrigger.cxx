@@ -108,9 +108,14 @@ void  SkimNtupleDiTauHTrigger::doEvent(){ //  Method called on every event
   std::vector<TString>  MatchedTriggerNames;
 
   MatchedTriggerNames.push_back("HLT_DoubleMediumIsoPFTau");
+  MatchedTriggerNames.push_back("HLT_DoubleMediumCombinedIsoPFTau35");
   TriggerIndexVector=Ntp->GetVectorTriggers(MatchedTriggerNames);
    
+ 
+   // for(unsigned int itr=0; itr<Ntp->NTriggers(); itr++){
 
+   //   if(Ntp->TriggerAccept(itr)) std::cout<<"   itr   "<< itr <<"   trig name  "<< Ntp->TriggerName(itr) << "  accept?    "<<Ntp->TriggerAccept(itr) << std::endl;
+   // }
   //int triggerMask(0);
   //triggerMask |= (1<< Ntp->getBitOfGivenTrigger("HLT_IsoMu22_eta2p1_v"));
   // PassedTrigger = (( Ntp->triggerbit() & triggerMask ) == triggerMask);
