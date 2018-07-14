@@ -2718,6 +2718,30 @@ TMatrixTSym<double> Ntuple_Controller::PFTau_TIP_secondaryVertex_cov(unsigned in
    return LorentzVectorParticle(a1_par,a1_cov,Ntp->PFTau_a1_pdgid->at(i),Ntp->PFTau_a1_charge->at(i),Ntp->PFTau_a1_B->at(i));
  }
 
+
+// https://github.com/cms-analysis/HiggsAnalysis-KITHiggsToTauTau/blob/master/data/stitching_2016.ods
+double Ntuple_Controller::stitch_weight(){
+  if(GetMCID() == 33){
+    if(lheNOutPartons()==0) return 1.16379;
+    if(lheNOutPartons()==1) return 0.88841;
+    if(lheNOutPartons()==2) return 1.01368;
+    if(lheNOutPartons()==3) return 0.83481;
+    //    if(lheNOutPartons()==4) return 1.16379;
+  }
+  if(GetMCID() == 20){
+    if(lheNOutPartons()==0) return 1.22122;
+    if(lheNOutPartons()==1) return 1.09970;
+    if(lheNOutPartons()==2) return 1.08290;
+    if(lheNOutPartons()==3) return 1.14923;
+    if(lheNOutPartons()==4) return 1.18782;
+    //    if(lheNOutPartons()==4) return 1.16379;
+  }
+
+}
+
+
+
+
 // std::vector<TrackParticle> Ntuple_Controller::PFTau_daughterTracks(unsigned int i){
 //   std::vector<TrackParticle> daughter;
 //   for(unsigned int d=0;d<Ntp->PFTau_daughterTracks_poca->at(i).size();d++){
@@ -3017,6 +3041,7 @@ void Ntuple_Controller::runAndSaveSVFit_MuTau3p(SVFitObject* svfObj, SVFitStorag
 		Logger(Logger::Error) << "Unable to create a valid SVFit object." << std::endl;
 	}
 }
+
 
 
 #endif // USE_SVfit
