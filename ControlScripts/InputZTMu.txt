@@ -1,6 +1,6 @@
 Thin: False
 Skim: False
-HistoFile: InputData/Histomutau.txt
+HistoFile: InputData/HistomutauInclusive.txt
 Analysis: ZMuTau
 UncertType: default
 SkimInfo: InputData/SkimSummarySingleMuonFullData.log

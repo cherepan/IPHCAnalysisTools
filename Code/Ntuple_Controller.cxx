@@ -2736,7 +2736,6 @@ double Ntuple_Controller::stitch_weight(){
     if(lheNOutPartons()==4) return 1.18782;
     //    if(lheNOutPartons()==4) return 1.16379;
   }
-
 }
 
 
