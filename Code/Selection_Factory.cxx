@@ -33,6 +33,7 @@
 #include "gbourgat/ZMuMu.h"
 #include "gbourgat/SVFitIPHC.h"
 
+
 #endif
 
 #ifdef USE_cgrimault
@@ -87,7 +88,8 @@ Selection_Base* Selection_Factory::Factory(TString Analysis, TString UncertType,
   else if(Analysis.Contains("ztautau"))s=new ZTauTau(Analysis,UncertType);
   else if(Analysis.Contains("zmutau"))s=new ZMuTau(Analysis,UncertType);
   else if(Analysis.Contains("zmumu"))s=new ZMuMu(Analysis,UncertType);
-else if(Analysis.Contains("svfitiphc"))s=new SVFitIPHC(Analysis,UncertType);
+  else if(Analysis.Contains("svfitiphc"))s=new SVFitIPHC(Analysis,UncertType);
+  
 
 #endif
 

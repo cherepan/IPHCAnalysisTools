@@ -198,9 +198,19 @@ void  ZMuTau::Configure(){
   SVChi2=HConfig.GetTH1D(Name+"_SVChi2","SV  #chi^{2}",10,0,18,"#chi^{2}","Events");
   SVQuality=HConfig.GetTH1D(Name+"_SVQuality","Track mathicn #DeltaR",10,0,2,"#Sigma#Delta R","Events");
   SVQualityVsSignificance=HConfig.GetTH2D(Name+"_SVQualityVsSignificance","Track mathicn #DeltaR vs significance",25,0,3,31,-0.5,5.5,"","Events");
+
   NWJets=HConfig.GetTH1D(Name+"_NWJets","NWJets",4,0.5,4.5,"NWJets in ABCD","Events");
   NWJetsRelaxed=HConfig.GetTH1D(Name+"_NWJetsRelaxed","NWJetsRelaxed",2,0.5,2.5,"NWJetsRelaxed in Low and High MT","Events");
   NQCD=HConfig.GetTH1D(Name+"_NQCD","NQCD",4,0.5,4.5,"NQCD in ABCD","Events");
+  TauTauVisMass_AHigh=HConfig.GetTH1D(Name+"_TauTauVisMass_AHigh","TauTauVisMass_AHigh",40,0,150,"#tau_h#mu Visible Mass in AHigh","Events");
+  TauTauVisMass_BHigh=HConfig.GetTH1D(Name+"_TauTauVisMass_BHigh","TauTauVisMass_BHigh",40,0,150,"#tau_h#mu Visible Mass in BHigh","Events");
+  TauTauVisMass_BLow=HConfig.GetTH1D(Name+"_TauTauVisMass_BLow","TauTauVisMass_BLow",40,0,150,"#tau_h#mu Visible Mass in BLow","Events");
+  MT_AHigh=HConfig.GetTH1D(Name+"_MT_AHigh","MT_AHigh",20,0,40,"Transverse Mass in AHigh","Events");
+  MT_BHigh=HConfig.GetTH1D(Name+"_MT_BHigh","MT_BHigh",20,0,40,"Transverse Mass in BHigh","Events");
+  MT_BLow=HConfig.GetTH1D(Name+"_MT_BLow","MT_BLow",20,0,40,"Transverse Mass in BLow","Events");
+
+
+
   PVSVSignificance=HConfig.GetTH1D(Name+"_PVSVSignificance"," PV-SV significance for tau decay mode = 10",10,-0.5,5.5," pType","Events");
   dRTauTau=HConfig.GetTH1D(Name+"_dRTauTau","#Delta R",20,0.,4.," #Delta R","Events");
 
@@ -232,6 +242,9 @@ void  ZMuTau::Configure(){
   Thetavis = HConfig.GetTH1D(Name+"_Thetavis","Thetavis",30,0.,TMath::Pi(),"Original theta of Tau- with visible particles");
   
   
+  //PhiInf8GeVvis=HConfig.GetTH1D(Name+"_PhiInf8GeVvis","PhiInf8GeVvis",30,-TMath::Pi(),TMath::Pi(),"Visible angle between Tau+ and an initial proton in the new xy plan for ZPt<8GeV");
+  //PhiSup8GeVvis=HConfig.GetTH1D(Name+"_PhiSup8GeVvis","PhiSup8GeVvis",30,-TMath::Pi(),TMath::Pi(),"Visible angle between Tau+ and an initial proton in the new xy plan for ZPt>8GeV");
+
   Etatruth = HConfig.GetTH1D(Name+"_Etatruth", "Etatruth", 30, -10, 10, "Real Eta between Tau+ and Tau- in the new xy plan");
 
   //Phitruthpipi = HConfig.GetTH1D(Name+"_Phitruthpipi","Phitruth #pi#pi",30,-TMath::Pi(),TMath::Pi(),"Real angle between Tau+ and an initial proton in the new xy plan for #pi#pi channel");
@@ -250,18 +263,34 @@ void  ZMuTau::Configure(){
   Pi0EnergyResPull=HConfig.GetTH1D(Name+"_Pi0EnergyResPull","Energy Pull Plot of Pi0",100,-50.,50.,"Energy Pull Plot of Pi0, GeV","Events");
 
   
-   NewPhivsDeltaPhi=HConfig.GetTH2D(Name+"_NewPhivsDeltaPhi","New #phi VS old #Delta#phi",30,-TMath::Pi(),TMath::Pi(),30,-TMath::Pi(),TMath::Pi(),"","Events");
-  NewPhivsDeltaEta=HConfig.GetTH2D(Name+"_NewPhivsDeltaEta","New #phi VS old #Delta#eta",30,-TMath::Pi(),TMath::Pi(),20,-2.7,2.7,"","Events");
-  NewPhivsPhiproton=HConfig.GetTH2D(Name+"_NewPhivsPhiproton","New #phi VS old #phi of the proton",30,-TMath::Pi(),TMath::Pi(),30,-TMath::Pi(),TMath::Pi(),"","Events");
-  NewPhivsPhiTauplus=HConfig.GetTH2D(Name+"_NewPhivsPhiTauplus","New #phi VS old #phi of the Tau-",30,-TMath::Pi(),TMath::Pi(),30,-TMath::Pi(),TMath::Pi(),"","Events");
-  NewPhivsEtaproton=HConfig.GetTH2D(Name+"_NewPhivsEtaproton","New #phi VS old #eta of the proton",30,-TMath::Pi(),TMath::Pi(),20,-2.7,2.7,"","Events");
-  NewPhivsEtaTauplus=HConfig.GetTH2D(Name+"_NewPhivsEtaTauplus","New #phi VS old #eta of the Tau-",30,-TMath::Pi(),TMath::Pi(),20,-2.7,2.7,"","Events");
+  NewPhivsDeltaPhi=HConfig.GetTH2D(Name+"_NewPhivsDeltaPhi","New #phi VS old #Delta#phi",30,-TMath::Pi(),TMath::Pi(),30,-TMath::Pi(),TMath::Pi(),"","Events");
+  NewPhivsDeltaEta=HConfig.GetTH2D(Name+"_NewPhivsDeltaEta","New #phi VS old #Delta#eta",30,-TMath::Pi(),TMath::Pi(),40,-5.,5.,"","Events");
+  //NewPhivsPhiproton=HConfig.GetTH2D(Name+"_NewPhivsPhiproton","New #phi VS old #phi of the proton",30,-TMath::Pi(),TMath::Pi(),30,-TMath::Pi(),TMath::Pi(),"","Events");
+  NewPhivsPhiTauplus=HConfig.GetTH2D(Name+"_NewPhivsPhiTauplus","New #phi VS old #phi of the Tau+",30,-TMath::Pi(),TMath::Pi(),30,-TMath::Pi(),TMath::Pi(),"","Events");
+  //NewPhivsEtaproton=HConfig.GetTH2D(Name+"_NewPhivsEtaproton","New #phi VS old #eta of the proton",30,-TMath::Pi(),TMath::Pi(),20,-2.7,2.7,"","Events");
+  NewPhivsEtaTauplus=HConfig.GetTH2D(Name+"_NewPhivsEtaTauplus","New #phi VS old #eta of the Tau+",30,-TMath::Pi(),TMath::Pi(),20,-2.7,2.7,"","Events");
   NewPhivsZPt=HConfig.GetTH2D(Name+"_NewPhivsZPt","New #phi VS Pt_{Z}",30,-TMath::Pi(),TMath::Pi(),40,0,100,"","Events");
 
-  NewPhiSignal=HConfig.GetTH1D(Name+"_NewPhiSignal","New Phi for all Signal",30,-TMath::Pi(),TMath::Pi(),"","Events");
-  NewPhiQCD=HConfig.GetTH1D(Name+"_NewPhiQCD","New Phi for QCD",30,-TMath::Pi(),TMath::Pi(),"","Events");
+  NewPhiSignal=HConfig.GetTH1D(Name+"_NewPhiSignal","New #phi for all Signal",30,-TMath::Pi(),TMath::Pi(),"","Events");
+  NewPhiQCD=HConfig.GetTH1D(Name+"_NewPhiQCD","New #phi for QCD",30,-TMath::Pi(),TMath::Pi(),"","Events");
 																			      
-  ZPtVis=HConfig.GetTH1D(Name+"_ZPtVis","Visible Pt_{Z}",40,0,100,"","Events");
+  ZPtVis=HConfig.GetTH1D(Name+"_ZPtVis","Visible Pt_{Z}",20,0,40,"","Events");
+
+  NewPhivsPhiTauminus=HConfig.GetTH2D(Name+"_NewPhivsPhiTauminus","New #phi VS old #phi of the Tau-",30,-TMath::Pi(),TMath::Pi(),30,-TMath::Pi(),TMath::Pi(),"","Events");
+  NewPhivsEtaTauminus=HConfig.GetTH2D(Name+"_NewPhivsEtaTauminus","New #phi VS old #eta of the Tau-",30,-TMath::Pi(),TMath::Pi(),20,-2.7,2.7,"","Events");
+
+  //NewPhivsTauplusPt=HConfig.GetTH2D(Name+"_NewPhivsTauplusPt","New #phi VS Pt_{#tau+}",30,-TMath::Pi(),TMath::Pi(),30,0,60,"","Events");
+  //NewPhivsTauminusPt=HConfig.GetTH2D(Name+"_NewPhivsTauminusPt","New #phi VS Pt_{#tau-}",30,-TMath::Pi(),TMath::Pi(),30,0,60,"","Events");
+  
+  NewPhivsDeltaEtaplusminus=HConfig.GetTH2D(Name+"_NewPhivsDeltaEtaplusminus","New #phi VS old #Delta#eta for tau+ and tau-",30,-TMath::Pi(),TMath::Pi(),40,-5.,5.,"","Events");
+
+  EtaplusvsEtaminus=HConfig.GetTH2D(Name+"_EtaplusvsEtaminus","#eta_{#tau+} VS #eta_{#tau-}",40,-2.7,2.7,40,-2.7,2.7,"","Events");
+
+  EtaTau1vsEtaTau2=HConfig.GetTH2D(Name+"_EtaTau1vsEtaTau2","#eta_{#tau1} VS #eta_{#tau2}",40,-2.7,2.7,40,-2.7,2.7,"","Events");
+
+  PhiTau1vsPhiTau2=HConfig.GetTH2D(Name+"_PhiTau1vsPhiTau2","#phi_{#tau1} VS #phi_{#tau2}",40,-TMath::Pi(),TMath::Pi(),40,-TMath::Pi(),TMath::Pi(),"","Events");
+
+  DzTau1vsDzTau2=HConfig.GetTH2D(Name+"_DzTau1vsDzTau2","Dz_{#tau1} VS Dz_{#tau2}",20,-0.05,0.05,20,-0.05,0.05,"","Events");
 
   Selection::ConfigureHistograms();   //   do not remove
   HConfig.GetHistoInfo(types,CrossSectionandAcceptance,legend,colour);  // do not remove
@@ -314,6 +343,12 @@ void  ZMuTau::Store_ExtraDist(){
   Extradist1d.push_back(&NQCD);
   Extradist1d.push_back(&NWJets);
   Extradist1d.push_back(&NWJetsRelaxed);
+  Extradist1d.push_back(&MT_AHigh);
+  Extradist1d.push_back(&MT_BHigh);
+  Extradist1d.push_back(&MT_BLow);
+  Extradist1d.push_back(&TauTauVisMass_AHigh);
+  Extradist1d.push_back(&TauTauVisMass_BHigh);
+  Extradist1d.push_back(&TauTauVisMass_BLow);
 
   Extradist1d.push_back(&MET);
   Extradist1d.push_back(&METphi);
@@ -342,6 +377,9 @@ void  ZMuTau::Store_ExtraDist(){
   //Extradist1d.push_back(&Phivisa1a1);
   Extradist1d.push_back(&Thetavis);
   
+  // Extradist1d.push_back(&PhiInf8GeVvis);
+  //Extradist1d.push_back(&PhiSup8GeVvis);
+
   Extradist1d.push_back(&Etatruth);
   //Extradist1d.push_back(&Phitruthpipi);
   //Extradist1d.push_back(&Phitruthpirho);
@@ -361,13 +399,25 @@ void  ZMuTau::Store_ExtraDist(){
 
   Extradist2d.push_back(&NewPhivsDeltaPhi);
   Extradist2d.push_back(&NewPhivsDeltaEta);
-  Extradist2d.push_back(&NewPhivsPhiproton);
+  //Extradist2d.push_back(&NewPhivsPhiproton);
   Extradist2d.push_back(&NewPhivsPhiTauplus);
-  Extradist2d.push_back(&NewPhivsEtaproton);
+  //Extradist2d.push_back(&NewPhivsEtaproton);
   Extradist2d.push_back(&NewPhivsEtaTauplus);
   Extradist2d.push_back(&NewPhivsZPt);
   Extradist1d.push_back(&NewPhiSignal);
   Extradist1d.push_back(&NewPhiQCD);
+
+  Extradist2d.push_back(&NewPhivsPhiTauminus);
+  Extradist2d.push_back(&NewPhivsEtaTauminus);
+  //Extradist2d.push_back(&NewPhivsTauminusPt);
+  //Extradist2d.push_back(&NewPhivsTauplusPt);
+  Extradist2d.push_back(&NewPhivsDeltaEtaplusminus);
+
+  Extradist2d.push_back(&EtaplusvsEtaminus);
+  Extradist2d.push_back(&EtaTau1vsEtaTau2);
+
+  Extradist2d.push_back(&PhiTau1vsPhiTau2);
+  Extradist2d.push_back(&DzTau1vsDzTau2);
 }
 
 void  ZMuTau::doEvent(){ //  Method called on every event
@@ -538,6 +588,9 @@ void  ZMuTau::doEvent(){ //  Method called on every event
 
   if(!Ntp->isData() && id!=DataMCType::QCD)w*=Ntp->MC_weight(); //generator weight
 
+
+  if(Ntp->GetMCID() == 20 ||Ntp->GetMCID() == 33||Ntp->GetMCID() == 30) w*=Ntp->stitch_weight();
+
   //  std::cout<<"zpt "<< zptw<<std::endl;
 
   }
@@ -604,14 +657,20 @@ void  ZMuTau::doEvent(){ //  Method called on every event
       }
       if(Ntp->transverseMass(MuonP4.Pt(), MuonP4.Phi(), Ntp->MET(), Ntp->METphi())>70.){
 	NWJets.at(t).Fill(3.,w); //A High
+	MT_AHigh.at(t).Fill(Ntp->transverseMass(MuonP4.Pt(), MuonP4.Phi(), Ntp->MET(), Ntp->METphi()),w);
+	TauTauVisMass_AHigh.at(t).Fill((MuonP4+TauP4).M(),w);
       }
     }
     if(!pass.at(PairCharge)){
       if(Ntp->transverseMass(MuonP4.Pt(), MuonP4.Phi(), Ntp->MET(), Ntp->METphi())<40.){
 	NWJets.at(t).Fill(2.,w); //B Low
+	MT_BHigh.at(t).Fill(Ntp->transverseMass(MuonP4.Pt(), MuonP4.Phi(), Ntp->MET(), Ntp->METphi()),w);
+	TauTauVisMass_AHigh.at(t).Fill((MuonP4+TauP4).M(),w);
       }
       if(Ntp->transverseMass(MuonP4.Pt(), MuonP4.Phi(), Ntp->MET(), Ntp->METphi())>70.){
 	NWJets.at(t).Fill(4.,w); //B High
+	MT_BLow.at(t).Fill(Ntp->transverseMass(MuonP4.Pt(), MuonP4.Phi(), Ntp->MET(), Ntp->METphi()),w);
+	TauTauVisMass_AHigh.at(t).Fill((MuonP4+TauP4).M(),w);
       }
     }
   }
@@ -677,7 +736,7 @@ void  ZMuTau::doEvent(){ //  Method called on every event
     double pvx(0);
     pvx =  Ntp->npv();
 
-
+    cout<<"1   Eta Tau= "<<TauP4.Eta()<<"  Eta Muon= "<<MuonP4.Eta()<<endl;
 
     // if(id == DataMCType::Data) pvx =  Ntp->npv();
      if(id !=DataMCType::Data && id !=DataMCType::QCD && id !=DataMCType::W_lnu)	  pvx = Ntp->PUNumInteractions();
@@ -797,12 +856,32 @@ SVQualityVsSignificance.at(t).Fill(Ntp->PFTau_secondaryVertex_TracksMatchingQual
   if(id==33 || id == 10110333 || id == 10110433|| id == 10130533|| id ==10210333|| id == 10210433|| id == 10230533|| id ==10310333 || id ==10330533 || id ==10410433 || id == 10410333 || id == 10430533 || id == 30530533){
     NewPhivsDeltaPhi.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),Ntp->DeltaPhi(protonvis.Phi(),Tauplus3Dvis.Phi()),w);
     NewPhivsDeltaEta.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),protonvis.Eta()-Tauplus3Dvis.Eta(),w);
-    NewPhivsPhiproton.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),protonvis.Phi(),w);
+    //NewPhivsPhiproton.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),protonvis.Phi(),w);
     NewPhivsPhiTauplus.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),Tauplus3Dvis.Phi(),w);
-    NewPhivsEtaproton.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),protonvis.Eta(),w);
+    //NewPhivsEtaproton.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),protonvis.Eta(),w);
     NewPhivsEtaTauplus.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),Tauplus3Dvis.Eta(),w);
-
+    NewPhivsZPt.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),(TauP4+MuonP4).Pt(),w);
+    
     NewPhiSignal.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);
+
+
+    NewPhivsPhiTauminus.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),Tauminus3Dvis.Phi(),w);
+    NewPhivsEtaTauminus.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),Tauminus3Dvis.Eta(),w);
+    //NewPhivsTauminusPt.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),Tauminusvis.Pt(),w);
+    //NewPhivsTauplusPt.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),Tauplusvis.Pt(),w);
+
+    NewPhivsDeltaEtaplusminus.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),Tauminus3Dvis.Eta()-Tauplus3Dvis.Eta(),w);
+    
+    EtaplusvsEtaminus.at(t).Fill(Tauplus3Dvis.Eta(),Tauminus3Dvis.Eta(),w);
+    EtaTau1vsEtaTau2.at(t).Fill(MuonP4.Eta(),TauP4.Eta(),w);
+    cout<<"2   Eta Tau= "<<TauP4.Eta()<<"  Eta Muon= "<<MuonP4.Eta()<<endl;
+    PhiTau1vsPhiTau2.at(t).Fill(MuonP4.Phi(),TauP4.Phi(),w);
+
+    DzTau1vsDzTau2.at(t).Fill(Ntp->dz(Muon),Ntp->dz(Tau),w);
+    
+    //if((TauP4+MuonP4).Pt()<=8.)PhiInf8GeVvis.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()));
+    //if((TauP4+MuonP4).Pt()>8.)PhiSup8GeVvis.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()));
+      
   }
   if(id==DataMCType::QCD || id==DataMCType::Data)NewPhiQCD.at(t).Fill(Ntp->DeltaPhi(xyprotonvis.Phi(),xytauplusvis.Phi()),w);							
   if(id == 10110333 || id == 10110433|| id == 10130533|| id ==10210333|| id == 10210433|| id == 10230533|| id ==10310333 || id ==10330533 || id ==10410433 || id == 10410333|| id == 10430533|| id == 30530533)

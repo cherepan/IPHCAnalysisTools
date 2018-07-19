@@ -115,6 +115,9 @@ class ZTauTau : public Selection {
   std::vector<TH1D> QCDShape;
 
   std::vector<TH1D> NQCD;
+  std::vector<TH1D> TauTauFullMass_B;
+  std::vector<TH1D> TauTauFullMass_C;
+  std::vector<TH1D> TauTauFullMass_D;
   
   std::vector<TH1D> MET;
   std::vector<TH1D> METphi;
@@ -262,7 +265,17 @@ class ZTauTau : public Selection {
   std::vector<TH1D> Pi0EnergyRes;
   std::vector<TH1D> Pi0EnergyResPull;
 
-  /*std::vector<TH1D> CTN;
-    std::vector<TH1D> CTT;*/
+  std::vector<TH1D> ZPtVis;
+
+  std::vector<TH2D> NewPhivsDeltaPhi;
+  std::vector<TH2D> NewPhivsDeltaEta;
+  std::vector<TH2D> NewPhivsPhiproton;
+  std::vector<TH2D> NewPhivsPhiTauplus;
+  std::vector<TH2D> NewPhivsEtaproton;
+  std::vector<TH2D> NewPhivsEtaTauplus;
+  std::vector<TH2D> NewPhivsZPt;
+  std::vector<TH1D> NewPhiSignal;
+  std::vector<TH1D> NewPhiQCD;
+
 };
 #endif
