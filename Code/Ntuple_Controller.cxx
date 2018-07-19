@@ -2722,19 +2722,19 @@ TMatrixTSym<double> Ntuple_Controller::PFTau_TIP_secondaryVertex_cov(unsigned in
 // https://github.com/cms-analysis/HiggsAnalysis-KITHiggsToTauTau/blob/master/data/stitching_2016.ods
 double Ntuple_Controller::stitch_weight(){
   if(GetMCID() == 33){
-    if(lheNOutPartons()==0) return 1.16379;
-    if(lheNOutPartons()==1) return 0.88841;
-    if(lheNOutPartons()==2) return 1.01368;
-    if(lheNOutPartons()==3) return 0.83481;
-    //    if(lheNOutPartons()==4) return 1.16379;
+    std::cout<<" lheNOutPartons() "<< lheNOutPartons()<<std::endl;
+    if(lheNOutPartons()==0 || lheNOutPartons() > 5 ) return 1.;
+    if(lheNOutPartons()==1) return 0.78855280106;
+    if(lheNOutPartons()==2) return 0.78086684643;
+    if(lheNOutPartons()==3) return 0.76970531344;
+    if(lheNOutPartons()==4) return 0.84032985204;
   }
   if(GetMCID() == 20){
-    if(lheNOutPartons()==0) return 1.22122;
-    if(lheNOutPartons()==1) return 1.09970;
-    if(lheNOutPartons()==2) return 1.08290;
-    if(lheNOutPartons()==3) return 1.14923;
-    if(lheNOutPartons()==4) return 1.18782;
-    //    if(lheNOutPartons()==4) return 1.16379;
+    if(lheNOutPartons()==0 || lheNOutPartons() > 5) return 1.;
+    if(lheNOutPartons()==1) return 0.90831531132;
+    if(lheNOutPartons()==2) return 0.56050723346;
+    if(lheNOutPartons()==3) return 0.40353543865;
+    if(lheNOutPartons()==4) return 0.33651360777;
   }
 }
 
