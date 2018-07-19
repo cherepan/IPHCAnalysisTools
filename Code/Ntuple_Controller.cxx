@@ -2719,10 +2719,8 @@ TMatrixTSym<double> Ntuple_Controller::PFTau_TIP_secondaryVertex_cov(unsigned in
  }
 
 
-// https://github.com/cms-analysis/HiggsAnalysis-KITHiggsToTauTau/blob/master/data/stitching_2016.ods
 double Ntuple_Controller::stitch_weight(){
-  if(GetMCID() == 33){
-    std::cout<<" lheNOutPartons() "<< lheNOutPartons()<<std::endl;
+  if(GetMCID() == 33 or GetMCID() == 30 ){
     if(lheNOutPartons()==0 || lheNOutPartons() > 5 ) return 1.;
     if(lheNOutPartons()==1) return 0.78855280106;
     if(lheNOutPartons()==2) return 0.78086684643;
