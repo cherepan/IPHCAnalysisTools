@@ -852,8 +852,9 @@ float  Daughters_lepMVA_mvaId(unsigned int i){return Ntp->daughters_lepMVA_mvaId
  int subjets_ak8MotherIdx(unsigned int i){return Ntp->subjets_ak8MotherIdx->at(i);}
 
  bool CHECK_BIT(int var, int pos){  return ((var & (1 << pos)) == (1 << pos)); }
-
+ //
  double stitch_weight();
+
 
  // bool res = word & (1 << bitpos);
 
