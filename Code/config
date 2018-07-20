@@ -132,7 +132,8 @@ else
 	lhapdf=$(ls TauSpiner/* | grep  lhapdf | wc -l)
 	if [ $lhapdf == 0 ]; then
 		cd TauSpiner
-	    wget http://www.hepforge.org/archive/lhapdf/lhapdf-5.9.1.tar.gz
+		wget http://www.hepforge.org/archive/lhapdf/lhapdf-5.9.1.tar.gz
+	#	wget http://www.hepforge.org/archive/lhapdf/LHAPDF-6.1.6.tar.gz
 	    cd ..
 	fi
 	pythia=$(ls TauSpiner/* | grep pythia8 | wc -l )
