@@ -226,32 +226,32 @@ void Ntuple_Controller::doMET(){
 //Physics get Functions
 Long64_t  Ntuple_Controller::GetMCID(){
 	Long64_t  DataMCTypeFromTupel = Ntp->DataMC_Type_idx;
-	//customize your event ID here 
-	// if(DataMCTypeFromTupel==10230533 or DataMCTypeFromTupel==10130533 or DataMCTypeFromTupel==10330533 or DataMCTypeFromTupel==10430533) return 10230533;
+	// //customize your event ID here 
+	// // if(DataMCTypeFromTupel==10230533 or DataMCTypeFromTupel==10130533 or DataMCTypeFromTupel==10330533 or DataMCTypeFromTupel==10430533) return 10230533;
 	
-	//if(DataMCTypeFromTupel==10110133 ) return DataMCTypeFromTupel;
-	//if(DataMCTypeFromTupel==10210233 ) return DataMCTypeFromTupel;
+	// //if(DataMCTypeFromTupel==10110133 ) return DataMCTypeFromTupel;
+	// //if(DataMCTypeFromTupel==10210233 ) return DataMCTypeFromTupel;
 	
-	//if(DataMCTypeFromTupel==10110233 ) return DataMCTypeFromTupel;
-	/*	if(DataMCTypeFromTupel==10110333 ) return DataMCTypeFromTupel;
-	if(DataMCTypeFromTupel==10110433 ) return DataMCTypeFromTupel;
-	if(DataMCTypeFromTupel==10130533 ) return DataMCTypeFromTupel;
+	// //if(DataMCTypeFromTupel==10110233 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10110333 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10110433 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10130533 ) return DataMCTypeFromTupel;
 
 	
-	if(DataMCTypeFromTupel==10210333 ) return DataMCTypeFromTupel;
-	if(DataMCTypeFromTupel==10210433 ) return DataMCTypeFromTupel;
-	if(DataMCTypeFromTupel==10230533 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10210333 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10210433 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10230533 ) return DataMCTypeFromTupel;
 	
-	if(DataMCTypeFromTupel==10310333 ) return DataMCTypeFromTupel;
-	if(DataMCTypeFromTupel==10330533 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10310333 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10330533 ) return DataMCTypeFromTupel;
 
 	
-	if(DataMCTypeFromTupel==10410433 ) return DataMCTypeFromTupel;
-	if(DataMCTypeFromTupel==10410333 ) return DataMCTypeFromTupel;
-	if(DataMCTypeFromTupel==10430533 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10410433 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10410333 ) return DataMCTypeFromTupel;
+	// if(DataMCTypeFromTupel==10430533 ) return DataMCTypeFromTupel;
 
 	
-	if(DataMCTypeFromTupel==30530533 ) return DataMCTypeFromTupel;*/
+	// if(DataMCTypeFromTupel==30530533 ) return DataMCTypeFromTupel;
 
 
 	
@@ -2721,19 +2721,28 @@ TMatrixTSym<double> Ntuple_Controller::PFTau_TIP_secondaryVertex_cov(unsigned in
 
 double Ntuple_Controller::stitch_weight(){
   if(GetMCID() == 33 or GetMCID() == 30 ){
-    if(lheNOutPartons()==0 || lheNOutPartons() > 5 ) return 1.;
-    if(lheNOutPartons()==1) return 0.78855280106;
-    if(lheNOutPartons()==2) return 0.78086684643;
-    if(lheNOutPartons()==3) return 0.76970531344;
-    if(lheNOutPartons()==4) return 0.84032985204;
+    if(lheNOutPartons() >= 5) return 1.;
+    if(lheNOutPartons()==0) return 1.5296701743;
+    if(lheNOutPartons()==1) return 0.4931720511;
+    if(lheNOutPartons()==2) return 0.503391311;
+    if(lheNOutPartons()==3) return 0.5267843245;
+    if(lheNOutPartons()==4) return 0.4250100447;
+
+    // if(lheNOutPartons()==0 || lheNOutPartons() > 5 ) return 1.;
+    // if(lheNOutPartons()==1) return 0.78855280106;
+    // if(lheNOutPartons()==2) return 0.78086684643;
+    // if(lheNOutPartons()==3) return 0.76970531344;
+    // if(lheNOutPartons()==4) return 0.84032985204;
   }
   if(GetMCID() == 20){
-    if(lheNOutPartons()==0 || lheNOutPartons() > 5) return 1.;
-    if(lheNOutPartons()==1) return 0.90831531132;
-    if(lheNOutPartons()==2) return 0.56050723346;
-    if(lheNOutPartons()==3) return 0.40353543865;
-    if(lheNOutPartons()==4) return 0.33651360777;
+    if(lheNOutPartons() >= 5) return 1.;
+    if(lheNOutPartons()==0) return 25.4144948064;
+    if(lheNOutPartons()==1) return 6.8091967302;
+    if(lheNOutPartons()==2) return 3.8983265846;
+    if(lheNOutPartons()==3) return 1.9482755634;
+    if(lheNOutPartons()==4) return 2.1232718311;
   }
+  return 1;
 }
 
 

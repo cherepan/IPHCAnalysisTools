@@ -103,7 +103,13 @@ class ZMuTau : public Selection {
   std::vector<TH1D> NQCD;
   std::vector<TH1D> NWJets;
   std::vector<TH1D> NWJetsRelaxed;
-  
+  std::vector<TH1D> MT_AHigh;
+  std::vector<TH1D> MT_BHigh;
+  std::vector<TH1D> MT_BLow;
+  std::vector<TH1D> TauTauVisMass_AHigh;
+  std::vector<TH1D> TauTauVisMass_BHigh;
+  std::vector<TH1D> TauTauVisMass_BLow;
+
   std::vector<TH1D> MET;
   std::vector<TH1D> METphi;
   std::vector<TH1D> PUPPImet;
@@ -133,6 +139,9 @@ class ZMuTau : public Selection {
   // std::vector<TH1D> Phivisa1a1;
   std::vector<TH1D> Thetavis;
   
+  //std::vector<TH1D> PhiInf8GeVvis;
+  //std::vector<TH1D> PhiSup8GeVvis;
+
   std::vector<TH1D> Etatruth;
   //std::vector<TH1D> Phitruthpipi;
   // std::vector<TH1D> Phitruthpirho;
@@ -217,12 +226,26 @@ class ZMuTau : public Selection {
 
   std::vector<TH2D> NewPhivsDeltaPhi;
   std::vector<TH2D> NewPhivsDeltaEta;
-  std::vector<TH2D> NewPhivsPhiproton;
+  //std::vector<TH2D> NewPhivsPhiproton;
   std::vector<TH2D> NewPhivsPhiTauplus;
-  std::vector<TH2D> NewPhivsEtaproton;
+  //std::vector<TH2D> NewPhivsEtaproton;
   std::vector<TH2D> NewPhivsEtaTauplus;
   std::vector<TH2D> NewPhivsZPt;
   std::vector<TH1D> NewPhiSignal;
   std::vector<TH1D> NewPhiQCD;
+
+  std::vector<TH2D> NewPhivsPhiTauminus;
+  std::vector<TH2D> NewPhivsEtaTauminus;
+  //std::vector<TH2D> NewPhivsTauminusPt;
+  //std::vector<TH2D> NewPhivsTauplusPt;
+  std::vector<TH2D> NewPhivsDeltaEtaplusminus;
+
+  std::vector<TH2D> EtaplusvsEtaminus;
+  std::vector<TH2D> EtaTau1vsEtaTau2;
+
+  std::vector<TH2D> PhiTau1vsPhiTau2;
+  
+  std::vector<TH2D> DzTau1vsDzTau2;
+  
 };
 #endif
