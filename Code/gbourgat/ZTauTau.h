@@ -131,17 +131,17 @@ class ZTauTau : public Selection {
   
   std::vector<TH1D> NbJets;
   
-  std::vector<TH1D> h_SVFitMass;
+  std::vector<TH1D> h_SVFitMass; 
   std::vector<TH1D> h_SVFitStatus;
-  std::vector<TH1D> svfTau1E;
-  std::vector<TH1D> svfTau2E;
+  /* std::vector<TH1D> svfTau1E; */
+  /* std::vector<TH1D> svfTau2E; */
   
-  std::vector<TH1D> PhiDatasvfitpipi;
-  std::vector<TH1D> PhiDatasvfitpirho;
-  std::vector<TH1D> PhiDatasvfitpia1;
-  std::vector<TH1D> PhiDatasvfitrhorho;
-  std::vector<TH1D> PhiDatasvfitrhoa1;
-  std::vector<TH1D> PhiDatasvfita1a1;
+  /* std::vector<TH1D> PhiDatasvfitpipi; */
+  /* std::vector<TH1D> PhiDatasvfitpirho; */
+  /* std::vector<TH1D> PhiDatasvfitpia1; */
+  /* std::vector<TH1D> PhiDatasvfitrhorho; */
+  /* std::vector<TH1D> PhiDatasvfitrhoa1; */
+  /* std::vector<TH1D> PhiDatasvfita1a1; */
   /*
   std::vector<TH1D> PhiDatavispipi;
   std::vector<TH1D> PhiDatavispirho;
@@ -151,17 +151,17 @@ class ZTauTau : public Selection {
   std::vector<TH1D> PhiDatavisa1a1;
   */
   
-  std::vector<TH1D> Etasvfit;
-  std::vector<TH1D> Phisvfitpipi;
-  std::vector<TH1D> Phisvfitpirho;
-  //std::vector<TH1D> Phisvfitlpi;
-  //std::vector<TH1D> Phisvfitlrho;
-  std::vector<TH1D> Phisvfitpia1;
-  std::vector<TH1D> Phisvfitrhorho;
-  std::vector<TH1D> Phisvfitrhoa1;
-  // std::vector<TH1D> Phisvfitla1;
-  std::vector<TH1D> Phisvfita1a1;
-  std::vector<TH1D> Thetasvfit;
+  /* std::vector<TH1D> Etasvfit; */
+  /* std::vector<TH1D> Phisvfitpipi; */
+  /* std::vector<TH1D> Phisvfitpirho; */
+  /* //std::vector<TH1D> Phisvfitlpi; */
+  /* //std::vector<TH1D> Phisvfitlrho; */
+  /* std::vector<TH1D> Phisvfitpia1; */
+  /* std::vector<TH1D> Phisvfitrhorho; */
+  /* std::vector<TH1D> Phisvfitrhoa1; */
+  /* // std::vector<TH1D> Phisvfitla1; */
+  /* std::vector<TH1D> Phisvfita1a1; */
+  /* std::vector<TH1D> Thetasvfit; */
   
   std::vector<TH1D> Etavis;
   std::vector<TH1D> Phivispipi;

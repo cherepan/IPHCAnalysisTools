@@ -189,12 +189,12 @@ void  ZTauTau::Configure(){
 
   TauTauVisMass=HConfig.GetTH1D(Name+"_TauTauVisMass","Visible invariant mass of a tau pair",40,0,150," M(#tau#tau)_{vis}, GeV","Events");
   TauTauTruthMass=HConfig.GetTH1D(Name+"_TauTauTruthMass","Truth invariant mass of a tau pair",40,0,150," M(#tau#tau)_{truth}, GeV","Events");
-  TauTauFullMass=HConfig.GetTH1D(Name+"_TauTauFullMass","Full invariant mass of a tau pair",40,0,150," M(#tau#tau)_{full}, GeV","Events");
+  //TauTauFullMass=HConfig.GetTH1D(Name+"_TauTauFullMass","Full invariant mass of a tau pair",40,0,150," M(#tau#tau)_{full}, GeV","Events");
 
   NQCD=HConfig.GetTH1D(Name+"_NQCD","NQCD",4,0.5,4.5,"NQCD in ABCD","Events");
-  TauTauFullMass_B=HConfig.GetTH1D(Name+"_TauTauFullMass_B","TauTauFullMass_B",40,0,150,"#tau_h#tau_h SVFit Mass in B","Events");
-  TauTauFullMass_C=HConfig.GetTH1D(Name+"_TauTauFullMass_C","TauTauFullMass_C",40,0,150,"#tau_h#tau_h SVFit Mass in C","Events");
-  TauTauFullMass_D=HConfig.GetTH1D(Name+"_TauTauFullMass_D","TauTauFullMass_D",40,0,150,"#tau_h#tau_h SVFit Mass in D","Events");
+  // TauTauFullMass_B=HConfig.GetTH1D(Name+"_TauTauFullMass_B","TauTauFullMass_B",40,0,150,"#tau_h#tau_h SVFit Mass in B","Events");
+  // TauTauFullMass_C=HConfig.GetTH1D(Name+"_TauTauFullMass_C","TauTauFullMass_C",40,0,150,"#tau_h#tau_h SVFit Mass in C","Events");
+  // TauTauFullMass_D=HConfig.GetTH1D(Name+"_TauTauFullMass_D","TauTauFullMass_D",40,0,150,"#tau_h#tau_h SVFit Mass in D","Events");
 
   dRTauTau=HConfig.GetTH1D(Name+"_dRTauTau","#Delta R",20,0.,3.5," #Delta R","Events");
 
@@ -210,19 +210,19 @@ void  ZTauTau::Configure(){
   
   NbJets=HConfig.GetTH1D(Name+"_NbJets","NbJets",12,0,12,"Number of jets","Events");
   
-  h_SVFitMass = HConfig.GetTH1D(Name+"_SVFitMass","SVFitMass",100,0.,200.,"m_{SVfit}(#tau_{h},#tau_{h})/GeV");
-  h_SVFitStatus = HConfig.GetTH1D(Name+"_SVFitStatus", "SVFitStatus", 5, -0.5, 4.5, "Status of SVFit calculation");
+   h_SVFitMass = HConfig.GetTH1D(Name+"_SVFitMass","SVFitMass",100,0.,200.,"m_{SVfit}(#tau_{h},#tau_{h})/GeV");
+   h_SVFitStatus = HConfig.GetTH1D(Name+"_SVFitStatus", "SVFitStatus", 5, -0.5, 4.5, "Status of SVFit calculation");
 
-  svfTau1E = HConfig.GetTH1D(Name+"_svfTau1E","svFitTau1E",40,20.,120.,"E_{SVfit}(#tau_{h}1)/GeV");
-  svfTau2E = HConfig.GetTH1D(Name+"_svfTau2E","svFitTau2E",40,20.,120.,"E_{SVfit}(#tau_{h}2)/GeV");
+  // svfTau1E = HConfig.GetTH1D(Name+"_svfTau1E","svFitTau1E",40,20.,120.,"E_{SVfit}(#tau_{h}1)/GeV");
+  // svfTau2E = HConfig.GetTH1D(Name+"_svfTau2E","svFitTau2E",40,20.,120.,"E_{SVfit}(#tau_{h}2)/GeV");
 
   
-  PhiDatasvfitpipi = HConfig.GetTH1D(Name+"_PhiDatasvfitpipi","Phisvfit #pi#pi",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #pi#pi channel");
-  PhiDatasvfitpirho = HConfig.GetTH1D(Name+"_PhiDatasvfitpirho","Phisvfit #pi#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #pi#rho channel");
-  PhiDatasvfitpia1 = HConfig.GetTH1D(Name+"_PhiDatasvfitpia1","Phisvfit a1#pi",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1#pi channel");
-  PhiDatasvfitrhorho = HConfig.GetTH1D(Name+"_PhiDatasvfitrhorho","Phisvfit #rho#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #rho#rho channel");
-  PhiDatasvfitrhoa1 = HConfig.GetTH1D(Name+"_PhiDatasvfitrhoa1","Phisvfit a1#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1#rho channel");
-  PhiDatasvfita1a1 = HConfig.GetTH1D(Name+"_PhiDatasvfita1a1","Phisvfit a1a1",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1a1 channel");
+  // PhiDatasvfitpipi = HConfig.GetTH1D(Name+"_PhiDatasvfitpipi","Phisvfit #pi#pi",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #pi#pi channel");
+  // PhiDatasvfitpirho = HConfig.GetTH1D(Name+"_PhiDatasvfitpirho","Phisvfit #pi#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #pi#rho channel");
+  // PhiDatasvfitpia1 = HConfig.GetTH1D(Name+"_PhiDatasvfitpia1","Phisvfit a1#pi",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1#pi channel");
+  // PhiDatasvfitrhorho = HConfig.GetTH1D(Name+"_PhiDatasvfitrhorho","Phisvfit #rho#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #rho#rho channel");
+  // PhiDatasvfitrhoa1 = HConfig.GetTH1D(Name+"_PhiDatasvfitrhoa1","Phisvfit a1#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1#rho channel");
+  // PhiDatasvfita1a1 = HConfig.GetTH1D(Name+"_PhiDatasvfita1a1","Phisvfit a1a1",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1a1 channel");
   /*
   PhiDatavispipi = HConfig.GetTH1D(Name+"_PhiDatavispipi","Phivis #pi#pi",30,-TMath::Pi(),TMath::Pi(),"Angle with vis between Tau+ and an initial proton in the new xy plan for #pi#pi channel");
   PhiDatavispirho = HConfig.GetTH1D(Name+"_PhiDatavispirho","Phivis #pi#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with vis between Tau+ and an initial proton in the new xy plan for #pi#rho channel");
@@ -232,19 +232,19 @@ void  ZTauTau::Configure(){
   PhiDatavisa1a1 = HConfig.GetTH1D(Name+"_PhiDatavisa1a1","Phivis a1a1",30,-TMath::Pi(),TMath::Pi(),"Angle with vis between Tau+ and an initial proton in the new xy plan for a1a1 channel");
   */
   
-  Etasvfit = HConfig.GetTH1D(Name+"_Etasvfit", "Etasvfit", 30, -10, 10, "Eta  with svfit between Tau+ and Tau- in the new xy plan");
+  // Etasvfit = HConfig.GetTH1D(Name+"_Etasvfit", "Etasvfit", 30, -10, 10, "Eta  with svfit between Tau+ and Tau- in the new xy plan");
 
-  Phisvfitpipi = HConfig.GetTH1D(Name+"_Phisvfitpipi","Phisvfit #pi#pi",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #pi#pi channel");
-  Phisvfitpirho = HConfig.GetTH1D(Name+"_Phisvfitpirho","Phisvfit #pi#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #pi#rho channel");
-  // Phisvfitlpi = HConfig.GetTH1D(Name+"_Phisvfitlpi","Phisvfit l#pi",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #pi channel");
-  // Phisvfitlrho = HConfig.GetTH1D(Name+"_Phisvfitlrho","Phisvfit l#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for l#rho channel");
-  Phisvfitpia1 = HConfig.GetTH1D(Name+"_Phisvfitpia1","Phisvfit a1#pi",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1#pi channel");
-   Phisvfitrhorho = HConfig.GetTH1D(Name+"_Phisvfitrhorho","Phisvfit #rho#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #rho#rho channel");
-  Phisvfitrhoa1 = HConfig.GetTH1D(Name+"_Phisvfitrhoa1","Phisvfit a1#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1#rho channel");
-  // Phisvfitla1 = HConfig.GetTH1D(Name+"_Phisvfitla1","Phisvfit la1",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for la1 channel");
-  Phisvfita1a1 = HConfig.GetTH1D(Name+"_Phisvfita1a1","Phisvfit a1a1",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1a1 channel");
+  // Phisvfitpipi = HConfig.GetTH1D(Name+"_Phisvfitpipi","Phisvfit #pi#pi",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #pi#pi channel");
+  // Phisvfitpirho = HConfig.GetTH1D(Name+"_Phisvfitpirho","Phisvfit #pi#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #pi#rho channel");
+  // // Phisvfitlpi = HConfig.GetTH1D(Name+"_Phisvfitlpi","Phisvfit l#pi",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #pi channel");
+  // // Phisvfitlrho = HConfig.GetTH1D(Name+"_Phisvfitlrho","Phisvfit l#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for l#rho channel");
+  // Phisvfitpia1 = HConfig.GetTH1D(Name+"_Phisvfitpia1","Phisvfit a1#pi",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1#pi channel");
+  //  Phisvfitrhorho = HConfig.GetTH1D(Name+"_Phisvfitrhorho","Phisvfit #rho#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for #rho#rho channel");
+  // Phisvfitrhoa1 = HConfig.GetTH1D(Name+"_Phisvfitrhoa1","Phisvfit a1#rho",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1#rho channel");
+  // // Phisvfitla1 = HConfig.GetTH1D(Name+"_Phisvfitla1","Phisvfit la1",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for la1 channel");
+  // Phisvfita1a1 = HConfig.GetTH1D(Name+"_Phisvfita1a1","Phisvfit a1a1",30,-TMath::Pi(),TMath::Pi(),"Angle with svfit between Tau+ and an initial proton in the new xy plan for a1a1 channel");
 
-  Thetasvfit = HConfig.GetTH1D(Name+"_Thetasvfit","Thetasvfit",30,0.,3.,"Original theta of Tau- with svfit");
+  // Thetasvfit = HConfig.GetTH1D(Name+"_Thetasvfit","Thetasvfit",30,0.,3.,"Original theta of Tau- with svfit");
   
 
   Etavis = HConfig.GetTH1D(Name+"_Etavis", "Etavis", 30, -10, 10, "Eta between Tau+ and Tau- in the new xy plan with visible particles");
@@ -423,13 +423,13 @@ void  ZTauTau::Store_ExtraDist(){
   Extradist1d.push_back(&dRTauTau);
   Extradist1d.push_back(&TauTauVisMass);
   Extradist1d.push_back(&TauTauTruthMass);
-  Extradist1d.push_back(&TauTauFullMass);
+  //Extradist1d.push_back(&TauTauFullMass);
   
   Extradist1d.push_back(&QCDShape);
   Extradist1d.push_back(&NQCD);
-  Extradist1d.push_back(&TauTauFullMass_B);
-  Extradist1d.push_back(&TauTauFullMass_C);
-  Extradist1d.push_back(&TauTauFullMass_D);
+  // Extradist1d.push_back(&TauTauFullMass_B);
+  // Extradist1d.push_back(&TauTauFullMass_C);
+  // Extradist1d.push_back(&TauTauFullMass_D);
 
   Extradist1d.push_back(&MET);
   Extradist1d.push_back(&METphi);
@@ -444,17 +444,17 @@ void  ZTauTau::Store_ExtraDist(){
 
   Extradist1d.push_back(&NbJets);
 
-  Extradist1d.push_back(&h_SVFitMass);
-  Extradist1d.push_back(&h_SVFitStatus);
-  Extradist1d.push_back(&svfTau1E);
-  Extradist1d.push_back(&svfTau2E);
+   Extradist1d.push_back(&h_SVFitMass);
+   Extradist1d.push_back(&h_SVFitStatus);
+  // Extradist1d.push_back(&svfTau1E);
+  // Extradist1d.push_back(&svfTau2E);
   
-  Extradist1d.push_back(&PhiDatasvfitpipi);
-  Extradist1d.push_back(&PhiDatasvfitpirho);
-  Extradist1d.push_back(&PhiDatasvfitpia1);
-  Extradist1d.push_back(&PhiDatasvfitrhorho);
-  Extradist1d.push_back(&PhiDatasvfitrhoa1);
-  Extradist1d.push_back(&PhiDatasvfita1a1);
+  // Extradist1d.push_back(&PhiDatasvfitpipi);
+  // Extradist1d.push_back(&PhiDatasvfitpirho);
+  // Extradist1d.push_back(&PhiDatasvfitpia1);
+  // Extradist1d.push_back(&PhiDatasvfitrhorho);
+  // Extradist1d.push_back(&PhiDatasvfitrhoa1);
+  // Extradist1d.push_back(&PhiDatasvfita1a1);
   /*
   Extradist1d.push_back(&PhiDatavispipi);
   Extradist1d.push_back(&PhiDatavispirho);
@@ -464,17 +464,17 @@ void  ZTauTau::Store_ExtraDist(){
   Extradist1d.push_back(&PhiDatavisa1a1);
   */
   
-  Extradist1d.push_back(&Etasvfit);
-  Extradist1d.push_back(&Phisvfitpipi);
-  Extradist1d.push_back(&Phisvfitpirho);
-  //Extradist1d.push_back(&Phisvfitlpi);
-  //Extradist1d.push_back(&Phisvfitlrho);
-  Extradist1d.push_back(&Phisvfitpia1);
-  Extradist1d.push_back(&Phisvfitrhorho);
-  Extradist1d.push_back(&Phisvfitrhoa1);
-  //Extradist1d.push_back(&Phisvfitla1);
-  Extradist1d.push_back(&Phisvfita1a1);
-  Extradist1d.push_back(&Thetasvfit);
+  // Extradist1d.push_back(&Etasvfit);
+  // Extradist1d.push_back(&Phisvfitpipi);
+  // Extradist1d.push_back(&Phisvfitpirho);
+  // //Extradist1d.push_back(&Phisvfitlpi);
+  // //Extradist1d.push_back(&Phisvfitlrho);
+  // Extradist1d.push_back(&Phisvfitpia1);
+  // Extradist1d.push_back(&Phisvfitrhorho);
+  // Extradist1d.push_back(&Phisvfitrhoa1);
+  // //Extradist1d.push_back(&Phisvfitla1);
+  // Extradist1d.push_back(&Phisvfita1a1);
+  // Extradist1d.push_back(&Thetasvfit);
   
   Extradist1d.push_back(&Etavis);
   Extradist1d.push_back(&Phivispipi);
@@ -837,39 +837,7 @@ void  ZTauTau::doEvent()  { //  Method called on every event
  if(passAllBut(exclude_cuts)){
    Tau1P4 = Ntp->TauP4_Corrected(Tau1);
    Tau2P4 = Ntp->TauP4_Corrected(Tau2);
-
-
- 
- //---------  svfit ---------------------
-    std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
-    classic_svFit::MeasuredTauLepton lep1(1, Tau1P4.Pt(), Tau1P4.Eta(),  Tau1P4.Phi(), Tau1P4.M());
-    classic_svFit::MeasuredTauLepton lep2(1, Tau2P4.Pt(), Tau2P4.Eta(),  Tau2P4.Phi(), Tau2P4.M());
- 
-    measuredTauLeptons.push_back(lep1);
-    measuredTauLeptons.push_back(lep2);
-    TMatrixD metcov(2,2);
-    double metx = Ntp->MET()*cos(Ntp->METphi());
-    double mety = Ntp->MET()*sin(Ntp->METphi());
-
-    metcov[0][0] = Ntp->PFMETCov00();
-    metcov[1][0] = Ntp->PFMETCov01();
-    metcov[0][1] = Ntp->PFMETCov10();
-    metcov[1][1] = Ntp->PFMETCov11();
-
-    svfitAlgo1.addLogM_fixed(true,5.0);
-    svfitAlgo1.setDiTauMassConstraint(-1.0);
-    svfitAlgo1.integrate(measuredTauLeptons,metx,mety, metcov );
-    if(svfitAlgo1.isValidSolution()){
-      double higgsmass  = static_cast<classic_svFit::DiTauSystemHistogramAdapter*>(svfitAlgo1.getHistogramAdapter())->getMass();
-      h_SVFitMass.at(t).Fill(higgsmass,w); 
-    }
-    ClassicSVfit svfitAlgo2;
-    svfitAlgo2.setHistogramAdapter(new classic_svFit::TauTauHistogramAdapter());
-    svfitAlgo2.addLogM_fixed(true, 5.);
-    svfitAlgo2.integrate(measuredTauLeptons,metx,mety, metcov );
-    tau1P4 = static_cast<classic_svFit::TauTauHistogramAdapter*>(svfitAlgo2.getHistogramAdapter())->GetFittedTau1LV();
-    tau2P4 = static_cast<classic_svFit::TauTauHistogramAdapter*>(svfitAlgo2.getHistogramAdapter())->GetFittedTau2LV();
- }
+  }
 
   // QCD ABCD BG Method
   /*******************
@@ -913,17 +881,17 @@ void  ZTauTau::doEvent()  { //  Method called on every event
       }
       if((Ntp->isIsolatedTau(Tau1,"Medium") && !Ntp->isIsolatedTau(Tau2,"Tight") && Ntp->isIsolatedTau(Tau2,"Loose")) || (Ntp->isIsolatedTau(Tau2,"Medium") && !Ntp->isIsolatedTau(Tau1,"Tight") && Ntp->isIsolatedTau(Tau1,"Loose"))){
 	NQCD.at(t).Fill(2.,w); //B
-	TauTauFullMass_B.at(t).Fill((tau1P4+tau2P4).M(),w);
+	//TauTauFullMass_B.at(t).Fill((tau1P4+tau2P4).M(),w);
       }
     }
     if(!pass.at(PairCharge)){
       if(pass.at(Tau1Isolation) && pass.at(Tau2Isolation)){
 	NQCD.at(t).Fill(3.,w); //C
-	TauTauFullMass_C.at(t).Fill((tau1P4+tau2P4).M(),w);
+	//TauTauFullMass_C.at(t).Fill((tau1P4+tau2P4).M(),w);
       }
       if((Ntp->isIsolatedTau(Tau1,"Medium") && !Ntp->isIsolatedTau(Tau2,"Tight") && Ntp->isIsolatedTau(Tau2,"Loose")) || (Ntp->isIsolatedTau(Tau2,"Medium") && !Ntp->isIsolatedTau(Tau1,"Tight") && Ntp->isIsolatedTau(Tau1,"Loose"))){
 	NQCD.at(t).Fill(4.,w); //D
-	TauTauFullMass_D.at(t).Fill((tau1P4+tau2P4).M(),w);
+	//TauTauFullMass_D.at(t).Fill((tau1P4+tau2P4).M(),w);
       }
     }
   }
@@ -971,12 +939,43 @@ void  ZTauTau::doEvent()  { //  Method called on every event
     
     std::vector<int> thirdLepton;
 
-   
-    
+   //---------  svfit ---------------------
+    std::vector<classic_svFit::MeasuredTauLepton> measuredTauLeptons;
+    classic_svFit::MeasuredTauLepton lep1(1, Tau1P4.Pt(), Tau1P4.Eta(),  Tau1P4.Phi(), Tau1P4.M());
+    classic_svFit::MeasuredTauLepton lep2(1, Tau2P4.Pt(), Tau2P4.Eta(),  Tau2P4.Phi(), Tau2P4.M());
+ 
+    measuredTauLeptons.push_back(lep1);
+    measuredTauLeptons.push_back(lep2);
+    TMatrixD metcov(2,2);
+    double metx = Ntp->MET()*cos(Ntp->METphi());
+    double mety = Ntp->MET()*sin(Ntp->METphi());
+
+    metcov[0][0] = Ntp->PFMETCov00();
+    metcov[1][0] = Ntp->PFMETCov01();
+    metcov[0][1] = Ntp->PFMETCov10();
+    metcov[1][1] = Ntp->PFMETCov11();
+
+    svfitAlgo1.addLogM_fixed(true,5.0);
+    svfitAlgo1.setDiTauMassConstraint(-1.0);
+    svfitAlgo1.integrate(measuredTauLeptons,metx,mety, metcov );
+    if(svfitAlgo1.isValidSolution()){
+      double higgsmass  = static_cast<classic_svFit::DiTauSystemHistogramAdapter*>(svfitAlgo1.getHistogramAdapter())->getMass();
+      h_SVFitMass.at(t).Fill(higgsmass,w); 
+    }
+    ClassicSVfit svfitAlgo2;
+    svfitAlgo2.setHistogramAdapter(new classic_svFit::TauTauHistogramAdapter());
+    svfitAlgo2.addLogM_fixed(true, 5.);
+    svfitAlgo2.integrate(measuredTauLeptons,metx,mety, metcov );
+    tau1P4 = static_cast<classic_svFit::TauTauHistogramAdapter*>(svfitAlgo2.getHistogramAdapter())->GetFittedTau1LV();
+    tau2P4 = static_cast<classic_svFit::TauTauHistogramAdapter*>(svfitAlgo2.getHistogramAdapter())->GetFittedTau2LV();
+
+    //---------  svfit ---------------------
+
+
     //    TLorentzVector taunew(tau1P4.Px(), );
 
-    svfTau1E.at(t).Fill(tau1P4.E(),w);
-    svfTau2E.at(t).Fill(tau2P4.E(),w);
+    // svfTau1E.at(t).Fill(tau1P4.E(),w);
+    // svfTau2E.at(t).Fill(tau2P4.E(),w);
     
     Tau1PT.at(t).Fill(Tau1P4.Pt(),w);
     Tau1E.at(t).Fill(Tau1P4.E(),w);
@@ -1021,7 +1020,7 @@ void  ZTauTau::doEvent()  { //  Method called on every event
     else ExtraLeptonVeto.at(t).Fill(0.,w);
       
     TauTauVisMass.at(t).Fill((Tau1P4+Tau2P4).M(),w);
-    TauTauFullMass.at(t).Fill((tau1P4+tau2P4).M(),w);
+    //TauTauFullMass.at(t).Fill((tau1P4+tau2P4).M(),w);
     dRTauTau.at(t).Fill(Tau1P4.DeltaR(Tau2P4),w);
     
     MET.at(t).Fill(Ntp->MET(),w);
@@ -1069,34 +1068,34 @@ void  ZTauTau::doEvent()  { //  Method called on every event
       }
     
     
-    TVector3 Tauplus3Dsvfit(Tauplussvfit.X(),Tauplussvfit.Y(),Tauplussvfit.Z());
-    TVector3 Tauminus3Dsvfit(Tauminussvfit.X(),Tauminussvfit.Y(),Tauminussvfit.Z());
-    TVector3 Zsvfit=(Tauminus3Dsvfit).Unit();
-    TVector3 Ysvfit=(Tauminus3Dsvfit.Cross(Tauplus3Dsvfit)).Unit();
-    TVector3 Xsvfit=(Ysvfit.Cross(Tauminus3Dsvfit)).Unit();
-    TVector3 protonsvfit(0,0,1);
-    TVector3 xyprotonsvfit(protonsvfit.Dot(Xsvfit),protonsvfit.Dot(Ysvfit),0);
-    TVector3 xytauplussvfit(Tauplus3Dsvfit.Dot(Xsvfit),Tauplus3Dsvfit.Dot(Ysvfit),0);
+    // TVector3 Tauplus3Dsvfit(Tauplussvfit.X(),Tauplussvfit.Y(),Tauplussvfit.Z());
+    // TVector3 Tauminus3Dsvfit(Tauminussvfit.X(),Tauminussvfit.Y(),Tauminussvfit.Z());
+    // TVector3 Zsvfit=(Tauminus3Dsvfit).Unit();
+    // TVector3 Ysvfit=(Tauminus3Dsvfit.Cross(Tauplus3Dsvfit)).Unit();
+    // TVector3 Xsvfit=(Ysvfit.Cross(Tauminus3Dsvfit)).Unit();
+    // TVector3 protonsvfit(0,0,1);
+    // TVector3 xyprotonsvfit(protonsvfit.Dot(Xsvfit),protonsvfit.Dot(Ysvfit),0);
+    // TVector3 xytauplussvfit(Tauplus3Dsvfit.Dot(Xsvfit),Tauplus3Dsvfit.Dot(Ysvfit),0);
     
     
-      Etasvfit.at(t).Fill(TMath::ATanH((Tauplus3Dsvfit*Zsvfit)/(sqrt((Tauplus3Dsvfit*Zsvfit)*(Tauplus3Dsvfit*Zsvfit)+(Tauplus3Dsvfit*Ysvfit)*(Tauplus3Dsvfit*Ysvfit)+(Tauplus3Dsvfit*Xsvfit)*(Tauplus3Dsvfit*Xsvfit)))),w);
-      if(id==10310333){	    Phisvfitpipi.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-      if(id==10410333){	    Phisvfitpirho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-      if(id==10410433){	    Phisvfitrhorho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-      if(id==10330533){	    Phisvfitpia1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-      if(id==10430533){	    Phisvfitrhoa1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-      if(id==30530533){	    Phisvfita1a1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-      //if(id==10110333 || id==10210333){	    Phisvfitlpi.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-      //if(id==10110433 || id==10210433){	    Phisvfitlrho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-      //if(id==10130533 || id==10230533){	    Phisvfitla1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-      Thetasvfit.at(t).Fill(Tauminussvfit.Theta(),w);
+    //   Etasvfit.at(t).Fill(TMath::ATanH((Tauplus3Dsvfit*Zsvfit)/(sqrt((Tauplus3Dsvfit*Zsvfit)*(Tauplus3Dsvfit*Zsvfit)+(Tauplus3Dsvfit*Ysvfit)*(Tauplus3Dsvfit*Ysvfit)+(Tauplus3Dsvfit*Xsvfit)*(Tauplus3Dsvfit*Xsvfit)))),w);
+    //   if(id==10310333){	    Phisvfitpipi.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    //   if(id==10410333){	    Phisvfitpirho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    //   if(id==10410433){	    Phisvfitrhorho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    //   if(id==10330533){	    Phisvfitpia1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    //   if(id==10430533){	    Phisvfitrhoa1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    //   if(id==30530533){	    Phisvfita1a1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    //   //if(id==10110333 || id==10210333){	    Phisvfitlpi.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    //   //if(id==10110433 || id==10210433){	    Phisvfitlrho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    //   //if(id==10130533 || id==10230533){	    Phisvfitla1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    //   Thetasvfit.at(t).Fill(Tauminussvfit.Theta(),w);
     
-    if(Ntp->decayMode(Tau1)==0 && Ntp->decayMode(Tau2)==0 ){PhiDatasvfitpipi.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-    if((Ntp->decayMode(Tau1)==0 && Ntp->decayMode(Tau2)==1) || (Ntp->decayMode(Tau2)==0 && Ntp->decayMode(Tau1)==1)){PhiDatasvfitpirho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-    if((Ntp->decayMode(Tau1)==0 && Ntp->decayMode(Tau2)==10) || (Ntp->decayMode(Tau2)==0 && Ntp->decayMode(Tau1)==10)){PhiDatasvfitpia1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-    if(Ntp->decayMode(Tau1)==1 && Ntp->decayMode(Tau2)==1 ){PhiDatasvfitrhorho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-    if((Ntp->decayMode(Tau1)==1 && Ntp->decayMode(Tau2)==10) || (Ntp->decayMode(Tau2)==1 && Ntp->decayMode(Tau1)==10)){PhiDatasvfitrhoa1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
-    if(Ntp->decayMode(Tau1)==10 && Ntp->decayMode(Tau2)==10 ){PhiDatasvfita1a1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    // if(Ntp->decayMode(Tau1)==0 && Ntp->decayMode(Tau2)==0 ){PhiDatasvfitpipi.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    // if((Ntp->decayMode(Tau1)==0 && Ntp->decayMode(Tau2)==1) || (Ntp->decayMode(Tau2)==0 && Ntp->decayMode(Tau1)==1)){PhiDatasvfitpirho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    // if((Ntp->decayMode(Tau1)==0 && Ntp->decayMode(Tau2)==10) || (Ntp->decayMode(Tau2)==0 && Ntp->decayMode(Tau1)==10)){PhiDatasvfitpia1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    // if(Ntp->decayMode(Tau1)==1 && Ntp->decayMode(Tau2)==1 ){PhiDatasvfitrhorho.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    // if((Ntp->decayMode(Tau1)==1 && Ntp->decayMode(Tau2)==10) || (Ntp->decayMode(Tau2)==1 && Ntp->decayMode(Tau1)==10)){PhiDatasvfitrhoa1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
+    // if(Ntp->decayMode(Tau1)==10 && Ntp->decayMode(Tau2)==10 ){PhiDatasvfita1a1.at(t).Fill(Ntp->DeltaPhi(xyprotonsvfit.Phi(),xytauplussvfit.Phi()),w);}
     
     
     TVector3 Tauplus3Dvis(Tauplusvis.X(),Tauplusvis.Y(),Tauplusvis.Z());
@@ -1314,7 +1313,7 @@ void  ZTauTau::doEvent()  { //  Method called on every event
 	  
 	    TauTauTruthMass.at(t).Fill((Tau1Truth+Tau2Truth).M(),w);
 	  
-	    if((sqrt((Tauplussvfit.Eta()-Tau1Truth.Eta())*(Tauplussvfit.Eta()-Tau1Truth.Eta())+(Tauplussvfit.Phi()-Tau1Truth.Phi())*(Tauplussvfit.Phi()-Tau1Truth.Phi())))<0.5 && (sqrt((Tauminussvfit.Eta()-Tau2Truth.Eta())*(Tauminussvfit.Eta()-Tau2Truth.Eta())+(Tauminussvfit.Phi()-Tau2Truth.Phi())*(Tauminussvfit.Phi()-Tau2Truth.Phi())))<0.5)
+	    if((sqrt((Tauplusvis.Eta()-Tau1Truth.Eta())*(Tauplusvis.Eta()-Tau1Truth.Eta())+(Tauplusvis.Phi()-Tau1Truth.Phi())*(Tauplusvis.Phi()-Tau1Truth.Phi())))<0.5 && (sqrt((Tauminusvis.Eta()-Tau2Truth.Eta())*(Tauminusvis.Eta()-Tau2Truth.Eta())+(Tauminusvis.Phi()-Tau2Truth.Phi())*(Tauminusvis.Phi()-Tau2Truth.Phi())))<0.5)
 	      {
 		Tauplustruth=Tau1Truth;
 		Tauminustruth=Tau2Truth;

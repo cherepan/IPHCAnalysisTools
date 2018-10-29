@@ -97,7 +97,7 @@ ifdef USE_lebihan
 endif
 
 ifdef USE_gbourgat
-	TARGETS += ZMuTau ZTauTau ZMuMu SVFitIPHC
+	TARGETS += ZMuTau ZTauTau ZMuMu SVFitIPHC SingleMuSkim SkimNtupleDiTauHTrigger
 	DEFS += -DUSE_gbourgat=1
 endif
 
